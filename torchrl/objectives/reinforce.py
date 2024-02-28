@@ -15,8 +15,10 @@ from tensordict import TensorDict, TensorDictBase
 from tensordict.nn import dispatch, ProbabilisticTensorDictSequential, TensorDictModule
 from tensordict.utils import NestedKey
 from torchrl.objectives.common import LossModule
+
 from torchrl.objectives.utils import (
     _GAMMA_LMBDA_DEPREC_ERROR,
+    _reduce,
     default_value_kwargs,
     distance_loss,
     ValueEstimators,
@@ -60,6 +62,10 @@ class ReinforceLoss(LossModule):
             Functionalizing permits features like meta-RL, but makes it
             impossible to use distributed models (DDP, FSDP, ...) and comes
             with a little cost. Defaults to ``True``.
+        reduction (str, optional): Specifies the reduction to apply to the output:
+            ``"none"`` | ``"mean"`` | ``"sum"``. ``"none"``: no reduction will be applied,
+            ``"mean"``: the sum of the output will be divided by the number of
+            elements in the output, ``"sum"``: the output will be summed. Default: ``"mean"``.
 
     .. note:
       The advantage (typically GAE) can be computed by the loss function or
@@ -223,6 +229,7 @@ class ReinforceLoss(LossModule):
         functional: bool = True,
         actor: ProbabilisticTensorDictSequential = None,
         critic: ProbabilisticTensorDictSequential = None,
+        reduction: str = None,
     ) -> None:
         if actor is not None:
             actor_network = actor
@@ -238,6 +245,8 @@ class ReinforceLoss(LossModule):
             raise RuntimeError(
                 "delay_value and ~functional are incompatible, as delayed value currently relies on functional calls."
             )
+        if reduction is None:
+            reduction = "mean"
 
         self._functional = functional
 
@@ -249,6 +258,7 @@ class ReinforceLoss(LossModule):
 
         self.delay_value = delay_value
         self.loss_critic_type = loss_critic_type
+        self.reduction = reduction
 
         # Actor
         if self.functional:
@@ -388,10 +398,15 @@ class ReinforceLoss(LossModule):
         if log_prob.shape == advantage.shape[:-1]:
             log_prob = log_prob.unsqueeze(-1)
         loss_actor = -log_prob * advantage.detach()
-        loss_actor = loss_actor.mean()
-        td_out = TensorDict({"loss_actor": loss_actor}, [])
+        td_out = TensorDict({"loss_actor": loss_actor}, batch_size=[])
 
-        td_out.set("loss_value", self.loss_critic(tensordict).mean())
+        td_out.set("loss_value", self.loss_critic(tensordict))
+        td_out = td_out.named_apply(
+            lambda name, value: _reduce(value, reduction=self.reduction).squeeze(-1)
+            if name.startswith("loss_")
+            else value,
+            batch_size=[],
+        )
 
         return td_out
 

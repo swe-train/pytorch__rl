@@ -5,6 +5,7 @@
 
 import argparse
 import contextlib
+import functools
 import importlib
 import os
 import pickle
@@ -29,7 +30,11 @@ from tensordict import (
 )
 from torch import multiprocessing as mp
 from torch.utils._pytree import tree_flatten, tree_map
+
+from torchrl.collectors import RandomPolicy, SyncDataCollector
+from torchrl.collectors.utils import split_trajectories
 from torchrl.data import (
+    MultiStep,
     PrioritizedReplayBuffer,
     RemoteTensorDictReplayBuffer,
     ReplayBuffer,
@@ -61,6 +66,7 @@ from torchrl.data.replay_buffers.writers import (
     TensorDictRoundRobinWriter,
     WriterEnsemble,
 )
+from torchrl.envs import GymEnv, SerialEnv
 from torchrl.envs.transforms.transforms import (
     BinarizeReward,
     CatFrames,
@@ -87,6 +93,7 @@ from torchrl.envs.transforms.transforms import (
 
 OLD_TORCH = parse(torch.__version__) < parse("2.0.0")
 _has_tv = importlib.util.find_spec("torchvision") is not None
+_has_gym = importlib.util.find_spec("gym") is not None
 _has_snapshot = importlib.util.find_spec("torchsnapshot") is not None
 _os_is_windows = sys.platform == "win32"
 
@@ -156,44 +163,20 @@ class TestComposableBuffers:
 
     def _get_data(self, datatype, size):
         if datatype is None:
-            data = torch.randint(
-                100,
-                (
-                    size,
-                    1,
-                ),
-            )
+            data = torch.randint(100, (size, 1))
         elif datatype == "tensor":
-            data = torch.randint(
-                100,
-                (
-                    size,
-                    1,
-                ),
-            )
+            data = torch.randint(100, (size, 1))
         elif datatype == "tensordict":
             data = TensorDict(
                 {
-                    "a": torch.randint(
-                        100,
-                        (
-                            size,
-                            1,
-                        ),
-                    ),
+                    "a": torch.randint(100, (size, 1)),
                     "next": {"reward": torch.randn(size, 1)},
                 },
                 [size],
             )
         elif datatype == "pytree":
             data = {
-                "a": torch.randint(
-                    100,
-                    (
-                        size,
-                        1,
-                    ),
-                ),
+                "a": torch.randint(100, (size, 1)),
                 "b": {"c": [torch.zeros(size, 3), (torch.ones(size, 2),)]},
                 30: torch.zeros(size, 2),
             }
@@ -218,7 +201,8 @@ class TestComposableBuffers:
                 rb.add(data)
             return
         rb.add(data)
-        s = rb.sample(1)
+        s, info = rb.sample(1, return_info=True)
+        assert len(rb) == 1
         if isinstance(s, (torch.Tensor, TensorDictBase)):
             assert s.ndim, s
             s = s[0]
@@ -756,11 +740,11 @@ class TestStorages:
             if data_type in ("tensor", "pytree"):
                 tree_map(
                     torch.testing.assert_close,
-                    tree_flatten(storage._storage)[0],
-                    tree_flatten(storage_recover._storage)[0],
+                    tree_flatten(storage[:])[0],
+                    tree_flatten(storage_recover[:])[0],
                 )
             else:
-                assert_allclose_td(storage._storage, storage_recover._storage)
+                assert_allclose_td(storage[:], storage_recover[:])
         if data == "tc":
             assert storage._storage.text == storage_recover._storage.text
 
@@ -838,6 +822,36 @@ class TestLazyStorages:
         tc_sample = mystorage.get(idx)
         assert tc_sample.shape == torch.Size([tc.shape[0] - 2, *tc.shape[1:]])
 
+    def test_extend_list_pytree(self, max_size, shape, storage):
+        memory = ReplayBuffer(
+            storage=storage(max_size=max_size),
+            sampler=SamplerWithoutReplacement(),
+        )
+        data = [
+            (
+                torch.full(shape, i),
+                {"a": torch.full(shape, i), "b": (torch.full(shape, i))},
+                [torch.full(shape, i)],
+            )
+            for i in range(10)
+        ]
+        memory.extend(data)
+        assert len(memory) == 10
+        assert len(memory._storage) == 10
+        sample = memory.sample(10)
+        for leaf in torch.utils._pytree.tree_leaves(sample):
+            assert (leaf.unique(sorted=True) == torch.arange(10)).all()
+        memory = ReplayBuffer(
+            storage=storage(max_size=max_size),
+            sampler=SamplerWithoutReplacement(),
+        )
+        t1x4 = torch.Tensor([0.1, 0.2, 0.3, 0.4])
+        t1x1 = torch.Tensor([0.01])
+        with pytest.raises(
+            RuntimeError, match="Stacking the elements of the list resulted in an error"
+        ):
+            memory.extend([t1x4, t1x1, t1x4 + 0.4, t1x1 + 0.01])
+
 
 @pytest.mark.parametrize("priority_key", ["pk", "td_error"])
 @pytest.mark.parametrize("contiguous", [True, False])
@@ -912,8 +926,10 @@ def test_replay_buffer_trajectories(stack, reduction, datatype):
         {"obs": torch.randn(3, 4, 5), "actions": torch.randn(3, 4, 2)},
         batch_size=[3, 4],
     )
+    rbcls = functools.partial(TensorDictReplayBuffer, priority_key="td_error")
     if datatype == "tc":
         c = make_tc(traj_td)
+        rbcls = functools.partial(ReplayBuffer, storage=LazyTensorStorage(100))
         traj_td = c(**traj_td, batch_size=traj_td.batch_size)
         assert is_tensorclass(traj_td)
     elif datatype != "tb":
@@ -922,27 +938,36 @@ def test_replay_buffer_trajectories(stack, reduction, datatype):
     if stack:
         traj_td = torch.stack(list(traj_td), 0)
 
-    rb = TensorDictReplayBuffer(
+    rb = rbcls(
         sampler=samplers.PrioritizedSampler(
             5,
             alpha=0.7,
             beta=0.9,
             reduction=reduction,
         ),
-        priority_key="td_error",
         batch_size=3,
     )
     rb.extend(traj_td)
-    sampled_td = rb.sample()
+    if datatype == "tc":
+        sampled_td, info = rb.sample(return_info=True)
+        index = info["index"]
+    else:
+        sampled_td = rb.sample()
     if datatype == "tc":
         assert is_tensorclass(traj_td)
         return
 
     sampled_td.set("td_error", torch.rand(sampled_td.shape))
-    rb.update_tensordict_priority(sampled_td)
-    sampled_td = rb.sample(include_info=True)
-    assert (sampled_td.get("_weight") > 0).all()
-    assert sampled_td.batch_size == torch.Size([3, 4])
+    if datatype == "tc":
+        rb.update_priority(index, sampled_td)
+        sampled_td, info = rb.sample(return_info=True)
+        assert (info["_weight"] > 0).all()
+        assert sampled_td.batch_size == torch.Size([3, 4])
+    else:
+        rb.update_tensordict_priority(sampled_td)
+        sampled_td = rb.sample(include_info=True)
+        assert (sampled_td.get("_weight") > 0).all()
+        assert sampled_td.batch_size == torch.Size([3, 4])
 
     # # set back the trajectory length
     # sampled_td_filtered = sampled_td.to_tensordict().exclude(
@@ -1855,7 +1880,6 @@ class TestSamplers:
     @pytest.mark.parametrize("episode_key", ["episode", ("some", "episode")])
     @pytest.mark.parametrize("done_key", ["done", ("some", "done")])
     @pytest.mark.parametrize("match_episode", [True, False])
-    @pytest.mark.parametrize("_data_prefix", [True, False])
     @pytest.mark.parametrize("device", get_default_devices())
     def test_slice_sampler(
         self,
@@ -1866,7 +1890,6 @@ class TestSamplers:
         episode_key,
         done_key,
         match_episode,
-        _data_prefix,
         device,
     ):
         torch.manual_seed(0)
@@ -1898,8 +1921,6 @@ class TestSamplers:
             [100],
             device=device,
         )
-        if _data_prefix:
-            data = TensorDict({"_data": data}, [100])
         storage.set(range(100), data)
         if slice_len is not None and slice_len > 15:
             # we may have to sample trajs shorter than slice_len
@@ -1936,10 +1957,7 @@ class TestSamplers:
         count_unique = set()
         for _ in range(30):
             index, info = sampler.sample(storage, batch_size=batch_size)
-            if _data_prefix:
-                samples = storage._storage["_data"][index]
-            else:
-                samples = storage._storage[index]
+            samples = storage._storage[index]
             if strict_length:
                 # check that trajs are ok
                 samples = samples.view(num_slices, -1)
@@ -1950,7 +1968,12 @@ class TestSamplers:
                 assert (
                     samples["steps"][..., 1:] - 1 == samples["steps"][..., :-1]
                 ).all()
-            too_short = too_short or index.numel() < batch_size
+            if isinstance(index, tuple):
+                index_numel = index[0].numel()
+            else:
+                index_numel = index.numel()
+
+            too_short = too_short or index_numel < batch_size
             trajs_unique_id = trajs_unique_id.union(
                 samples["another_episode"].view(-1).tolist()
             )
@@ -1974,7 +1997,6 @@ class TestSamplers:
 
     def test_slice_sampler_errors(self):
         device = "cpu"
-        _data_prefix = False
         batch_size, num_slices = 100, 20
 
         episode = torch.zeros(100, dtype=torch.int, device=device)
@@ -2003,8 +2025,6 @@ class TestSamplers:
             [100],
             device=device,
         )
-        if _data_prefix:
-            data = TensorDict({"_data": data}, [100])
 
         data_wrong_done = data.clone(False)
         data_wrong_done.rename_key_("episode", "_")
@@ -2031,7 +2051,6 @@ class TestSamplers:
     @pytest.mark.parametrize("episode_key", ["episode", ("some", "episode")])
     @pytest.mark.parametrize("done_key", ["done", ("some", "done")])
     @pytest.mark.parametrize("match_episode", [True, False])
-    @pytest.mark.parametrize("_data_prefix", [True, False])
     @pytest.mark.parametrize("device", get_default_devices())
     def test_slice_sampler_without_replacement(
         self,
@@ -2040,7 +2059,6 @@ class TestSamplers:
         episode_key,
         done_key,
         match_episode,
-        _data_prefix,
         device,
     ):
         torch.manual_seed(0)
@@ -2068,8 +2086,6 @@ class TestSamplers:
             [100],
             device=device,
         )
-        if _data_prefix:
-            data = TensorDict({"_data": data}, [100])
         storage.set(range(100), data)
         sampler = SliceSamplerWithoutReplacement(
             num_slices=num_slices, traj_key=episode_key, end_key=done_key
@@ -2077,10 +2093,7 @@ class TestSamplers:
         trajs_unique_id = set()
         for i in range(5):
             index, info = sampler.sample(storage, batch_size=batch_size)
-            if _data_prefix:
-                samples = storage._storage["_data"][index]
-            else:
-                samples = storage._storage[index]
+            samples = storage._storage[index]
 
             # check that trajs are ok
             samples = samples.view(num_slices, -1)
@@ -2482,6 +2495,175 @@ class TestEnsemble:
         assert isinstance(rb._writer[np.array([0, 1])], WriterEnsemble)
         assert isinstance(rb._writer[[0, 1]], WriterEnsemble)
         assert isinstance(rb._writer[0], RoundRobinWriter)
+
+
+def _rbtype(datatype):
+    if datatype in ("pytree", "tensorclass"):
+        return [ReplayBuffer, PrioritizedReplayBuffer]
+    return [
+        ReplayBuffer,
+        PrioritizedReplayBuffer,
+        TensorDictReplayBuffer,
+        TensorDictPrioritizedReplayBuffer,
+    ]
+
+
+class TestRBMultidim:
+    @tensorclass
+    class MyData:
+        x: torch.Tensor
+        y: torch.Tensor
+        z: torch.Tensor
+
+    def _make_data(self, datatype, datadim):
+        if datadim == 1:
+            shape = [12]
+        elif datadim == 2:
+            shape = [4, 3]
+        else:
+            raise NotImplementedError
+        if datatype == "pytree":
+            return {
+                "x": (torch.ones(*shape, 2), (torch.ones(*shape, 3))),
+                "y": [
+                    {"z": torch.ones(shape)},
+                    torch.ones((*shape, 1), dtype=torch.bool),
+                ],
+            }
+        elif datatype == "tensordict":
+            return TensorDict(
+                {"x": torch.ones(*shape, 2), "y": {"z": torch.ones(*shape, 3)}}, shape
+            )
+        elif datatype == "tensorclass":
+            return self.MyData(
+                x=torch.ones(*shape, 2),
+                y=torch.ones(*shape, 3),
+                z=torch.ones((*shape, 1), dtype=torch.bool),
+                batch_size=shape,
+            )
+
+    datatype_rb_pairs = [
+        [datatype, rbtype]
+        for datatype in ["pytree", "tensordict", "tensorclass"]
+        for rbtype in _rbtype(datatype)
+    ]
+
+    @pytest.mark.parametrize("datatype,rbtype", datatype_rb_pairs)
+    @pytest.mark.parametrize("datadim", [1, 2])
+    @pytest.mark.parametrize("storage_cls", [LazyMemmapStorage, LazyTensorStorage])
+    def test_rb_multidim(self, datatype, datadim, rbtype, storage_cls):
+        data = self._make_data(datatype, datadim)
+        if rbtype not in (PrioritizedReplayBuffer, TensorDictPrioritizedReplayBuffer):
+            rbtype = functools.partial(rbtype, sampler=RandomSampler())
+        else:
+            rbtype = functools.partial(rbtype, alpha=0.9, beta=1.1)
+
+        rb = rbtype(storage=storage_cls(100, ndim=datadim), batch_size=4)
+        rb.extend(data)
+        assert len(rb) == 12
+        data = rb[:]
+        if datatype in ("tensordict", "tensorclass"):
+            assert data.numel() == 12
+        else:
+            assert all(
+                leaf.shape[:datadim].numel() == 12 for leaf in tree_flatten(data)[0]
+            )
+        s = rb.sample()
+        if datatype in ("tensordict", "tensorclass"):
+            assert (s.exclude("index") == 1).all()
+            assert s.numel() == 4
+        else:
+            for leaf in torch.utils._pytree.tree_leaves(s):
+                assert leaf.shape[0] == 4
+                assert (leaf == 1).all()
+
+    @pytest.mark.skipif(not _has_gym, reason="gym required for this test.")
+    @pytest.mark.parametrize(
+        "writer_cls",
+        [TensorDictMaxValueWriter, RoundRobinWriter, TensorDictRoundRobinWriter],
+    )
+    @pytest.mark.parametrize("storage_cls", [LazyMemmapStorage, LazyTensorStorage])
+    @pytest.mark.parametrize(
+        "rbtype",
+        [
+            functools.partial(ReplayBuffer, batch_size=8),
+            functools.partial(TensorDictReplayBuffer, batch_size=8),
+        ],
+    )
+    @pytest.mark.parametrize(
+        "sampler_cls",
+        [
+            functools.partial(SliceSampler, num_slices=2, strict_length=False),
+            RandomSampler,
+            functools.partial(
+                SliceSamplerWithoutReplacement, num_slices=2, strict_length=False
+            ),
+            functools.partial(PrioritizedSampler, alpha=1.0, beta=1.0, max_capacity=10),
+            functools.partial(
+                PrioritizedSliceSampler,
+                alpha=1.0,
+                beta=1.0,
+                max_capacity=10,
+                num_slices=2,
+                strict_length=False,
+            ),
+        ],
+    )
+    @pytest.mark.parametrize(
+        "transform",
+        [
+            None,
+            [
+                lambda: split_trajectories,
+                functools.partial(MultiStep, gamma=0.9, n_steps=3),
+            ],
+        ],
+    )
+    def test_rb_multidim_collector(
+        self, rbtype, storage_cls, writer_cls, sampler_cls, transform
+    ):
+        from _utils_internal import CARTPOLE_VERSIONED
+
+        torch.manual_seed(0)
+        env = SerialEnv(2, lambda: GymEnv(CARTPOLE_VERSIONED))
+        env.set_seed(0)
+        collector = SyncDataCollector(
+            env, RandomPolicy(env.action_spec), frames_per_batch=4, total_frames=16
+        )
+        if writer_cls is TensorDictMaxValueWriter:
+            with pytest.raises(
+                ValueError,
+                match="TensorDictMaxValueWriter is not compatible with storages with more than one dimension",
+            ):
+                rb = rbtype(
+                    storage=storage_cls(max_size=10, ndim=2),
+                    sampler=sampler_cls(),
+                    writer=writer_cls(),
+                )
+            return
+        rb = rbtype(
+            storage=storage_cls(max_size=10, ndim=2),
+            sampler=sampler_cls(),
+            writer=writer_cls(),
+        )
+        if not isinstance(rb._sampler, SliceSampler) and transform is not None:
+            pytest.skip("no need to test this combination")
+        if transform:
+            for t in transform:
+                rb.append_transform(t())
+        for data in collector:
+            rb.extend(data)
+            if isinstance(rb, TensorDictReplayBuffer) and transform is not None:
+                # this should fail bc we can't set the indices after executing the transform.
+                with pytest.raises(RuntimeError, match="Failed to set the metadata"):
+                    rb.sample()
+                return
+            s = rb.sample()
+            rbtot = rb[:]
+            assert rbtot.shape[0] == 2
+            assert len(rb) == rbtot.numel()
+            if transform is not None:
+                assert s.ndim == 2
 
 
 if __name__ == "__main__":
