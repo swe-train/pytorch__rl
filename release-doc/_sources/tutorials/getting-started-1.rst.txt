@@ -519,7 +519,7 @@ We can easily build our Q-Value actor by adding a
 :class:`~torchrl.modules.tensordict_module.QValueModule` after our value
 network:
 
-.. GENERATED FROM PYTHON SOURCE LINES 271-281
+.. GENERATED FROM PYTHON SOURCE LINES 271-279
 
 .. code-block:: Python
 
@@ -528,9 +528,7 @@ network:
 
     policy = TensorDictSequential(
         value_net,  # writes action values in our tensordict
-        QValueModule(
-            action_space=env.action_spec
-        ),  # Reads the "action_value" entry by default
+        QValueModule(spec=env.action_spec),  # Reads the "action_value" entry by default
     )
 
 
@@ -540,14 +538,14 @@ network:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 282-286
+.. GENERATED FROM PYTHON SOURCE LINES 280-284
 
 Let's check it out! We run the policy for a couple of steps and look at the
 output. We should find an ``"action_value"`` as well as a
 ``"chosen_action_value"`` entries in the rollout that we obtain:
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 286-290
+.. GENERATED FROM PYTHON SOURCE LINES 284-288
 
 .. code-block:: Python
 
@@ -589,14 +587,14 @@ output. We should find an ``"action_value"`` as well as a
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 291-295
+.. GENERATED FROM PYTHON SOURCE LINES 289-293
 
 Because it relies on the ``argmax`` operator, this policy is deterministic.
 During data collection, we will need to explore the environment. For that,
 we are using the :class:`~torchrl.modules.tensordict_module.EGreedyModule`
 once again:
 
-.. GENERATED FROM PYTHON SOURCE LINES 295-301
+.. GENERATED FROM PYTHON SOURCE LINES 293-299
 
 .. code-block:: Python
 
@@ -613,7 +611,7 @@ once again:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 302-318
+.. GENERATED FROM PYTHON SOURCE LINES 300-316
 
 This is it for our short tutorial on building a policy with TorchRL!
 
@@ -635,7 +633,7 @@ Next steps:
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 47.534 seconds)
+   **Total running time of the script:** (0 minutes 44.416 seconds)
 
 **Estimated memory usage:**  8 MB
 

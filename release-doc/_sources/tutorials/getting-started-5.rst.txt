@@ -101,7 +101,7 @@ for :ref:`inference <gs_storage>`.
 
     value_mlp = MLP(out_features=env.action_spec.shape[-1], num_cells=[64, 64])
     value_net = Mod(value_mlp, in_keys=["observation"], out_keys=["action_value"])
-    policy = Seq(value_net, QValueModule(env.action_spec))
+    policy = Seq(value_net, QValueModule(spec=env.action_spec))
     exploration_module = EGreedyModule(
         env.action_spec, annealing_num_steps=100_000, eps_init=0.5
     )
@@ -303,9 +303,9 @@ Feel free to share feedback about it on GitHub.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 21.933 seconds)
+   **Total running time of the script:** (0 minutes 20.858 seconds)
 
-**Estimated memory usage:**  152 MB
+**Estimated memory usage:**  52 MB
 
 
 .. _sphx_glr_download_tutorials_getting-started-5.py:
