@@ -1054,6 +1054,13 @@
 <span class="sd">            the :meth:`~sample` method will be compiled with :func:`~torch.compile`.</span>
 <span class="sd">            Keyword arguments can also be passed to torch.compile with this arg.</span>
 <span class="sd">            Defaults to ``False``.</span>
+<span class="sd">        span (bool, int, Tuple[bool | int, bool | int], optional): if provided, the sampled</span>
+<span class="sd">            trajectory will span across the left and/or the right. This means that possibly</span>
+<span class="sd">            fewer elements will be provided than what was required. A boolean value means</span>
+<span class="sd">            that at least one element will be sampled per trajectory. An integer `i` means</span>
+<span class="sd">            that at least `slice_len - i` samples will be gathered for each sampled trajectory.</span>
+<span class="sd">            Using tuples allows a fine grained control over the span on the left (beginning</span>
+<span class="sd">            of the stored trajectory) and on the right (end of the stored trajectory).</span>
 
 <span class="sd">    .. note:: To recover the trajectory splits in the storage,</span>
 <span class="sd">        :class:`~torchrl.data.replay_buffers.samplers.SliceSampler` will first</span>
@@ -1133,6 +1140,7 @@
         <span class="n">truncated_key</span><span class="p">:</span> <span class="n">NestedKey</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;next&quot;</span><span class="p">,</span> <span class="s2">&quot;truncated&quot;</span><span class="p">),</span>
         <span class="n">strict_length</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
         <span class="nb">compile</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">|</span> <span class="nb">dict</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="n">span</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">|</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">bool</span> <span class="o">|</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">bool</span> <span class="o">|</span> <span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
     <span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">num_slices</span> <span class="o">=</span> <span class="n">num_slices</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">slice_len</span> <span class="o">=</span> <span class="n">slice_len</span>
@@ -1143,6 +1151,11 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_fetch_traj</span> <span class="o">=</span> <span class="kc">True</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">strict_length</span> <span class="o">=</span> <span class="n">strict_length</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_cache</span> <span class="o">=</span> <span class="p">{}</span>
+
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">span</span><span class="p">,</span> <span class="nb">bool</span><span class="p">):</span>
+            <span class="n">span</span> <span class="o">=</span> <span class="p">(</span><span class="n">span</span><span class="p">,</span> <span class="n">span</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">span</span> <span class="o">=</span> <span class="n">span</span>
+
         <span class="k">if</span> <span class="n">trajectories</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">traj_key</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">end_key</span><span class="p">:</span>
                 <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span>
@@ -1296,6 +1309,7 @@
         <span class="k">return</span> <span class="n">start_idx</span><span class="p">,</span> <span class="n">stop_idx</span><span class="p">,</span> <span class="n">lengths</span>
 
     <span class="k">def</span> <span class="nf">_start_to_end</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">st</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">length</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
+
         <span class="n">arange</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">length</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">st</span><span class="o">.</span><span class="n">device</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">st</span><span class="o">.</span><span class="n">dtype</span><span class="p">)</span>
         <span class="n">ndims</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="mi">1</span> <span class="k">if</span> <span class="n">st</span><span class="o">.</span><span class="n">ndim</span> <span class="k">else</span> <span class="mi">0</span>
         <span class="k">if</span> <span class="n">ndims</span><span class="p">:</span>
@@ -1508,14 +1522,55 @@
         <span class="n">storage_length</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
         <span class="n">traj_idx</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="nb">dict</span><span class="p">]:</span>
+        <span class="c1"># end_point is the last possible index for start</span>
+        <span class="n">last_indexable_start</span> <span class="o">=</span> <span class="n">lengths</span><span class="p">[</span><span class="n">traj_idx</span><span class="p">]</span> <span class="o">-</span> <span class="n">seq_length</span> <span class="o">+</span> <span class="mi">1</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">span</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span>
+            <span class="n">end_point</span> <span class="o">=</span> <span class="n">last_indexable_start</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">span</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
+            <span class="n">end_point</span> <span class="o">=</span> <span class="n">lengths</span><span class="p">[</span><span class="n">traj_idx</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">span_left</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">span</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">span_left</span> <span class="o">&gt;=</span> <span class="n">seq_length</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                    <span class="s2">&quot;The right and left span must be strictly lower than the sequence length&quot;</span>
+                <span class="p">)</span>
+            <span class="n">end_point</span> <span class="o">=</span> <span class="n">lengths</span><span class="p">[</span><span class="n">traj_idx</span><span class="p">]</span> <span class="o">-</span> <span class="n">span_left</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">span</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
+            <span class="n">start_point</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">span</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
+            <span class="n">start_point</span> <span class="o">=</span> <span class="o">-</span><span class="n">seq_length</span> <span class="o">+</span> <span class="mi">1</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">span_right</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">span</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">span_right</span> <span class="o">&gt;=</span> <span class="n">seq_length</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                    <span class="s2">&quot;The right and left span must be strictly lower than the sequence length&quot;</span>
+                <span class="p">)</span>
+            <span class="n">start_point</span> <span class="o">=</span> <span class="o">-</span><span class="n">span_right</span>
+
         <span class="n">relative_starts</span> <span class="o">=</span> <span class="p">(</span>
-            <span class="p">(</span>
-                <span class="n">torch</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="n">num_slices</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">lengths</span><span class="o">.</span><span class="n">device</span><span class="p">)</span>
-                <span class="o">*</span> <span class="p">(</span><span class="n">lengths</span><span class="p">[</span><span class="n">traj_idx</span><span class="p">]</span> <span class="o">-</span> <span class="n">seq_length</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
-            <span class="p">)</span>
-            <span class="o">.</span><span class="n">floor</span><span class="p">()</span>
-            <span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">start_idx</span><span class="o">.</span><span class="n">dtype</span><span class="p">)</span>
-        <span class="p">)</span>
+            <span class="n">torch</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="n">num_slices</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">lengths</span><span class="o">.</span><span class="n">device</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">end_point</span> <span class="o">-</span> <span class="n">start_point</span><span class="p">)</span>
+        <span class="p">)</span><span class="o">.</span><span class="n">floor</span><span class="p">()</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">start_idx</span><span class="o">.</span><span class="n">dtype</span><span class="p">)</span> <span class="o">+</span> <span class="n">start_point</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">span</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
+            <span class="n">out_of_traj</span> <span class="o">=</span> <span class="n">relative_starts</span> <span class="o">&lt;</span> <span class="mi">0</span>
+            <span class="k">if</span> <span class="n">out_of_traj</span><span class="o">.</span><span class="n">any</span><span class="p">():</span>
+                <span class="c1"># a negative start means sampling fewer elements</span>
+                <span class="n">seq_length</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">where</span><span class="p">(</span>
+                    <span class="o">~</span><span class="n">out_of_traj</span><span class="p">,</span> <span class="n">seq_length</span><span class="p">,</span> <span class="n">seq_length</span> <span class="o">+</span> <span class="n">relative_starts</span>
+                <span class="p">)</span>
+                <span class="n">relative_starts</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="o">~</span><span class="n">out_of_traj</span><span class="p">,</span> <span class="n">relative_starts</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">span</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span>
+            <span class="n">out_of_traj</span> <span class="o">=</span> <span class="n">relative_starts</span> <span class="o">+</span> <span class="n">seq_length</span> <span class="o">&gt;</span> <span class="n">lengths</span><span class="p">[</span><span class="n">traj_idx</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">out_of_traj</span><span class="o">.</span><span class="n">any</span><span class="p">():</span>
+                <span class="c1"># a negative start means sampling fewer elements</span>
+                <span class="c1"># print(&#39;seq_length before&#39;, seq_length)</span>
+                <span class="c1"># print(&#39;relative_starts&#39;, relative_starts)</span>
+                <span class="n">seq_length</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">minimum</span><span class="p">(</span>
+                    <span class="n">seq_length</span><span class="p">,</span> <span class="n">lengths</span><span class="p">[</span><span class="n">traj_idx</span><span class="p">]</span> <span class="o">-</span> <span class="n">relative_starts</span>
+                <span class="p">)</span>
+                <span class="c1"># print(&#39;seq_length after&#39;, seq_length)</span>
+
         <span class="n">starts</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">cat</span><span class="p">(</span>
             <span class="p">[</span>
                 <span class="p">(</span><span class="n">start_idx</span><span class="p">[</span><span class="n">traj_idx</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">relative_starts</span><span class="p">)</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span>
@@ -1523,6 +1578,7 @@
             <span class="p">],</span>
             <span class="mi">1</span><span class="p">,</span>
         <span class="p">)</span>
+
         <span class="n">index</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tensor_slices_from_startend</span><span class="p">(</span><span class="n">seq_length</span><span class="p">,</span> <span class="n">starts</span><span class="p">,</span> <span class="n">storage_length</span><span class="p">)</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">truncated_key</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">truncated_key</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">truncated_key</span>

@@ -783,7 +783,7 @@ Under the hood, <a class="reference internal" href="generated/torchrl.data.Repla
 which we don’t assume to be serializable using memory-mapped tensors in general).</p>
 <p>Whenever saving data using <a class="reference internal" href="generated/torchrl.data.ReplayBuffer.html#torchrl.data.ReplayBuffer.dumps" title="torchrl.data.ReplayBuffer.dumps"><code class="xref py py-meth docutils literal notranslate"><span class="pre">dumps()</span></code></a> is not possible, an
 alternative way is to use <code class="xref py py-meth docutils literal notranslate"><span class="pre">state_dict()</span></code>, which returns a data
-structure that can be saved using <a class="reference external" href="https://pytorch.org/docs/stable/generated/torch.save.html#torch.save" title="(in PyTorch v2.2)"><code class="xref py py-func docutils literal notranslate"><span class="pre">torch.save()</span></code></a> and loaded using <a class="reference external" href="https://pytorch.org/docs/stable/generated/torch.load.html#torch.load" title="(in PyTorch v2.2)"><code class="xref py py-func docutils literal notranslate"><span class="pre">torch.load()</span></code></a>
+structure that can be saved using <a class="reference external" href="https://pytorch.org/docs/stable/generated/torch.save.html#torch.save" title="(in PyTorch v2.3)"><code class="xref py py-func docutils literal notranslate"><span class="pre">torch.save()</span></code></a> and loaded using <a class="reference external" href="https://pytorch.org/docs/stable/generated/torch.load.html#torch.load" title="(in PyTorch v2.3)"><code class="xref py py-func docutils literal notranslate"><span class="pre">torch.load()</span></code></a>
 before calling <code class="xref py py-meth docutils literal notranslate"><span class="pre">load_state_dict()</span></code>. The drawback
 of this method is that it will struggle to save big data structures, which is a
 common setting when using replay buffers.</p>
@@ -875,7 +875,7 @@ in the <code class="docutils literal notranslate"><span class="pre">&quot;next&q
 </pre></div>
 </div>
 <p>During a rollout (either using <a class="reference internal" href="generated/torchrl.envs.EnvBase.html#torchrl.envs.EnvBase" title="torchrl.envs.EnvBase"><code class="xref py py-class docutils literal notranslate"><span class="pre">EnvBase</span></code></a> or
-<code class="xref py py-class docutils literal notranslate"><span class="pre">SyncDataCollector</span></code>), the content of the <code class="docutils literal notranslate"><span class="pre">&quot;next&quot;</span></code>
+<a class="reference internal" href="generated/torchrl.collectors.SyncDataCollector.html#torchrl.collectors.SyncDataCollector" title="torchrl.collectors.SyncDataCollector"><code class="xref py py-class docutils literal notranslate"><span class="pre">SyncDataCollector</span></code></a>), the content of the <code class="docutils literal notranslate"><span class="pre">&quot;next&quot;</span></code>
 tensordict is brought to the root through the <a class="reference internal" href="generated/torchrl.envs.utils.step_mdp.html#torchrl.envs.utils.step_mdp" title="torchrl.envs.utils.step_mdp"><code class="xref py py-func docutils literal notranslate"><span class="pre">step_mdp()</span></code></a>
 function when the agent resets its step count: <code class="docutils literal notranslate"><span class="pre">t</span> <span class="pre">&lt;-</span> <span class="pre">t+1</span></code>. You can read more
 about the environment API <a class="reference internal" href="envs.html#environment-api"><span class="std std-ref">here</span></a>.</p>
@@ -1199,6 +1199,12 @@ efficient sampling.</p>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="generated/torchrl.data.get_dataloader.html#torchrl.data.get_dataloader" title="torchrl.data.get_dataloader"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_dataloader</span></code></a>(batch_size, block_size, ...)</p></td>
 <td><p>Creates a dataset and returns a dataloader from it.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/torchrl.data.ConstantKLController.html#torchrl.data.ConstantKLController" title="torchrl.data.ConstantKLController"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ConstantKLController</span></code></a>(*[, kl_coef, model])</p></td>
+<td><p>Constant KL Controller.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/torchrl.data.AdaptiveKLController.html#torchrl.data.AdaptiveKLController" title="torchrl.data.AdaptiveKLController"><code class="xref py py-obj docutils literal notranslate"><span class="pre">AdaptiveKLController</span></code></a>(*, init_kl_coef, ...[, ...])</p></td>
+<td><p>Adaptive KL Controller as described in Ziegler et al. &quot;Fine-Tuning Language Models from Human Preferences&quot;.</p></td>
 </tr>
 </tbody>
 </table>

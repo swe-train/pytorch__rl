@@ -907,12 +907,12 @@ a done state).</p>
 when to reset the environment (through the <code class="docutils literal notranslate"><span class="pre">max_frames_per_traj</span></code> argument),
 on which <code class="docutils literal notranslate"><span class="pre">device</span></code> the policy should be executed, etc. They are also
 designed to work efficiently with batched and multiprocessed environments.</p>
-<p>The simplest data collector is the <a class="reference internal" href="../reference/generated/torchrl.collectors.collectors.SyncDataCollector.html#torchrl.collectors.collectors.SyncDataCollector" title="torchrl.collectors.collectors.SyncDataCollector"><code class="xref py py-class docutils literal notranslate"><span class="pre">SyncDataCollector</span></code></a>:
+<p>The simplest data collector is the <a class="reference internal" href="../reference/generated/torchrl.collectors.SyncDataCollector.html#torchrl.collectors.SyncDataCollector" title="torchrl.collectors.collectors.SyncDataCollector"><code class="xref py py-class docutils literal notranslate"><span class="pre">SyncDataCollector</span></code></a>:
 it is an iterator that you can use to get batches of data of a given length, and
 that will stop once a total number of frames (<code class="docutils literal notranslate"><span class="pre">total_frames</span></code>) have been
 collected.
-Other data collectors (<a class="reference internal" href="../reference/generated/torchrl.collectors.collectors.MultiSyncDataCollector.html#torchrl.collectors.collectors.MultiSyncDataCollector" title="torchrl.collectors.collectors.MultiSyncDataCollector"><code class="xref py py-class docutils literal notranslate"><span class="pre">MultiSyncDataCollector</span></code></a> and
-<a class="reference internal" href="../reference/generated/torchrl.collectors.collectors.MultiaSyncDataCollector.html#torchrl.collectors.collectors.MultiaSyncDataCollector" title="torchrl.collectors.collectors.MultiaSyncDataCollector"><code class="xref py py-class docutils literal notranslate"><span class="pre">MultiaSyncDataCollector</span></code></a>) will execute
+Other data collectors (<a class="reference internal" href="../reference/generated/torchrl.collectors.MultiSyncDataCollector.html#torchrl.collectors.MultiSyncDataCollector" title="torchrl.collectors.collectors.MultiSyncDataCollector"><code class="xref py py-class docutils literal notranslate"><span class="pre">MultiSyncDataCollector</span></code></a> and
+<a class="reference internal" href="../reference/generated/torchrl.collectors.MultiaSyncDataCollector.html#torchrl.collectors.MultiaSyncDataCollector" title="torchrl.collectors.collectors.MultiaSyncDataCollector"><code class="xref py py-class docutils literal notranslate"><span class="pre">MultiaSyncDataCollector</span></code></a>) will execute
 the same operations in synchronous and asynchronous manner over a
 set of multiprocessed workers.</p>
 <p>As for the policy and environment before, the data collector will return
@@ -1083,26 +1083,26 @@ The steps include:</p>
 </pre></div>
 </div>
 <div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>  0%|          | 0/10000 [00:00&lt;?, ?it/s]
- 10%|█         | 1000/10000 [00:02&lt;00:19, 461.30it/s]
-eval cumulative reward:  92.3441 (init:  92.3441), eval step-count: 9, average reward= 9.0893 (init= 9.0893), step count (max): 11, lr policy:  0.0003:  10%|█         | 1000/10000 [00:02&lt;00:19, 461.30it/s]
-eval cumulative reward:  92.3441 (init:  92.3441), eval step-count: 9, average reward= 9.0893 (init= 9.0893), step count (max): 11, lr policy:  0.0003:  20%|██        | 2000/10000 [00:04&lt;00:17, 465.22it/s]
-eval cumulative reward:  92.3441 (init:  92.3441), eval step-count: 9, average reward= 9.1314 (init= 9.0893), step count (max): 22, lr policy:  0.0003:  20%|██        | 2000/10000 [00:04&lt;00:17, 465.22it/s]
-eval cumulative reward:  92.3441 (init:  92.3441), eval step-count: 9, average reward= 9.1314 (init= 9.0893), step count (max): 22, lr policy:  0.0003:  30%|███       | 3000/10000 [00:06&lt;00:14, 469.73it/s]
-eval cumulative reward:  92.3441 (init:  92.3441), eval step-count: 9, average reward= 9.1616 (init= 9.0893), step count (max): 16, lr policy:  0.0003:  30%|███       | 3000/10000 [00:06&lt;00:14, 469.73it/s]
-eval cumulative reward:  92.3441 (init:  92.3441), eval step-count: 9, average reward= 9.1616 (init= 9.0893), step count (max): 16, lr policy:  0.0003:  40%|████      | 4000/10000 [00:08&lt;00:12, 471.63it/s]
-eval cumulative reward:  92.3441 (init:  92.3441), eval step-count: 9, average reward= 9.1961 (init= 9.0893), step count (max): 21, lr policy:  0.0002:  40%|████      | 4000/10000 [00:08&lt;00:12, 471.63it/s]
-eval cumulative reward:  92.3441 (init:  92.3441), eval step-count: 9, average reward= 9.1961 (init= 9.0893), step count (max): 21, lr policy:  0.0002:  50%|█████     | 5000/10000 [00:10&lt;00:10, 472.34it/s]
-eval cumulative reward:  92.3441 (init:  92.3441), eval step-count: 9, average reward= 9.2059 (init= 9.0893), step count (max): 24, lr policy:  0.0002:  50%|█████     | 5000/10000 [00:10&lt;00:10, 472.34it/s]
-eval cumulative reward:  92.3441 (init:  92.3441), eval step-count: 9, average reward= 9.2059 (init= 9.0893), step count (max): 24, lr policy:  0.0002:  60%|██████    | 6000/10000 [00:12&lt;00:08, 473.51it/s]
-eval cumulative reward:  92.3441 (init:  92.3441), eval step-count: 9, average reward= 9.2298 (init= 9.0893), step count (max): 32, lr policy:  0.0001:  60%|██████    | 6000/10000 [00:12&lt;00:08, 473.51it/s]
-eval cumulative reward:  92.3441 (init:  92.3441), eval step-count: 9, average reward= 9.2298 (init= 9.0893), step count (max): 32, lr policy:  0.0001:  70%|███████   | 7000/10000 [00:14&lt;00:06, 474.52it/s]
-eval cumulative reward:  92.3441 (init:  92.3441), eval step-count: 9, average reward= 9.2447 (init= 9.0893), step count (max): 35, lr policy:  0.0001:  70%|███████   | 7000/10000 [00:14&lt;00:06, 474.52it/s]
-eval cumulative reward:  92.3441 (init:  92.3441), eval step-count: 9, average reward= 9.2447 (init= 9.0893), step count (max): 35, lr policy:  0.0001:  80%|████████  | 8000/10000 [00:17&lt;00:04, 463.40it/s]
-eval cumulative reward:  92.3441 (init:  92.3441), eval step-count: 9, average reward= 9.2489 (init= 9.0893), step count (max): 43, lr policy:  0.0001:  80%|████████  | 8000/10000 [00:17&lt;00:04, 463.40it/s]
-eval cumulative reward:  92.3441 (init:  92.3441), eval step-count: 9, average reward= 9.2489 (init= 9.0893), step count (max): 43, lr policy:  0.0001:  90%|█████████ | 9000/10000 [00:19&lt;00:02, 467.66it/s]
-eval cumulative reward:  92.3441 (init:  92.3441), eval step-count: 9, average reward= 9.2596 (init= 9.0893), step count (max): 41, lr policy:  0.0000:  90%|█████████ | 9000/10000 [00:19&lt;00:02, 467.66it/s]
-eval cumulative reward:  92.3441 (init:  92.3441), eval step-count: 9, average reward= 9.2596 (init= 9.0893), step count (max): 41, lr policy:  0.0000: 100%|██████████| 10000/10000 [00:21&lt;00:00, 470.52it/s]
-eval cumulative reward:  92.3441 (init:  92.3441), eval step-count: 9, average reward= 9.2596 (init= 9.0893), step count (max): 54, lr policy:  0.0000: 100%|██████████| 10000/10000 [00:21&lt;00:00, 470.52it/s]
+ 10%|█         | 1000/10000 [00:02&lt;00:19, 460.33it/s]
+eval cumulative reward:  138.8561 (init:  138.8561), eval step-count: 14, average reward= 9.0988 (init= 9.0988), step count (max): 12, lr policy:  0.0003:  10%|█         | 1000/10000 [00:02&lt;00:19, 460.33it/s]
+eval cumulative reward:  138.8561 (init:  138.8561), eval step-count: 14, average reward= 9.0988 (init= 9.0988), step count (max): 12, lr policy:  0.0003:  20%|██        | 2000/10000 [00:04&lt;00:17, 464.15it/s]
+eval cumulative reward:  138.8561 (init:  138.8561), eval step-count: 14, average reward= 9.1383 (init= 9.0988), step count (max): 18, lr policy:  0.0003:  20%|██        | 2000/10000 [00:04&lt;00:17, 464.15it/s]
+eval cumulative reward:  138.8561 (init:  138.8561), eval step-count: 14, average reward= 9.1383 (init= 9.0988), step count (max): 18, lr policy:  0.0003:  30%|███       | 3000/10000 [00:06&lt;00:14, 468.70it/s]
+eval cumulative reward:  138.8561 (init:  138.8561), eval step-count: 14, average reward= 9.1712 (init= 9.0988), step count (max): 35, lr policy:  0.0003:  30%|███       | 3000/10000 [00:06&lt;00:14, 468.70it/s]
+eval cumulative reward:  138.8561 (init:  138.8561), eval step-count: 14, average reward= 9.1712 (init= 9.0988), step count (max): 35, lr policy:  0.0003:  40%|████      | 4000/10000 [00:08&lt;00:12, 467.37it/s]
+eval cumulative reward:  138.8561 (init:  138.8561), eval step-count: 14, average reward= 9.1953 (init= 9.0988), step count (max): 21, lr policy:  0.0002:  40%|████      | 4000/10000 [00:08&lt;00:12, 467.37it/s]
+eval cumulative reward:  138.8561 (init:  138.8561), eval step-count: 14, average reward= 9.1953 (init= 9.0988), step count (max): 21, lr policy:  0.0002:  50%|█████     | 5000/10000 [00:10&lt;00:10, 467.88it/s]
+eval cumulative reward:  138.8561 (init:  138.8561), eval step-count: 14, average reward= 9.2118 (init= 9.0988), step count (max): 27, lr policy:  0.0002:  50%|█████     | 5000/10000 [00:10&lt;00:10, 467.88it/s]
+eval cumulative reward:  138.8561 (init:  138.8561), eval step-count: 14, average reward= 9.2118 (init= 9.0988), step count (max): 27, lr policy:  0.0002:  60%|██████    | 6000/10000 [00:12&lt;00:08, 472.22it/s]
+eval cumulative reward:  138.8561 (init:  138.8561), eval step-count: 14, average reward= 9.2265 (init= 9.0988), step count (max): 49, lr policy:  0.0001:  60%|██████    | 6000/10000 [00:12&lt;00:08, 472.22it/s]
+eval cumulative reward:  138.8561 (init:  138.8561), eval step-count: 14, average reward= 9.2265 (init= 9.0988), step count (max): 49, lr policy:  0.0001:  70%|███████   | 7000/10000 [00:14&lt;00:06, 475.71it/s]
+eval cumulative reward:  138.8561 (init:  138.8561), eval step-count: 14, average reward= 9.2327 (init= 9.0988), step count (max): 31, lr policy:  0.0001:  70%|███████   | 7000/10000 [00:14&lt;00:06, 475.71it/s]
+eval cumulative reward:  138.8561 (init:  138.8561), eval step-count: 14, average reward= 9.2327 (init= 9.0988), step count (max): 31, lr policy:  0.0001:  80%|████████  | 8000/10000 [00:17&lt;00:04, 466.22it/s]
+eval cumulative reward:  138.8561 (init:  138.8561), eval step-count: 14, average reward= 9.2403 (init= 9.0988), step count (max): 37, lr policy:  0.0001:  80%|████████  | 8000/10000 [00:17&lt;00:04, 466.22it/s]
+eval cumulative reward:  138.8561 (init:  138.8561), eval step-count: 14, average reward= 9.2403 (init= 9.0988), step count (max): 37, lr policy:  0.0001:  90%|█████████ | 9000/10000 [00:19&lt;00:02, 471.37it/s]
+eval cumulative reward:  138.8561 (init:  138.8561), eval step-count: 14, average reward= 9.2462 (init= 9.0988), step count (max): 47, lr policy:  0.0000:  90%|█████████ | 9000/10000 [00:19&lt;00:02, 471.37it/s]
+eval cumulative reward:  138.8561 (init:  138.8561), eval step-count: 14, average reward= 9.2462 (init= 9.0988), step count (max): 47, lr policy:  0.0000: 100%|██████████| 10000/10000 [00:21&lt;00:00, 475.11it/s]
+eval cumulative reward:  138.8561 (init:  138.8561), eval step-count: 14, average reward= 9.2497 (init= 9.0988), step count (max): 42, lr policy:  0.0000: 100%|██████████| 10000/10000 [00:21&lt;00:00, 475.11it/s]
 </pre></div>
 </div>
 </section>
@@ -1146,8 +1146,8 @@ the environment after asking for rendering to get a visual rendering of the
 inverted pendulum in action. Check <code class="xref py py-mod docutils literal notranslate"><span class="pre">torchrl.record</span></code> to
 know more.</p></li>
 </ul>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (1 minutes 23.871 seconds)</p>
-<p><strong>Estimated memory usage:</strong>  9 MB</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (1 minutes 28.687 seconds)</p>
+<p><strong>Estimated memory usage:</strong>  10 MB</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-tutorials-coding-ppo-py">
 <div class="sphx-glr-download sphx-glr-download-jupyter docutils container">
 <p><a class="reference download internal" download="" href="../_downloads/e2a5193e019585d9cfa26d3eebfd8be3/coding_ppo.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">coding_ppo.ipynb</span></code></a></p>

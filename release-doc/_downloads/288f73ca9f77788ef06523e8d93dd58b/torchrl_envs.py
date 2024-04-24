@@ -9,6 +9,7 @@ TorchRL envs
 
 """
 import functools
+
 ##############################################################################
 #
 # Environments play a crucial role in RL settings, often somewhat similar to
@@ -145,7 +146,7 @@ print("reset data", reset_data)
 
 
 policy = TensorDictModule(
-    functools.partial(env.action_spec.rand(), env=env), in_keys=[], out_keys=["action"]
+    functools.partial(env.action_spec.rand, env=env), in_keys=[], out_keys=["action"]
 )
 
 

@@ -167,7 +167,7 @@ Check the tutorials on torchrl documentation: https://pytorch.org/rl
 
 .. raw:: html
 
-    <div class="sphx-glr-thumbcontainer" tooltip="   If you are interested in Multi-Agent Reinforcement Learning (MARL) in    TorchRL, check out ...">
+    <div class="sphx-glr-thumbcontainer" tooltip="This tutorial demonstrates how to use PyTorch and :pytorchrl to solve a Multi-Agent Reinforceme...">
 
 .. only:: html
 
@@ -286,7 +286,7 @@ Check the tutorials on torchrl documentation: https://pytorch.org/rl
 
 .. raw:: html
 
-    <div class="sphx-glr-thumbcontainer" tooltip="   If you are interested in Multi-Agent Reinforcement Learning (MARL) in    TorchRL, check out ...">
+    <div class="sphx-glr-thumbcontainer" tooltip="This tutorial demonstrates how to use PyTorch and TorchRL to solve a Competitive Multi-Agent Re...">
 
 .. only:: html
 

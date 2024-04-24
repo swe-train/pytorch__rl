@@ -22,13 +22,6 @@ Competitive Multi-Agent Reinforcement Learning (DDPG) with TorchRL Tutorial
 ===========================================================================
 **Author**: `Matteo Bettini <https://github.com/matteobettini>`_
 
-.. note::
-
-   If you are interested in Multi-Agent Reinforcement Learning (MARL) in
-   TorchRL, check out
-   `BenchMARL <https://github.com/facebookresearch/BenchMARL>`__: a benchmarking library where you
-   can train and compare MARL sota-implementations, tasks, and models using TorchRL!
-
 This tutorial demonstrates how to use PyTorch and TorchRL to
 solve a Competitive Multi-Agent Reinforcement Learning (MARL) problem.
 
@@ -59,7 +52,7 @@ Key learnings:
 - How we can use :class:`~tensordict.TensorDict` to carry multi-agent multi-group data;
 - How we can tie all the library components (collectors, modules, replay buffers, and losses) in an off-policy multi-agent MADDPG/IDDPG training loop.
 
-.. GENERATED FROM PYTHON SOURCE LINES 47-107
+.. GENERATED FROM PYTHON SOURCE LINES 40-100
 
 If you are running this in Google Colab, make sure you install the following dependencies:
 
@@ -122,7 +115,7 @@ to render and visualize your own trained policy before and after the training pr
 Import our dependencies:
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 107-144
+.. GENERATED FROM PYTHON SOURCE LINES 100-143
 
 .. code-block:: Python
 
@@ -163,6 +156,11 @@ Import our dependencies:
 
     from tqdm import tqdm
 
+    # Check if we're building the doc, in which case disable video rendering
+    try:
+        is_sphinx = __sphinx_build__
+    except NameError:
+        is_sphinx = False
 
 
 
@@ -170,7 +168,8 @@ Import our dependencies:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 145-154
+
+.. GENERATED FROM PYTHON SOURCE LINES 144-153
 
 Define Hyperparameters
 ----------------------
@@ -182,7 +181,7 @@ device.
 You can tune some of these values to adjust the computational requirements.
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 154-189
+.. GENERATED FROM PYTHON SOURCE LINES 153-188
 
 .. code-block:: Python
 
@@ -228,7 +227,7 @@ You can tune some of these values to adjust the computational requirements.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 190-226
+.. GENERATED FROM PYTHON SOURCE LINES 189-225
 
 Environment
 -----------
@@ -267,7 +266,7 @@ functionality is already provided in the PettingZoo and VMAS simulators but the 
 transform could alternatively be used.
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 226-264
+.. GENERATED FROM PYTHON SOURCE LINES 225-263
 
 .. code-block:: Python
 
@@ -316,7 +315,7 @@ transform could alternatively be used.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 265-271
+.. GENERATED FROM PYTHON SOURCE LINES 264-270
 
 Group map
 ~~~~~~~~~
@@ -325,7 +324,7 @@ PettingZoo and VMAS environments use the TorchRL MARL grouping API.
 We can access the group map, mapping each group to the agents in it, as follows:
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 271-274
+.. GENERATED FROM PYTHON SOURCE LINES 270-273
 
 .. code-block:: Python
 
@@ -345,7 +344,7 @@ We can access the group map, mapping each group to the agents in it, as follows:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 275-294
+.. GENERATED FROM PYTHON SOURCE LINES 274-293
 
 as we can see it contains 2 groups: "agents" (evaders) and "adversaries" (chasers).
 
@@ -367,7 +366,7 @@ There are four specs to look at:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 294-300
+.. GENERATED FROM PYTHON SOURCE LINES 293-299
 
 .. code-block:: Python
 
@@ -451,7 +450,7 @@ There are four specs to look at:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 301-319
+.. GENERATED FROM PYTHON SOURCE LINES 300-318
 
 Using the commands just shown we can access the domain of each value.
 
@@ -472,7 +471,7 @@ we will immediately understand which are per-agent and which shared.
 This info will be useful in order to tell all other TorchRL components where to find each value
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 319-325
+.. GENERATED FROM PYTHON SOURCE LINES 318-324
 
 .. code-block:: Python
 
@@ -497,7 +496,7 @@ This info will be useful in order to tell all other TorchRL components where to 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 326-342
+.. GENERATED FROM PYTHON SOURCE LINES 325-341
 
 Transforms
 ~~~~~~~~~~
@@ -516,7 +515,7 @@ the device and meta-data of the wrapped environment, and transform these dependi
 of transforms it contains.
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 342-352
+.. GENERATED FROM PYTHON SOURCE LINES 341-351
 
 .. code-block:: Python
 
@@ -537,13 +536,13 @@ of transforms it contains.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 353-356
+.. GENERATED FROM PYTHON SOURCE LINES 352-355
 
 the :func:`check_env_specs` function runs a small rollout and compares its output against the environment
 specs. If no error is raised, we can be confident that the specs are properly defined:
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 356-358
+.. GENERATED FROM PYTHON SOURCE LINES 355-357
 
 .. code-block:: Python
 
@@ -556,7 +555,7 @@ specs. If no error is raised, we can be confident that the specs are properly de
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 359-367
+.. GENERATED FROM PYTHON SOURCE LINES 358-366
 
 Rollout
 ~~~~~~~
@@ -567,7 +566,7 @@ and outputs look like. Actions will automatically be drawn at random from the ac
 domain.
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 367-372
+.. GENERATED FROM PYTHON SOURCE LINES 366-371
 
 .. code-block:: Python
 
@@ -635,7 +634,7 @@ domain.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 373-430
+.. GENERATED FROM PYTHON SOURCE LINES 372-429
 
 We can see that our rollout has ``batch_size`` of ``(n_rollout_steps)``.
 This means that all the tensors in it will have this leading dimension.
@@ -695,7 +694,7 @@ We will define a different policy for each group and store them in a dictionary.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 430-464
+.. GENERATED FROM PYTHON SOURCE LINES 429-463
 
 .. code-block:: Python
 
@@ -740,7 +739,7 @@ We will define a different policy for each group and store them in a dictionary.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 465-477
+.. GENERATED FROM PYTHON SOURCE LINES 464-476
 
 **Second**: wrap the :class:`~tensodrdict.nn.TensorDictModule` in a :class:`~torchrl.modules.ProbabilisticActor`
 
@@ -755,7 +754,7 @@ the :class:`TensorDictModule` above) has to end with the
 :class:`~torchrl.modules.TanhDelta` distribution constructor keyword arguments (param).
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 477-494
+.. GENERATED FROM PYTHON SOURCE LINES 476-493
 
 .. code-block:: Python
 
@@ -783,7 +782,7 @@ the :class:`TensorDictModule` above) has to end with the
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 495-507
+.. GENERATED FROM PYTHON SOURCE LINES 494-506
 
 **Third**: Exploration
 
@@ -798,7 +797,7 @@ Sigma can be annealed throughout training to reduce exploration.
 Sigma will go from ``sigma_init`` to ``sigma_end`` in ``annealing_num_steps``.
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 507-522
+.. GENERATED FROM PYTHON SOURCE LINES 506-521
 
 .. code-block:: Python
 
@@ -824,7 +823,7 @@ Sigma will go from ``sigma_init`` to ``sigma_end`` in ``annealing_num_steps``.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 523-560
+.. GENERATED FROM PYTHON SOURCE LINES 522-559
 
 Critic network
 --------------
@@ -864,7 +863,7 @@ all the values along the ``n_agents_in_group`` dimension will be identical.
 As with the policy, we create a critic network for each group and store them in a dictionary.
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 560-598
+.. GENERATED FROM PYTHON SOURCE LINES 559-597
 
 .. code-block:: Python
 
@@ -913,7 +912,7 @@ As with the policy, we create a critic network for each group and store them in 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 599-610
+.. GENERATED FROM PYTHON SOURCE LINES 598-609
 
 Let us try our policy and critic modules. As pointed earlier, the usage of
 :class:`~tensordict.nn.TensorDictModule` makes it possible to directly read the output
@@ -927,7 +926,7 @@ group entry.
 components as in single-agent learning. Isn't this fantastic?**
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 610-617
+.. GENERATED FROM PYTHON SOURCE LINES 609-616
 
 .. code-block:: Python
 
@@ -1004,7 +1003,7 @@ components as in single-agent learning. Isn't this fantastic?**
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 618-633
+.. GENERATED FROM PYTHON SOURCE LINES 617-632
 
 Data collector
 --------------
@@ -1022,7 +1021,7 @@ We need to feed it our exploration policies. Furthermore, to run the policies fr
 we put them in a sequence. They will not interfere with each other as each group writes and reads keys in different places.
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 633-645
+.. GENERATED FROM PYTHON SOURCE LINES 632-644
 
 .. code-block:: Python
 
@@ -1045,7 +1044,7 @@ we put them in a sequence. They will not interfere with each other as each group
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 646-653
+.. GENERATED FROM PYTHON SOURCE LINES 645-652
 
 Replay buffer
 -------------
@@ -1055,7 +1054,7 @@ There are many types of buffers, in this tutorial we use a basic buffer to store
 data randomly.
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 653-665
+.. GENERATED FROM PYTHON SOURCE LINES 652-664
 
 .. code-block:: Python
 
@@ -1078,7 +1077,7 @@ data randomly.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 666-676
+.. GENERATED FROM PYTHON SOURCE LINES 665-675
 
 Loss function
 -------------
@@ -1091,7 +1090,7 @@ goes with it.
 It is also possible to have different policies for each group.
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 676-710
+.. GENERATED FROM PYTHON SOURCE LINES 675-709
 
 .. code-block:: Python
 
@@ -1136,7 +1135,7 @@ It is also possible to have different policies for each group.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 711-718
+.. GENERATED FROM PYTHON SOURCE LINES 710-717
 
 Training utils
 --------------
@@ -1146,7 +1145,7 @@ They are very simple and do not contain any important logic.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 718-746
+.. GENERATED FROM PYTHON SOURCE LINES 717-745
 
 .. code-block:: Python
 
@@ -1185,7 +1184,7 @@ They are very simple and do not contain any important logic.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 747-765
+.. GENERATED FROM PYTHON SOURCE LINES 746-764
 
 Training loop
 -------------
@@ -1206,7 +1205,7 @@ The steps include:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 765-843
+.. GENERATED FROM PYTHON SOURCE LINES 764-842
 
 .. code-block:: Python
 
@@ -1296,11 +1295,11 @@ The steps include:
 
  .. code-block:: none
 
-    episode_reward_mean_adversary = 0, episode_reward_mean_agent = 0:   0%|          | 0/10 [00:00<?, ?it/s]    episode_reward_mean_adversary = 1.0, episode_reward_mean_agent = -1.0:  10%|█         | 1/10 [00:03<00:30,  3.39s/it]    episode_reward_mean_adversary = 0.0, episode_reward_mean_agent = 0.0:  20%|██        | 2/10 [00:06<00:27,  3.48s/it]     episode_reward_mean_adversary = 1.0, episode_reward_mean_agent = -1.0:  30%|███       | 3/10 [00:10<00:24,  3.51s/it]    episode_reward_mean_adversary = 0.0, episode_reward_mean_agent = 0.0:  40%|████      | 4/10 [00:14<00:21,  3.52s/it]     episode_reward_mean_adversary = 2.0, episode_reward_mean_agent = -2.0:  50%|█████     | 5/10 [00:17<00:17,  3.52s/it]    episode_reward_mean_adversary = 0.0, episode_reward_mean_agent = 0.0:  60%|██████    | 6/10 [00:20<00:13,  3.43s/it]     episode_reward_mean_adversary = 2.0, episode_reward_mean_agent = -2.0:  70%|███████   | 7/10 [00:23<00:09,  3.19s/it]    episode_reward_mean_adversary = 0.0, episode_reward_mean_agent = 0.0:  80%|████████  | 8/10 [00:26<00:06,  3.04s/it]     episode_reward_mean_adversary = 0.0, episode_reward_mean_agent = 0.0:  90%|█████████ | 9/10 [00:28<00:02,  2.93s/it]    episode_reward_mean_adversary = 1.0, episode_reward_mean_agent = -1.0: 100%|██████████| 10/10 [00:31<00:00,  2.84s/it]
+    episode_reward_mean_adversary = 0, episode_reward_mean_agent = 0:   0%|          | 0/10 [00:00<?, ?it/s]    episode_reward_mean_adversary = 1.0, episode_reward_mean_agent = -1.0:  10%|█         | 1/10 [00:03<00:31,  3.47s/it]    episode_reward_mean_adversary = 0.0, episode_reward_mean_agent = 0.0:  20%|██        | 2/10 [00:07<00:28,  3.56s/it]     episode_reward_mean_adversary = 1.0, episode_reward_mean_agent = -1.0:  30%|███       | 3/10 [00:10<00:25,  3.59s/it]    episode_reward_mean_adversary = 0.0, episode_reward_mean_agent = 0.0:  40%|████      | 4/10 [00:14<00:21,  3.60s/it]     episode_reward_mean_adversary = 2.0, episode_reward_mean_agent = -2.0:  50%|█████     | 5/10 [00:17<00:18,  3.61s/it]    episode_reward_mean_adversary = 0.0, episode_reward_mean_agent = 0.0:  60%|██████    | 6/10 [00:21<00:14,  3.51s/it]     episode_reward_mean_adversary = 2.0, episode_reward_mean_agent = -2.0:  70%|███████   | 7/10 [00:24<00:09,  3.26s/it]    episode_reward_mean_adversary = 0.0, episode_reward_mean_agent = 0.0:  80%|████████  | 8/10 [00:26<00:06,  3.09s/it]     episode_reward_mean_adversary = 0.0, episode_reward_mean_agent = 0.0:  90%|█████████ | 9/10 [00:29<00:02,  2.99s/it]    episode_reward_mean_adversary = 1.0, episode_reward_mean_agent = -1.0: 100%|██████████| 10/10 [00:32<00:00,  2.89s/it]
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 844-854
+.. GENERATED FROM PYTHON SOURCE LINES 843-853
 
 Results
 -------
@@ -1313,7 +1312,7 @@ When running this script locally, you may need to close the opened window to
 proceed with the rest of the screen.
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 854-868
+.. GENERATED FROM PYTHON SOURCE LINES 853-867
 
 .. code-block:: Python
 
@@ -1343,7 +1342,7 @@ proceed with the rest of the screen.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 869-881
+.. GENERATED FROM PYTHON SOURCE LINES 868-880
 
 Render
 ------
@@ -1358,12 +1357,12 @@ wrapped environment and save the stack of frames to a `mp4` file which location 
 logger `video_logger`. Note that this code may require some external dependencies such as torchvision.
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 881-910
+.. GENERATED FROM PYTHON SOURCE LINES 880-909
 
 .. code-block:: Python
 
 
-    if use_vmas:
+    if use_vmas and not is_sphinx:
         # Replace tmpdir with any desired path where the video should be saved
         with tempfile.TemporaryDirectory() as tmpdir:
             video_logger = CSVLogger("vmas_logs", tmpdir, video_format="mp4")
@@ -1393,45 +1392,12 @@ logger `video_logger`. Note that this code may require some external dependencie
 
 
 
-.. rst-class:: sphx-glr-script-out
-
-.. code-block:: pytb
-
-    Traceback (most recent call last):
-      File "/pytorch/rl/docs/source/reference/generated/tutorials/multiagent_competitive_ddpg.py", line 903, in <module>
-        env_with_render.rollout(100, policy=agents_exploration_policy)
-      File "/pytorch/rl/torchrl/envs/common.py", line 2529, in rollout
-        policy, self.observation_spec, env=self, fast_wrap=True
-      File "/pytorch/rl/torchrl/envs/common.py", line 1306, in observation_spec
-        observation_spec = self.output_spec["full_observation_spec"]
-      File "/pytorch/rl/torchrl/envs/transforms/transforms.py", line 752, in output_spec
-        output_spec = self.transform.transform_output_spec(output_spec)
-      File "/pytorch/rl/torchrl/envs/transforms/transforms.py", line 1108, in transform_output_spec
-        output_spec = t.transform_output_spec(output_spec)
-      File "/pytorch/rl/torchrl/envs/transforms/transforms.py", line 380, in transform_output_spec
-        output_spec["full_observation_spec"] = self.transform_observation_spec(
-      File "/pytorch/rl/torchrl/record/recorder.py", line 493, in transform_observation_spec
-        self._call(td_in)
-      File "/pytorch/rl/torchrl/record/recorder.py", line 453, in _call
-        array = getattr(self.parent, self.render_method)(**self.kwargs)
-      File "/pytorch/rl/env/lib/python3.8/site-packages/vmas/simulator/environment/environment.py", line 586, in render
-        self._init_rendering()
-      File "/pytorch/rl/env/lib/python3.8/site-packages/vmas/simulator/environment/environment.py", line 689, in _init_rendering
-        self.viewer = rendering.Viewer(
-      File "/pytorch/rl/env/lib/python3.8/site-packages/vmas/simulator/rendering.py", line 99, in __init__
-        self.window = pyglet.window.Window(
-      File "/pytorch/rl/env/lib/python3.8/site-packages/pyglet/window/__init__.py", line 576, in __init__
-        screen = display.get_default_screen()
-      File "/pytorch/rl/env/lib/python3.8/site-packages/pyglet/canvas/base.py", line 108, in get_default_screen
-        return self.get_screens()[0]
-      File "/pytorch/rl/env/lib/python3.8/site-packages/pyglet/canvas/base.py", line 100, in get_screens
-        raise NotImplementedError('abstract')
-    NotImplementedError: abstract
 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 911-939
+
+.. GENERATED FROM PYTHON SOURCE LINES 910-938
 
 Conclusion and next steps
 -------------------------
@@ -1465,9 +1431,9 @@ Here are a few videos of some possible scenarios you can try in VMAS.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (1 minutes 31.910 seconds)
+   **Total running time of the script:** (1 minutes 39.202 seconds)
 
-**Estimated memory usage:**  2739 MB
+**Estimated memory usage:**  12 MB
 
 
 .. _sphx_glr_download_tutorials_multiagent_competitive_ddpg.py:

@@ -1887,7 +1887,7 @@
     <span class="p">)</span>
 
 
-<span class="k">class</span> <span class="nc">RandomPolicy</span><span class="p">:</span>
+<div class="viewcode-block" id="RandomPolicy"><a class="viewcode-back" href="../../../reference/generated/torchrl.envs.utils.RandomPolicy.html#torchrl.envs.RandomPolicy">[docs]</a><span class="k">class</span> <span class="nc">RandomPolicy</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;A random policy for data collectors.</span>
 
 <span class="sd">    This is a wrapper around the action_spec.rand method.</span>
@@ -1912,7 +1912,7 @@
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">action_spec</span><span class="p">,</span> <span class="n">CompositeSpec</span><span class="p">):</span>
             <span class="k">return</span> <span class="n">td</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">action_spec</span><span class="o">.</span><span class="n">rand</span><span class="p">())</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">td</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">action_key</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">action_spec</span><span class="o">.</span><span class="n">rand</span><span class="p">())</span>
+            <span class="k">return</span> <span class="n">td</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">action_key</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">action_spec</span><span class="o">.</span><span class="n">rand</span><span class="p">())</span></div>
 
 
 <span class="k">class</span> <span class="nc">_PolicyMetaClass</span><span class="p">(</span><span class="n">abc</span><span class="o">.</span><span class="n">ABCMeta</span><span class="p">):</span>

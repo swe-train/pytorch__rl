@@ -640,7 +640,7 @@ Here are examples of using a replaybuffer with tensordicts.
  .. code-block:: none
 
 
-    tensor([1, 1])
+    tensor([0, 0])
 
 
 
@@ -670,8 +670,8 @@ Here are examples of using a replaybuffer with tensordicts.
 
  .. code-block:: none
 
-    0 1.0
-    1 0.28791671991348267
+    0 0.28791671991348267
+    1 1.0
     2 0.0
 
 
@@ -1851,13 +1851,14 @@ Collectors
 EnvCreator makes sure that we can send a lambda function from process to process
 We use a SerialEnv for simplicity, but for larger jobs a ParallelEnv would be better suited.
 
-.. GENERATED FROM PYTHON SOURCE LINES 742-751
+.. GENERATED FROM PYTHON SOURCE LINES 742-752
 
 .. code-block:: Python
 
 
     parallel_env = SerialEnv(
-        3, EnvCreator(lambda: GymEnv("Pendulum-v1")), mp_start_method="fork"
+        3,
+        EnvCreator(lambda: GymEnv("Pendulum-v1")),
     )
     create_env_fn = [parallel_env, parallel_env]
 
@@ -1866,27 +1867,16 @@ We use a SerialEnv for simplicity, but for larger jobs a ParallelEnv would be be
 
 
 
-.. rst-class:: sphx-glr-script-out
-
-.. code-block:: pytb
-
-    Traceback (most recent call last):
-      File "/pytorch/rl/docs/source/reference/generated/tutorials/torchrl_demo.py", line 743, in <module>
-        parallel_env = SerialEnv(
-      File "/pytorch/rl/torchrl/envs/common.py", line 175, in __call__
-        instance: EnvBase = super().__call__(*args, **kwargs)
-      File "/pytorch/rl/torchrl/envs/batched_envs.py", line 347, in __init__
-        raise TypeError(
-    TypeError: Cannot use mp_start_method=fork with envs of type <class 'torchrl.envs.batched_envs.SerialEnv'>.
 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 752-753
+
+.. GENERATED FROM PYTHON SOURCE LINES 753-754
 
 Sync data collector
 
-.. GENERATED FROM PYTHON SOURCE LINES 753-765
+.. GENERATED FROM PYTHON SOURCE LINES 754-766
 
 .. code-block:: Python
 
@@ -1903,7 +1893,13 @@ Sync data collector
     )
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 766-775
+
+
+
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 767-776
 
 .. code-block:: Python
 
@@ -1917,7 +1913,45 @@ Sync data collector
     del collector
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 776-797
+
+
+
+.. rst-class:: sphx-glr-script-out
+
+ .. code-block:: none
+
+    TensorDict(
+        fields={
+            action: Tensor(shape=torch.Size([6, 10, 1]), device=cpu, dtype=torch.float32, is_shared=False),
+            collector: TensorDict(
+                fields={
+                    traj_ids: Tensor(shape=torch.Size([6, 10]), device=cpu, dtype=torch.int64, is_shared=False)},
+                batch_size=torch.Size([6, 10]),
+                device=cpu,
+                is_shared=False),
+            done: Tensor(shape=torch.Size([6, 10, 1]), device=cpu, dtype=torch.bool, is_shared=False),
+            next: TensorDict(
+                fields={
+                    done: Tensor(shape=torch.Size([6, 10, 1]), device=cpu, dtype=torch.bool, is_shared=False),
+                    observation: Tensor(shape=torch.Size([6, 10, 3]), device=cpu, dtype=torch.float32, is_shared=False),
+                    reward: Tensor(shape=torch.Size([6, 10, 1]), device=cpu, dtype=torch.float32, is_shared=False),
+                    terminated: Tensor(shape=torch.Size([6, 10, 1]), device=cpu, dtype=torch.bool, is_shared=False),
+                    truncated: Tensor(shape=torch.Size([6, 10, 1]), device=cpu, dtype=torch.bool, is_shared=False)},
+                batch_size=torch.Size([6, 10]),
+                device=cpu,
+                is_shared=False),
+            observation: Tensor(shape=torch.Size([6, 10, 3]), device=cpu, dtype=torch.float32, is_shared=False),
+            terminated: Tensor(shape=torch.Size([6, 10, 1]), device=cpu, dtype=torch.bool, is_shared=False),
+            truncated: Tensor(shape=torch.Size([6, 10, 1]), device=cpu, dtype=torch.bool, is_shared=False)},
+        batch_size=torch.Size([6, 10]),
+        device=cpu,
+        is_shared=False)
+    3
+
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 777-798
 
 .. code-block:: Python
 
@@ -1943,12 +1977,50 @@ Sync data collector
     del parallel_env
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 798-800
+
+
+
+.. rst-class:: sphx-glr-script-out
+
+ .. code-block:: none
+
+    TensorDict(
+        fields={
+            action: Tensor(shape=torch.Size([3, 20, 1]), device=cpu, dtype=torch.float32, is_shared=False),
+            collector: TensorDict(
+                fields={
+                    traj_ids: Tensor(shape=torch.Size([3, 20]), device=cpu, dtype=torch.int64, is_shared=False)},
+                batch_size=torch.Size([3, 20]),
+                device=cpu,
+                is_shared=False),
+            done: Tensor(shape=torch.Size([3, 20, 1]), device=cpu, dtype=torch.bool, is_shared=False),
+            next: TensorDict(
+                fields={
+                    done: Tensor(shape=torch.Size([3, 20, 1]), device=cpu, dtype=torch.bool, is_shared=False),
+                    observation: Tensor(shape=torch.Size([3, 20, 3]), device=cpu, dtype=torch.float32, is_shared=False),
+                    reward: Tensor(shape=torch.Size([3, 20, 1]), device=cpu, dtype=torch.float32, is_shared=False),
+                    terminated: Tensor(shape=torch.Size([3, 20, 1]), device=cpu, dtype=torch.bool, is_shared=False),
+                    truncated: Tensor(shape=torch.Size([3, 20, 1]), device=cpu, dtype=torch.bool, is_shared=False)},
+                batch_size=torch.Size([3, 20]),
+                device=cpu,
+                is_shared=False),
+            observation: Tensor(shape=torch.Size([3, 20, 3]), device=cpu, dtype=torch.float32, is_shared=False),
+            terminated: Tensor(shape=torch.Size([3, 20, 1]), device=cpu, dtype=torch.bool, is_shared=False),
+            truncated: Tensor(shape=torch.Size([3, 20, 1]), device=cpu, dtype=torch.bool, is_shared=False)},
+        batch_size=torch.Size([3, 20]),
+        device=cpu,
+        is_shared=False)
+    3
+
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 799-801
 
 Objectives
 ^^^^^^^^^^
 
-.. GENERATED FROM PYTHON SOURCE LINES 800-822
+.. GENERATED FROM PYTHON SOURCE LINES 801-823
 
 .. code-block:: Python
 
@@ -1975,7 +2047,13 @@ Objectives
     loss_fn.make_value_estimator(loss_fn.default_value_estimator, gamma=0.99)
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 823-839
+
+
+
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 824-840
 
 .. code-block:: Python
 
@@ -1996,7 +2074,13 @@ Objectives
     loss_td = loss_fn(tensordict)
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 840-843
+
+
+
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 841-844
 
 .. code-block:: Python
 
@@ -2004,7 +2088,30 @@ Objectives
     print(loss_td)
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 844-847
+
+
+
+.. rst-class:: sphx-glr-script-out
+
+ .. code-block:: none
+
+    TensorDict(
+        fields={
+            loss_actor: Tensor(shape=torch.Size([]), device=cpu, dtype=torch.float32, is_shared=False),
+            loss_value: Tensor(shape=torch.Size([]), device=cpu, dtype=torch.float32, is_shared=False),
+            pred_value: Tensor(shape=torch.Size([10]), device=cpu, dtype=torch.float32, is_shared=False),
+            pred_value_max: Tensor(shape=torch.Size([]), device=cpu, dtype=torch.float32, is_shared=False),
+            target_value: Tensor(shape=torch.Size([10]), device=cpu, dtype=torch.float32, is_shared=False),
+            target_value_max: Tensor(shape=torch.Size([]), device=cpu, dtype=torch.float32, is_shared=False),
+            td_error: Tensor(shape=torch.Size([10]), device=cpu, dtype=torch.float32, is_shared=False)},
+        batch_size=torch.Size([]),
+        device=None,
+        is_shared=False)
+
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 845-848
 
 .. code-block:: Python
 
@@ -2012,7 +2119,34 @@ Objectives
     print(tensordict)
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 848-867
+
+
+
+.. rst-class:: sphx-glr-script-out
+
+ .. code-block:: none
+
+    TensorDict(
+        fields={
+            action: Tensor(shape=torch.Size([10, 1]), device=cpu, dtype=torch.float32, is_shared=False),
+            next: TensorDict(
+                fields={
+                    done: Tensor(shape=torch.Size([10, 1]), device=cpu, dtype=torch.bool, is_shared=False),
+                    observation: Tensor(shape=torch.Size([10, 3]), device=cpu, dtype=torch.float32, is_shared=False),
+                    reward: Tensor(shape=torch.Size([10, 1]), device=cpu, dtype=torch.float32, is_shared=False)},
+                batch_size=torch.Size([10]),
+                device=cpu,
+                is_shared=False),
+            observation: Tensor(shape=torch.Size([10, 3]), device=cpu, dtype=torch.float32, is_shared=False),
+            td_error: Tensor(shape=torch.Size([10]), device=cpu, dtype=torch.float32, is_shared=False)},
+        batch_size=torch.Size([10]),
+        device=cpu,
+        is_shared=False)
+
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 849-868
 
 State of the Library
 ^^^^^^^^^^^^^^^^^^^^
@@ -2034,7 +2168,7 @@ RL (or just curious), try it! Give us feedback: what will make the success of
 TorchRL is how well it covers researchers needs. To do that, we need their input!
 Since the library is nascent, it is a great time for you to shape it the way you want!
 
-.. GENERATED FROM PYTHON SOURCE LINES 869-873
+.. GENERATED FROM PYTHON SOURCE LINES 870-874
 
 Installing the Library
 ^^^^^^^^^^^^^^^^^^^^^^
@@ -2044,9 +2178,9 @@ The library is on PyPI: *pip install torchrl*
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (3 minutes 13.697 seconds)
+   **Total running time of the script:** (3 minutes 53.713 seconds)
 
-**Estimated memory usage:**  2742 MB
+**Estimated memory usage:**  16 MB
 
 
 .. _sphx_glr_download_tutorials_torchrl_demo.py:
