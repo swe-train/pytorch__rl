@@ -419,8 +419,8 @@ We can also customize the storage location on disk:
  .. code-block:: none
 
     The buffer has 3 elements
-    the 'a' tensor is stored in <TemporaryDirectory '/tmp/tmp4m5b8wdg'>/a.memmap
-    the ('b', 'c') tensor is stored in <TemporaryDirectory '/tmp/tmp4m5b8wdg'>/b/c.memmap
+    the 'a' tensor is stored in <TemporaryDirectory '/tmp/tmppaemcl14'>/a.memmap
+    the ('b', 'c') tensor is stored in <TemporaryDirectory '/tmp/tmppaemcl14'>/b/c.memmap
 
 
 
@@ -1204,7 +1204,7 @@ higher indices should occur more frequently:
  .. code-block:: none
 
 
-    (array([ 33.,  31.,  97.,  63.,  60., 141.,  90., 181., 105., 223.]), array([ 1. ,  2.4,  3.8,  5.2,  6.6,  8. ,  9.4, 10.8, 12.2, 13.6, 15. ]), <BarContainer object of 10 artists>)
+    (array([ 34.,  22.,  68.,  51.,  77., 155.,  68., 210., 103., 236.]), array([ 1. ,  2.4,  3.8,  5.2,  6.6,  8. ,  9.4, 10.8, 12.2, 13.6, 15. ]), <BarContainer object of 10 artists>)
 
 
 
@@ -1260,7 +1260,7 @@ Now, higher indices should occur less frequently:
  .. code-block:: none
 
 
-    (array([205., 118., 188., 104.,  87., 116.,  55.,  94.,  29.,  28.]), array([ 1. ,  2.4,  3.8,  5.2,  6.6,  8. ,  9.4, 10.8, 12.2, 13.6, 15. ]), <BarContainer object of 10 artists>)
+    (array([228., 101., 188.,  92.,  81., 128.,  52.,  91.,  35.,  28.]), array([ 1. ,  2.4,  3.8,  5.2,  6.6,  8. ,  9.4, 10.8, 12.2, 13.6, 15. ]), <BarContainer object of 10 artists>)
 
 
 
@@ -1848,9 +1848,9 @@ Next steps
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (2 minutes 54.903 seconds)
+   **Total running time of the script:** (2 minutes 52.047 seconds)
 
-**Estimated memory usage:**  158 MB
+**Estimated memory usage:**  170 MB
 
 
 .. _sphx_glr_download_tutorials_rb_tutorial.py:

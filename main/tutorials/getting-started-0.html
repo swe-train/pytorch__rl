@@ -454,8 +454,8 @@ backend API allows. Here’s an example using gym:</p>
 an episode, and <a class="reference internal" href="../reference/generated/torchrl.envs.EnvBase.html#id4" title="torchrl.envs.EnvBase.step"><code class="xref py py-meth docutils literal notranslate"><span class="pre">step()</span></code></a>, which executes an
 action selected by the actor.
 In TorchRL, environment methods read and write
-<a class="reference external" href="https://pytorch.org/tensordict/reference/generated/tensordict.TensorDict.html#tensordict.TensorDict" title="(in tensordict vmain (0.4.0 ))"><code class="xref py py-class docutils literal notranslate"><span class="pre">TensorDict</span></code></a> instances.
-Essentially, <a class="reference external" href="https://pytorch.org/tensordict/reference/generated/tensordict.TensorDict.html#tensordict.TensorDict" title="(in tensordict vmain (0.4.0 ))"><code class="xref py py-class docutils literal notranslate"><span class="pre">TensorDict</span></code></a> is a generic key-based data
+<code class="xref py py-class docutils literal notranslate"><span class="pre">TensorDict</span></code> instances.
+Essentially, <code class="xref py py-class docutils literal notranslate"><span class="pre">TensorDict</span></code> is a generic key-based data
 carrier for tensors.
 The benefit of using TensorDict over plain tensors is that it enables us to
 handle simple and complex data structures interchangeably. As our function
@@ -465,8 +465,8 @@ you will be capable of operating on both simple and highly complex
 environments, as their user-facing API is identical and simple!</p>
 <p>Let’s put the environment into action and see what a tensordict instance
 looks like:</p>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><a href="https://pytorch.org/tensordict/reference/generated/tensordict.TensorDict.html#tensordict.TensorDict" title="tensordict.TensorDict" class="sphx-glr-backref-module-tensordict sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">reset</span></a> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><a href="https://pytorch.org/tensordict/reference/generated/tensordict.TensorDict.html#tensordict.TensorDict" title="tensordict.TensorDict" class="sphx-glr-backref-module-tensordict sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">reset</span></a><span class="p">()</span>
-<span class="nb">print</span><span class="p">(</span><a href="https://pytorch.org/tensordict/reference/generated/tensordict.TensorDict.html#tensordict.TensorDict" title="tensordict.TensorDict" class="sphx-glr-backref-module-tensordict sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">reset</span></a><span class="p">)</span>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">reset</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">reset</span><span class="p">)</span>
 </pre></div>
 </div>
 <div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>TensorDict(
@@ -481,8 +481,8 @@ looks like:</p>
 </pre></div>
 </div>
 <p>Now let’s take a random action in the action space. First, sample the action:</p>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><a href="https://pytorch.org/tensordict/reference/generated/tensordict.TensorDict.html#tensordict.TensorDict" title="tensordict.TensorDict" class="sphx-glr-backref-module-tensordict sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">reset_with_action</span></a> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">rand_action</span><span class="p">(</span><a href="https://pytorch.org/tensordict/reference/generated/tensordict.TensorDict.html#tensordict.TensorDict" title="tensordict.TensorDict" class="sphx-glr-backref-module-tensordict sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">reset</span></a><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><a href="https://pytorch.org/tensordict/reference/generated/tensordict.TensorDict.html#tensordict.TensorDict" title="tensordict.TensorDict" class="sphx-glr-backref-module-tensordict sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">reset_with_action</span></a><span class="p">)</span>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">reset_with_action</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">rand_action</span><span class="p">(</span><span class="n">reset</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">reset_with_action</span><span class="p">)</span>
 </pre></div>
 </div>
 <div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>TensorDict(
@@ -501,18 +501,18 @@ looks like:</p>
 <a class="reference internal" href="../reference/generated/torchrl.envs.EnvBase.html#torchrl.envs.EnvBase" title="torchrl.envs.EnvBase"><code class="xref py py-meth docutils literal notranslate"><span class="pre">EnvBase()</span></code></a> with an additional <code class="docutils literal notranslate"><span class="pre">&quot;action&quot;</span></code> entry.
 You can access the action easily, like you would do with a regular
 dictionary:</p>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><a href="https://pytorch.org/tensordict/reference/generated/tensordict.TensorDict.html#tensordict.TensorDict" title="tensordict.TensorDict" class="sphx-glr-backref-module-tensordict sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">reset_with_action</span></a><span class="p">[</span><span class="s2">&quot;action&quot;</span><span class="p">])</span>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">reset_with_action</span><span class="p">[</span><span class="s2">&quot;action&quot;</span><span class="p">])</span>
 </pre></div>
 </div>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>tensor([-0.8956])
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>tensor([-0.7525])
 </pre></div>
 </div>
 <p>We now need to pass this action tp the environment.
 We’ll be passing the entire tensordict to the <code class="docutils literal notranslate"><span class="pre">step</span></code> method, since there
 might be more than one tensor to be read in more advanced cases like
 Multi-Agent RL or stateless environments:</p>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><a href="https://pytorch.org/tensordict/reference/generated/tensordict.TensorDict.html#tensordict.TensorDict" title="tensordict.TensorDict" class="sphx-glr-backref-module-tensordict sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">stepped_data</span></a> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><a href="https://pytorch.org/tensordict/reference/generated/tensordict.TensorDict.html#tensordict.TensorDict" title="tensordict.TensorDict" class="sphx-glr-backref-module-tensordict sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">reset_with_action</span></a><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><a href="https://pytorch.org/tensordict/reference/generated/tensordict.TensorDict.html#tensordict.TensorDict" title="tensordict.TensorDict" class="sphx-glr-backref-module-tensordict sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">stepped_data</span></a><span class="p">)</span>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">stepped_data</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="n">reset_with_action</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">stepped_data</span><span class="p">)</span>
 </pre></div>
 </div>
 <div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>TensorDict(
@@ -553,8 +553,8 @@ delivers a data structure corresponding to your observation after a step in
 the Markov Decision Process, or MDP.</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">torchrl.envs</span> <span class="kn">import</span> <span class="n">step_mdp</span>
 
-<a href="https://pytorch.org/tensordict/reference/generated/tensordict.TensorDict.html#tensordict.TensorDict" title="tensordict.TensorDict" class="sphx-glr-backref-module-tensordict sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">data</span></a> <span class="o">=</span> <span class="n">step_mdp</span><span class="p">(</span><a href="https://pytorch.org/tensordict/reference/generated/tensordict.TensorDict.html#tensordict.TensorDict" title="tensordict.TensorDict" class="sphx-glr-backref-module-tensordict sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">stepped_data</span></a><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><a href="https://pytorch.org/tensordict/reference/generated/tensordict.TensorDict.html#tensordict.TensorDict" title="tensordict.TensorDict" class="sphx-glr-backref-module-tensordict sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">data</span></a><span class="p">)</span>
+<span class="n">data</span> <span class="o">=</span> <span class="n">step_mdp</span><span class="p">(</span><span class="n">stepped_data</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
 </pre></div>
 </div>
 <div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>TensorDict(
@@ -575,8 +575,8 @@ the Markov Decision Process, or MDP.</p>
 moving in the MDP) can be a bit tedious and repetitive. Fortunately,
 TorchRL provides a nice <a class="reference internal" href="../reference/generated/torchrl.envs.EnvBase.html#id2" title="torchrl.envs.EnvBase.rollout"><code class="xref py py-meth docutils literal notranslate"><span class="pre">rollout()</span></code></a> function that
 allows you to run them in a closed loop at will:</p>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><a href="https://pytorch.org/tensordict/reference/generated/tensordict.TensorDict.html#tensordict.TensorDict" title="tensordict.TensorDict" class="sphx-glr-backref-module-tensordict sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">rollout</span></a> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><a href="https://pytorch.org/tensordict/reference/generated/tensordict.TensorDict.html#tensordict.TensorDict" title="tensordict.TensorDict" class="sphx-glr-backref-module-tensordict sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">rollout</span></a><span class="p">(</span><span class="n">max_steps</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><a href="https://pytorch.org/tensordict/reference/generated/tensordict.TensorDict.html#tensordict.TensorDict" title="tensordict.TensorDict" class="sphx-glr-backref-module-tensordict sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">rollout</span></a><span class="p">)</span>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">rollout</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">rollout</span><span class="p">(</span><span class="n">max_steps</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">rollout</span><span class="p">)</span>
 </pre></div>
 </div>
 <div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>TensorDict(
@@ -606,8 +606,8 @@ exception of its batch-size, which now equates the number of steps we
 provided through the <code class="docutils literal notranslate"><span class="pre">max_steps</span></code> argument. The magic of tensordict
 doesn’t end there: if you’re interested in a single transition of this
 environment, you can index the tensordict like you would index a tensor:</p>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><a href="https://pytorch.org/tensordict/reference/generated/tensordict.TensorDict.html#tensordict.TensorDict" title="tensordict.TensorDict" class="sphx-glr-backref-module-tensordict sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">transition</span></a> <span class="o">=</span> <a href="https://pytorch.org/tensordict/reference/generated/tensordict.TensorDict.html#tensordict.TensorDict" title="tensordict.TensorDict" class="sphx-glr-backref-module-tensordict sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">rollout</span></a><span class="p">[</span><span class="mi">3</span><span class="p">]</span>
-<span class="nb">print</span><span class="p">(</span><a href="https://pytorch.org/tensordict/reference/generated/tensordict.TensorDict.html#tensordict.TensorDict" title="tensordict.TensorDict" class="sphx-glr-backref-module-tensordict sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">transition</span></a><span class="p">)</span>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">transition</span> <span class="o">=</span> <span class="n">rollout</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">transition</span><span class="p">)</span>
 </pre></div>
 </div>
 <div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>TensorDict(
@@ -632,7 +632,7 @@ environment, you can index the tensordict like you would index a tensor:</p>
     is_shared=False)
 </pre></div>
 </div>
-<p><a class="reference external" href="https://pytorch.org/tensordict/reference/generated/tensordict.TensorDict.html#tensordict.TensorDict" title="(in tensordict vmain (0.4.0 ))"><code class="xref py py-class docutils literal notranslate"><span class="pre">TensorDict</span></code></a> will automatically check if the index you
+<p><code class="xref py py-class docutils literal notranslate"><span class="pre">TensorDict</span></code> will automatically check if the index you
 provided is a key (in which case we index along the key-dimension) or a
 spatial index like here.</p>
 <p>Executed as such (without a policy), the <code class="docutils literal notranslate"><span class="pre">rollout</span></code> method may seem rather
@@ -661,8 +661,8 @@ The complete list of transforms can be found
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">torchrl.envs</span> <span class="kn">import</span> <a href="https://pytorch.org/docs/stable/generated/torch.nn.Module.html#torch.nn.Module" title="torch.nn.Module" class="sphx-glr-backref-module-torch-nn sphx-glr-backref-type-py-class"><span class="n">StepCounter</span></a><span class="p">,</span> <a href="https://pytorch.org/docs/stable/generated/torch.nn.Module.html#torch.nn.Module" title="torch.nn.Module" class="sphx-glr-backref-module-torch-nn sphx-glr-backref-type-py-class"><span class="n">TransformedEnv</span></a>
 
 <span class="n">transformed_env</span> <span class="o">=</span> <a href="https://pytorch.org/docs/stable/generated/torch.nn.Module.html#torch.nn.Module" title="torch.nn.Module" class="sphx-glr-backref-module-torch-nn sphx-glr-backref-type-py-class"><span class="n">TransformedEnv</span></a><span class="p">(</span><span class="n">env</span><span class="p">,</span> <a href="https://pytorch.org/docs/stable/generated/torch.nn.Module.html#torch.nn.Module" title="torch.nn.Module" class="sphx-glr-backref-module-torch-nn sphx-glr-backref-type-py-class"><span class="n">StepCounter</span></a><span class="p">(</span><span class="n">max_steps</span><span class="o">=</span><span class="mi">10</span><span class="p">))</span>
-<a href="https://pytorch.org/tensordict/reference/generated/tensordict.TensorDict.html#tensordict.TensorDict" title="tensordict.TensorDict" class="sphx-glr-backref-module-tensordict sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">rollout</span></a> <span class="o">=</span> <span class="n">transformed_env</span><span class="o">.</span><a href="https://pytorch.org/tensordict/reference/generated/tensordict.TensorDict.html#tensordict.TensorDict" title="tensordict.TensorDict" class="sphx-glr-backref-module-tensordict sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">rollout</span></a><span class="p">(</span><span class="n">max_steps</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><a href="https://pytorch.org/tensordict/reference/generated/tensordict.TensorDict.html#tensordict.TensorDict" title="tensordict.TensorDict" class="sphx-glr-backref-module-tensordict sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">rollout</span></a><span class="p">)</span>
+<span class="n">rollout</span> <span class="o">=</span> <span class="n">transformed_env</span><span class="o">.</span><span class="n">rollout</span><span class="p">(</span><span class="n">max_steps</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">rollout</span><span class="p">)</span>
 </pre></div>
 </div>
 <div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>TensorDict(
@@ -696,7 +696,7 @@ argument <code class="docutils literal notranslate"><span class="pre">max_steps=
 trajectory after 10 steps (not completing a full rollout of 100 steps like
 we asked with the <code class="docutils literal notranslate"><span class="pre">rollout</span></code> call). We can see that the trajectory was
 truncated by looking at the truncated entry:</p>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><a href="https://pytorch.org/tensordict/reference/generated/tensordict.TensorDict.html#tensordict.TensorDict" title="tensordict.TensorDict" class="sphx-glr-backref-module-tensordict sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">rollout</span></a><span class="p">[</span><span class="s2">&quot;next&quot;</span><span class="p">,</span> <span class="s2">&quot;truncated&quot;</span><span class="p">])</span>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">rollout</span><span class="p">[</span><span class="s2">&quot;next&quot;</span><span class="p">,</span> <span class="s2">&quot;truncated&quot;</span><span class="p">])</span>
 </pre></div>
 </div>
 <div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>tensor([[False],
@@ -743,7 +743,7 @@ the info dictionaries through
 to control the gym backend thanks to
 <a class="reference internal" href="../reference/generated/torchrl.envs.set_gym_backend.html#torchrl.envs.set_gym_backend" title="torchrl.envs.set_gym_backend"><code class="xref py py-func docutils literal notranslate"><span class="pre">set_gym_backend()</span></code></a>.</p></li>
 </ul>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 43.071 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 43.241 seconds)</p>
 <p><strong>Estimated memory usage:</strong>  9 MB</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-tutorials-getting-started-0-py">
 <div class="sphx-glr-download sphx-glr-download-jupyter docutils container">
