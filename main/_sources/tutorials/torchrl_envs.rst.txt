@@ -216,7 +216,7 @@ uniformly distributed) numbers in that space:
  .. code-block:: none
 
     random action: 
-     tensor([1.0797])
+     tensor([-0.4942])
 
 
 
@@ -709,7 +709,7 @@ argument that allows the user to quickly ask for image-based environments:
  .. code-block:: none
 
 
-    <matplotlib.image.AxesImage object at 0x7ef9e80cd5b0>
+    <matplotlib.image.AxesImage object at 0x7f73f9399340>
 
 
 
@@ -1508,7 +1508,7 @@ to access this attribute. Here's an example:
  .. code-block:: none
 
 
-    'bar_5dab6bc8-0301-11ef-ad11-0242ac110002'
+    'bar_2704a254-0308-11ef-97ad-0242ac110002'
 
 
 
@@ -1558,7 +1558,7 @@ to access this attribute. Here's an example:
  .. code-block:: none
 
 
-    <torchrl.envs.batched_envs._dispatch_caller_parallel object at 0x7f07c1a7a820>
+    <torchrl.envs.batched_envs._dispatch_caller_parallel object at 0x7f74aa9faaf0>
 
 
 
@@ -1578,7 +1578,7 @@ to access this attribute. Here's an example:
  .. code-block:: none
 
 
-    ['bar_6301c126-0301-11ef-b2b2-0242ac110002', 'bar_62ff9842-0301-11ef-bf75-0242ac110002', 'bar_62f9fc3e-0301-11ef-96fd-0242ac110002']
+    ['bar_2c975d06-0308-11ef-bd75-0242ac110002', 'bar_2c979000-0308-11ef-879b-0242ac110002', 'bar_2c98f85a-0308-11ef-a78d-0242ac110002']
 
 
 
@@ -1795,8 +1795,8 @@ In regular setting, using VecNorm is quite easy:
 
  .. code-block:: none
 
-    mean: : tensor([0.9040, 0.3227, 0.0637])
-    std: : tensor([1.4763, 1.5155, 1.4685])
+    mean: : tensor([0.5438, 0.3332, 0.1084])
+    std: : tensor([1.5247, 1.3395, 1.3559])
 
 
 
@@ -1859,8 +1859,8 @@ once created:
         batch_size=torch.Size([3, 5]),
         device=cpu,
         is_shared=False)
-    mean: : tensor([-0.1447, -0.0286,  0.0736])
-    std: : tensor([1.1013, 1.2097, 1.3142])
+    mean: : tensor([-0.2067, -0.0298,  0.0749])
+    std: : tensor([1.2097, 1.0694, 1.1862])
 
 
 
@@ -1901,9 +1901,9 @@ This small difference will usually be absored throughout training.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (3 minutes 23.399 seconds)
+   **Total running time of the script:** (3 minutes 33.141 seconds)
 
-**Estimated memory usage:**  63 MB
+**Estimated memory usage:**  30 MB
 
 
 .. _sphx_glr_download_tutorials_torchrl_envs.py:
