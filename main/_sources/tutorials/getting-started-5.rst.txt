@@ -33,7 +33,7 @@ Get started with your own first training loop
         !pip install tensordict
         !pip install torchrl
 
-.. GENERATED FROM PYTHON SOURCE LINES 21-39
+.. GENERATED FROM PYTHON SOURCE LINES 20-38
 
 Time to wrap up everything we've learned so far in this Getting Started
 series!
@@ -54,7 +54,7 @@ transform. If you need a refresher, check our these features are presented in
 :ref:`the environment tutorial <gs_env_ted>`.
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 39-53
+.. GENERATED FROM PYTHON SOURCE LINES 38-52
 
 .. code-block:: Python
 
@@ -79,7 +79,7 @@ transform. If you need a refresher, check our these features are presented in
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 54-64
+.. GENERATED FROM PYTHON SOURCE LINES 53-63
 
 Designing a policy
 ------------------
@@ -92,7 +92,7 @@ version of the actor to be used within the
 Next, we will augment it with an exploration module
 for :ref:`inference <gs_storage>`.
 
-.. GENERATED FROM PYTHON SOURCE LINES 64-76
+.. GENERATED FROM PYTHON SOURCE LINES 63-75
 
 .. code-block:: Python
 
@@ -115,7 +115,7 @@ for :ref:`inference <gs_storage>`.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 77-84
+.. GENERATED FROM PYTHON SOURCE LINES 76-83
 
 Data Collector and replay buffer
 --------------------------------
@@ -125,7 +125,7 @@ Here comes the data part: we need a
 and a :ref:`replay buffer <gs_storage_rb>` to store that data for training.
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 84-102
+.. GENERATED FROM PYTHON SOURCE LINES 83-101
 
 .. code-block:: Python
 
@@ -154,7 +154,7 @@ and a :ref:`replay buffer <gs_storage_rb>` to store that data for training.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 103-108
+.. GENERATED FROM PYTHON SOURCE LINES 102-107
 
 Loss module and optimizer
 -------------------------
@@ -162,7 +162,7 @@ Loss module and optimizer
 We build our loss as indicated in the :ref:`dedicated tutorial <gs_optim>`, with
 its optimizer and target parameter updater:
 
-.. GENERATED FROM PYTHON SOURCE LINES 108-115
+.. GENERATED FROM PYTHON SOURCE LINES 107-114
 
 .. code-block:: Python
 
@@ -180,7 +180,7 @@ its optimizer and target parameter updater:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 116-121
+.. GENERATED FROM PYTHON SOURCE LINES 115-120
 
 Logger
 ------
@@ -188,7 +188,7 @@ Logger
 We'll be using a CSV logger to log our results, and save rendered videos.
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 121-132
+.. GENERATED FROM PYTHON SOURCE LINES 120-131
 
 .. code-block:: Python
 
@@ -210,7 +210,7 @@ We'll be using a CSV logger to log our results, and save rendered videos.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 133-141
+.. GENERATED FROM PYTHON SOURCE LINES 132-140
 
 Training loop
 -------------
@@ -221,7 +221,7 @@ defined as 200 steps in the environment -- with CartPole, success is defined
 as having longer trajectories).
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 141-175
+.. GENERATED FROM PYTHON SOURCE LINES 140-174
 
 .. code-block:: Python
 
@@ -266,7 +266,7 @@ as having longer trajectories).
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 176-181
+.. GENERATED FROM PYTHON SOURCE LINES 175-180
 
 Rendering
 ---------
@@ -274,7 +274,7 @@ Rendering
 Finally, we run the environment for as many steps as we can and save the
 video locally (notice that we are not exploring).
 
-.. GENERATED FROM PYTHON SOURCE LINES 181-185
+.. GENERATED FROM PYTHON SOURCE LINES 180-184
 
 .. code-block:: Python
 
@@ -289,7 +289,7 @@ video locally (notice that we are not exploring).
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 186-194
+.. GENERATED FROM PYTHON SOURCE LINES 185-193
 
 This is what your rendered CartPole video will look like after a full
 training loop:
@@ -303,9 +303,9 @@ Feel free to share feedback about it on GitHub.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 21.670 seconds)
+   **Total running time of the script:** (0 minutes 20.743 seconds)
 
-**Estimated memory usage:**  14 MB
+**Estimated memory usage:**  134 MB
 
 
 .. _sphx_glr_download_tutorials_getting-started-5.py:

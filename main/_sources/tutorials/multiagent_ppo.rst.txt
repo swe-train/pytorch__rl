@@ -52,7 +52,7 @@ Key learnings:
 - How we can use :class:`tensordict.TensorDict` to carry multi-agent data;
 - How we can tie all the library components (collectors, modules, replay buffers, and losses) in a multi-agent MAPPO/IPPO training loop.
 
-.. GENERATED FROM PYTHON SOURCE LINES 40-110
+.. GENERATED FROM PYTHON SOURCE LINES 39-109
 
 If you are running this in Google Colab, make sure you install the following dependencies:
 
@@ -125,7 +125,7 @@ to render and visualise your own trained policy prior and after training.
 Let's import our dependencies
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 110-142
+.. GENERATED FROM PYTHON SOURCE LINES 109-141
 
 .. code-block:: Python
 
@@ -168,7 +168,7 @@ Let's import our dependencies
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 143-152
+.. GENERATED FROM PYTHON SOURCE LINES 142-151
 
 Define Hyperparameters
 ----------------------
@@ -180,7 +180,7 @@ device.
 You can tune some of these values to adjust the computational requirements.
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 152-179
+.. GENERATED FROM PYTHON SOURCE LINES 151-178
 
 .. code-block:: Python
 
@@ -218,7 +218,7 @@ You can tune some of these values to adjust the computational requirements.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 180-221
+.. GENERATED FROM PYTHON SOURCE LINES 179-220
 
 Environment
 -----------
@@ -262,7 +262,7 @@ We will also use ``num_vmas_envs`` vectorized environments, to leverage batch si
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 221-239
+.. GENERATED FROM PYTHON SOURCE LINES 220-238
 
 .. code-block:: Python
 
@@ -291,7 +291,7 @@ We will also use ``num_vmas_envs`` vectorized environments, to leverage batch si
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 240-257
+.. GENERATED FROM PYTHON SOURCE LINES 239-256
 
 The environment is not only defined by its simulator and transforms, but also
 by a series of metadata that describe what can be expected during its
@@ -311,7 +311,7 @@ There are four specs to look at:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 257-263
+.. GENERATED FROM PYTHON SOURCE LINES 256-262
 
 .. code-block:: Python
 
@@ -391,7 +391,7 @@ There are four specs to look at:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 264-283
+.. GENERATED FROM PYTHON SOURCE LINES 263-282
 
 Using the commands just shown we can access the domain of each value.
 Doing this we can see that all specs apart from done have a leading shape ``(num_vmas_envs, n_agents)``.
@@ -413,7 +413,7 @@ we will immediately understand which are per-agent and which shared.
 This info will be useful in order to tell all other TorchRL components where to find each value
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 283-289
+.. GENERATED FROM PYTHON SOURCE LINES 282-288
 
 .. code-block:: Python
 
@@ -438,7 +438,7 @@ This info will be useful in order to tell all other TorchRL components where to 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 290-303
+.. GENERATED FROM PYTHON SOURCE LINES 289-302
 
 Transforms
 ~~~~~~~~~~
@@ -454,7 +454,7 @@ the device and meta-data of the wrapped environment, and transform these dependi
 of transforms it contains.
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 303-311
+.. GENERATED FROM PYTHON SOURCE LINES 302-310
 
 .. code-block:: Python
 
@@ -473,13 +473,13 @@ of transforms it contains.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 312-315
+.. GENERATED FROM PYTHON SOURCE LINES 311-314
 
 the :func:`check_env_specs` function runs a small rollout and compares its output against the environment
 specs. If no error is raised, we can be confident that the specs are properly defined:
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 315-317
+.. GENERATED FROM PYTHON SOURCE LINES 314-316
 
 .. code-block:: Python
 
@@ -492,7 +492,7 @@ specs. If no error is raised, we can be confident that the specs are properly de
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 318-326
+.. GENERATED FROM PYTHON SOURCE LINES 317-325
 
 Rollout
 ~~~~~~~
@@ -503,7 +503,7 @@ and outputs look like. Actions will automatically be drawn at random from the ac
 domain.
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 326-330
+.. GENERATED FROM PYTHON SOURCE LINES 325-329
 
 .. code-block:: Python
 
@@ -570,7 +570,7 @@ domain.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 331-393
+.. GENERATED FROM PYTHON SOURCE LINES 330-392
 
 We can see that our rollout has ``batch_size`` of ``(num_vmas_envs, n_rollout_steps)``.
 This means that all the tensors in it will have those leading dimensions.
@@ -635,7 +635,7 @@ For this we use the ``MultiAgentMLP``, a TorchRL module made exactly for
 multiple agents, with much customisation available.
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 393-413
+.. GENERATED FROM PYTHON SOURCE LINES 392-412
 
 .. code-block:: Python
 
@@ -666,7 +666,7 @@ multiple agents, with much customisation available.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 414-423
+.. GENERATED FROM PYTHON SOURCE LINES 413-422
 
 **Second**: wrap the neural network in a :class:`TensorDictModule`
 
@@ -678,7 +678,7 @@ Note that we use ``("agents", ...)`` keys as these keys are denoting data with t
 additional ``n_agents`` dimension.
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 423-429
+.. GENERATED FROM PYTHON SOURCE LINES 422-428
 
 .. code-block:: Python
 
@@ -695,7 +695,7 @@ additional ``n_agents`` dimension.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 430-442
+.. GENERATED FROM PYTHON SOURCE LINES 429-441
 
 **Third**: wrap the :class:`TensorDictModule` in a :class:`ProbabilisticActor`
 
@@ -710,7 +710,7 @@ the :class:`TensorDictModule` above) has to end with the
 :class:`TanhNormal` distribution constructor keyword arguments (loc and scale).
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 442-457
+.. GENERATED FROM PYTHON SOURCE LINES 441-456
 
 .. code-block:: Python
 
@@ -736,7 +736,7 @@ the :class:`TensorDictModule` above) has to end with the
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 458-491
+.. GENERATED FROM PYTHON SOURCE LINES 457-490
 
 Critic network
 --------------
@@ -772,7 +772,7 @@ If the critic is centralised and shared,
 all the values along the ``n_agents`` dimension will be identical.
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 491-513
+.. GENERATED FROM PYTHON SOURCE LINES 490-512
 
 .. code-block:: Python
 
@@ -805,7 +805,7 @@ all the values along the ``n_agents`` dimension will be identical.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 514-522
+.. GENERATED FROM PYTHON SOURCE LINES 513-521
 
 Let us try our policy and critic modules. As pointed earlier, the usage of
 :class:`TensorDictModule` makes it possible to directly read the output
@@ -816,7 +816,7 @@ and where to write it:
 components as in single-agent learning. Isn't this fantastic?**
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 522-525
+.. GENERATED FROM PYTHON SOURCE LINES 521-524
 
 .. code-block:: Python
 
@@ -884,7 +884,7 @@ components as in single-agent learning. Isn't this fantastic?**
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 526-538
+.. GENERATED FROM PYTHON SOURCE LINES 525-537
 
 Data collector
 --------------
@@ -899,7 +899,7 @@ We will use the simplest possible data collector, which has the same output as a
 with the only difference that it will auto reset done states until the desired frames are collected.
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 538-547
+.. GENERATED FROM PYTHON SOURCE LINES 537-546
 
 .. code-block:: Python
 
@@ -919,7 +919,7 @@ with the only difference that it will auto reset done states until the desired f
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 548-560
+.. GENERATED FROM PYTHON SOURCE LINES 547-559
 
 Replay buffer
 -------------
@@ -934,7 +934,7 @@ use the collected data online, but using these classes
 makes it easy for us to build the inner training loop in a reproducible way.
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 560-569
+.. GENERATED FROM PYTHON SOURCE LINES 559-568
 
 .. code-block:: Python
 
@@ -954,7 +954,7 @@ makes it easy for us to build the inner training loop in a reproducible way.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 570-591
+.. GENERATED FROM PYTHON SOURCE LINES 569-590
 
 Loss function
 -------------
@@ -978,7 +978,7 @@ Both of these will be used by :class:`ClipPPOLoss` to
 return the policy and value losses.
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 591-617
+.. GENERATED FROM PYTHON SOURCE LINES 590-616
 
 .. code-block:: Python
 
@@ -1015,7 +1015,7 @@ return the policy and value losses.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 618-635
+.. GENERATED FROM PYTHON SOURCE LINES 617-634
 
 Training loop
 -------------
@@ -1035,7 +1035,7 @@ The steps include:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 635-695
+.. GENERATED FROM PYTHON SOURCE LINES 634-694
 
 .. code-block:: Python
 
@@ -1107,11 +1107,11 @@ The steps include:
 
  .. code-block:: none
 
-    episode_reward_mean = 0:   0%|          | 0/10 [00:00<?, ?it/s]    episode_reward_mean = -0.4579917788505554:  10%|█         | 1/10 [00:06<01:00,  6.75s/it]    episode_reward_mean = 0.14524875581264496:  20%|██        | 2/10 [00:13<00:54,  6.76s/it]    episode_reward_mean = 1.168386459350586:  30%|███       | 3/10 [00:20<00:47,  6.74s/it]      episode_reward_mean = 1.3613134622573853:  40%|████      | 4/10 [00:26<00:40,  6.73s/it]    episode_reward_mean = 1.921463131904602:  50%|█████     | 5/10 [00:33<00:33,  6.74s/it]     episode_reward_mean = 2.2106335163116455:  60%|██████    | 6/10 [00:40<00:26,  6.73s/it]    episode_reward_mean = 2.1925103664398193:  70%|███████   | 7/10 [00:47<00:20,  6.73s/it]    episode_reward_mean = 2.664064407348633:  80%|████████  | 8/10 [00:53<00:13,  6.73s/it]     episode_reward_mean = 2.6539173126220703:  90%|█████████ | 9/10 [01:00<00:06,  6.77s/it]    episode_reward_mean = 2.743558168411255: 100%|██████████| 10/10 [01:07<00:00,  6.82s/it]
+    episode_reward_mean = 0:   0%|          | 0/10 [00:00<?, ?it/s]    episode_reward_mean = -0.4579917788505554:  10%|█         | 1/10 [00:06<01:00,  6.77s/it]    episode_reward_mean = 0.14524875581264496:  20%|██        | 2/10 [00:13<00:54,  6.76s/it]    episode_reward_mean = 1.168386459350586:  30%|███       | 3/10 [00:20<00:47,  6.73s/it]      episode_reward_mean = 1.3613134622573853:  40%|████      | 4/10 [00:26<00:40,  6.74s/it]    episode_reward_mean = 1.921463131904602:  50%|█████     | 5/10 [00:33<00:33,  6.73s/it]     episode_reward_mean = 2.2106335163116455:  60%|██████    | 6/10 [00:40<00:26,  6.73s/it]    episode_reward_mean = 2.1925103664398193:  70%|███████   | 7/10 [00:47<00:20,  6.72s/it]    episode_reward_mean = 2.664064407348633:  80%|████████  | 8/10 [00:53<00:13,  6.74s/it]     episode_reward_mean = 2.6539173126220703:  90%|█████████ | 9/10 [01:00<00:06,  6.77s/it]    episode_reward_mean = 2.743558168411255: 100%|██████████| 10/10 [01:07<00:00,  6.82s/it]
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 696-703
+.. GENERATED FROM PYTHON SOURCE LINES 695-702
 
 Results
 -------
@@ -1121,7 +1121,7 @@ Let's plot the mean reward obtained per episode
 To make training last longer, increase the ``n_iters`` hyperparameter.
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 703-709
+.. GENERATED FROM PYTHON SOURCE LINES 702-708
 
 .. code-block:: Python
 
@@ -1143,7 +1143,7 @@ To make training last longer, increase the ``n_iters`` hyperparameter.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 710-764
+.. GENERATED FROM PYTHON SOURCE LINES 709-763
 
 Render
 ------
@@ -1200,7 +1200,7 @@ If you are running this in Google Colab, you can render the trained policy by ru
    Image(open(f"{scenario_name}.gif", "rb").read())
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 767-799
+.. GENERATED FROM PYTHON SOURCE LINES 766-798
 
 Conclusion and next steps
 -------------------------
@@ -1238,9 +1238,9 @@ Here are a few videos of some possible scenarios you can try in VMAS.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (2 minutes 5.702 seconds)
+   **Total running time of the script:** (2 minutes 3.141 seconds)
 
-**Estimated memory usage:**  10 MB
+**Estimated memory usage:**  11 MB
 
 
 .. _sphx_glr_download_tutorials_multiagent_ppo.py:

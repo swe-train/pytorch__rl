@@ -22,7 +22,7 @@ Introduction to TorchRL
 =======================
 This demo was presented at ICML 2022 on the industry demo day.
 
-.. GENERATED FROM PYTHON SOURCE LINES 8-187
+.. GENERATED FROM PYTHON SOURCE LINES 7-186
 
 It gives a good overview of TorchRL functionalities. Feel free to reach out
 to vmoens@fb.com or submit issues if you have questions or comments about
@@ -204,7 +204,7 @@ Data
 TensorDict
 ----------
 
-.. GENERATED FROM PYTHON SOURCE LINES 187-192
+.. GENERATED FROM PYTHON SOURCE LINES 186-191
 
 .. code-block:: Python
 
@@ -220,11 +220,11 @@ TensorDict
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 215-216
+.. GENERATED FROM PYTHON SOURCE LINES 214-215
 
 Let's create a TensorDict.
 
-.. GENERATED FROM PYTHON SOURCE LINES 216-227
+.. GENERATED FROM PYTHON SOURCE LINES 215-226
 
 .. code-block:: Python
 
@@ -258,11 +258,11 @@ Let's create a TensorDict.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 228-229
+.. GENERATED FROM PYTHON SOURCE LINES 227-228
 
 You can index a TensorDict as well as query keys.
 
-.. GENERATED FROM PYTHON SOURCE LINES 229-233
+.. GENERATED FROM PYTHON SOURCE LINES 228-232
 
 .. code-block:: Python
 
@@ -290,11 +290,11 @@ You can index a TensorDict as well as query keys.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 234-235
+.. GENERATED FROM PYTHON SOURCE LINES 233-234
 
 The following shows how to stack multiple TensorDicts.
 
-.. GENERATED FROM PYTHON SOURCE LINES 235-255
+.. GENERATED FROM PYTHON SOURCE LINES 234-254
 
 .. code-block:: Python
 
@@ -341,11 +341,11 @@ The following shows how to stack multiple TensorDicts.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 256-257
+.. GENERATED FROM PYTHON SOURCE LINES 255-256
 
 Here are some other functionalities of TensorDict.
 
-.. GENERATED FROM PYTHON SOURCE LINES 257-282
+.. GENERATED FROM PYTHON SOURCE LINES 256-281
 
 .. code-block:: Python
 
@@ -403,11 +403,11 @@ Here are some other functionalities of TensorDict.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 283-284
+.. GENERATED FROM PYTHON SOURCE LINES 282-283
 
 You can create a **nested TensorDict** as well.
 
-.. GENERATED FROM PYTHON SOURCE LINES 284-297
+.. GENERATED FROM PYTHON SOURCE LINES 283-296
 
 .. code-block:: Python
 
@@ -448,12 +448,12 @@ You can create a **nested TensorDict** as well.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 298-300
+.. GENERATED FROM PYTHON SOURCE LINES 297-299
 
 Replay buffers
 ------------------------------
 
-.. GENERATED FROM PYTHON SOURCE LINES 300-303
+.. GENERATED FROM PYTHON SOURCE LINES 299-302
 
 .. code-block:: Python
 
@@ -467,7 +467,7 @@ Replay buffers
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 304-309
+.. GENERATED FROM PYTHON SOURCE LINES 303-308
 
 .. code-block:: Python
 
@@ -489,7 +489,7 @@ Replay buffers
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 310-314
+.. GENERATED FROM PYTHON SOURCE LINES 309-313
 
 .. code-block:: Python
 
@@ -510,7 +510,7 @@ Replay buffers
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 315-321
+.. GENERATED FROM PYTHON SOURCE LINES 314-320
 
 .. code-block:: Python
 
@@ -527,11 +527,11 @@ Replay buffers
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 322-323
+.. GENERATED FROM PYTHON SOURCE LINES 321-322
 
 Here are examples of using a replaybuffer with tensordicts.
 
-.. GENERATED FROM PYTHON SOURCE LINES 323-329
+.. GENERATED FROM PYTHON SOURCE LINES 322-328
 
 .. code-block:: Python
 
@@ -554,7 +554,7 @@ Here are examples of using a replaybuffer with tensordicts.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 330-336
+.. GENERATED FROM PYTHON SOURCE LINES 329-335
 
 .. code-block:: Python
 
@@ -589,7 +589,7 @@ Here are examples of using a replaybuffer with tensordicts.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 337-346
+.. GENERATED FROM PYTHON SOURCE LINES 336-345
 
 .. code-block:: Python
 
@@ -622,7 +622,7 @@ Here are examples of using a replaybuffer with tensordicts.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 347-350
+.. GENERATED FROM PYTHON SOURCE LINES 346-349
 
 .. code-block:: Python
 
@@ -638,11 +638,11 @@ Here are examples of using a replaybuffer with tensordicts.
  .. code-block:: none
 
 
-    tensor([0, 0])
+    tensor([1, 0])
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 351-365
+.. GENERATED FROM PYTHON SOURCE LINES 350-364
 
 .. code-block:: Python
 
@@ -669,18 +669,18 @@ Here are examples of using a replaybuffer with tensordicts.
  .. code-block:: none
 
     0 0.28791671991348267
-    1 1.0
+    1 0.06984967738389969
     2 0.0
 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 366-368
+.. GENERATED FROM PYTHON SOURCE LINES 365-367
 
 Envs
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-.. GENERATED FROM PYTHON SOURCE LINES 368-375
+.. GENERATED FROM PYTHON SOURCE LINES 367-374
 
 .. code-block:: Python
 
@@ -698,7 +698,7 @@ Envs
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 376-380
+.. GENERATED FROM PYTHON SOURCE LINES 375-379
 
 .. code-block:: Python
 
@@ -738,12 +738,12 @@ Envs
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 381-383
+.. GENERATED FROM PYTHON SOURCE LINES 380-382
 
 Changing environments config
 ------------------------------
 
-.. GENERATED FROM PYTHON SOURCE LINES 383-387
+.. GENERATED FROM PYTHON SOURCE LINES 382-386
 
 .. code-block:: Python
 
@@ -773,7 +773,7 @@ Changing environments config
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 388-392
+.. GENERATED FROM PYTHON SOURCE LINES 387-391
 
 .. code-block:: Python
 
@@ -788,7 +788,7 @@ Changing environments config
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 393-406
+.. GENERATED FROM PYTHON SOURCE LINES 392-405
 
 .. code-block:: Python
 
@@ -823,12 +823,12 @@ Changing environments config
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 407-409
+.. GENERATED FROM PYTHON SOURCE LINES 406-408
 
 Transforms
 ------------------------------
 
-.. GENERATED FROM PYTHON SOURCE LINES 409-423
+.. GENERATED FROM PYTHON SOURCE LINES 408-422
 
 .. code-block:: Python
 
@@ -864,7 +864,7 @@ Transforms
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 424-427
+.. GENERATED FROM PYTHON SOURCE LINES 423-426
 
 .. code-block:: Python
 
@@ -893,7 +893,7 @@ Transforms
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 428-432
+.. GENERATED FROM PYTHON SOURCE LINES 427-431
 
 .. code-block:: Python
 
@@ -924,12 +924,12 @@ Transforms
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 433-435
+.. GENERATED FROM PYTHON SOURCE LINES 432-434
 
 Vectorized Environments
 ------------------------------
 
-.. GENERATED FROM PYTHON SOURCE LINES 435-449
+.. GENERATED FROM PYTHON SOURCE LINES 434-448
 
 .. code-block:: Python
 
@@ -970,7 +970,7 @@ Vectorized Environments
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 450-456
+.. GENERATED FROM PYTHON SOURCE LINES 449-455
 
 .. code-block:: Python
 
@@ -1000,7 +1000,7 @@ Vectorized Environments
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 457-464
+.. GENERATED FROM PYTHON SOURCE LINES 456-463
 
 Modules
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -1010,7 +1010,7 @@ Models
 
 Example of a MLP model:
 
-.. GENERATED FROM PYTHON SOURCE LINES 464-467
+.. GENERATED FROM PYTHON SOURCE LINES 463-466
 
 .. code-block:: Python
 
@@ -1024,7 +1024,7 @@ Example of a MLP model:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 468-476
+.. GENERATED FROM PYTHON SOURCE LINES 467-475
 
 .. code-block:: Python
 
@@ -1056,11 +1056,11 @@ Example of a MLP model:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 477-478
+.. GENERATED FROM PYTHON SOURCE LINES 476-477
 
 Example of a CNN model:
 
-.. GENERATED FROM PYTHON SOURCE LINES 478-488
+.. GENERATED FROM PYTHON SOURCE LINES 477-487
 
 .. code-block:: Python
 
@@ -1094,12 +1094,12 @@ Example of a CNN model:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 489-491
+.. GENERATED FROM PYTHON SOURCE LINES 488-490
 
 TensorDictModules
 ------------------------------
 
-.. GENERATED FROM PYTHON SOURCE LINES 491-500
+.. GENERATED FROM PYTHON SOURCE LINES 490-499
 
 .. code-block:: Python
 
@@ -1131,12 +1131,12 @@ TensorDictModules
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 501-503
+.. GENERATED FROM PYTHON SOURCE LINES 500-502
 
 Sequences of Modules
 ------------------------------
 
-.. GENERATED FROM PYTHON SOURCE LINES 503-518
+.. GENERATED FROM PYTHON SOURCE LINES 502-517
 
 .. code-block:: Python
 
@@ -1194,7 +1194,7 @@ Sequences of Modules
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 519-522
+.. GENERATED FROM PYTHON SOURCE LINES 518-521
 
 .. code-block:: Python
 
@@ -1214,7 +1214,7 @@ Sequences of Modules
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 523-532
+.. GENERATED FROM PYTHON SOURCE LINES 522-531
 
 .. code-block:: Python
 
@@ -1248,7 +1248,7 @@ Sequences of Modules
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 533-541
+.. GENERATED FROM PYTHON SOURCE LINES 532-540
 
 .. code-block:: Python
 
@@ -1281,12 +1281,12 @@ Sequences of Modules
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 542-544
+.. GENERATED FROM PYTHON SOURCE LINES 541-543
 
 Functional Programming (Ensembling / Meta-RL)
 ----------------------------------------------
 
-.. GENERATED FROM PYTHON SOURCE LINES 544-550
+.. GENERATED FROM PYTHON SOURCE LINES 543-549
 
 .. code-block:: Python
 
@@ -1385,11 +1385,11 @@ Functional Programming (Ensembling / Meta-RL)
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 551-552
+.. GENERATED FROM PYTHON SOURCE LINES 550-551
 
 functional call using tensordict:
 
-.. GENERATED FROM PYTHON SOURCE LINES 552-556
+.. GENERATED FROM PYTHON SOURCE LINES 551-555
 
 .. code-block:: Python
 
@@ -1404,11 +1404,11 @@ functional call using tensordict:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 557-558
+.. GENERATED FROM PYTHON SOURCE LINES 556-557
 
 Using vectorized map for model ensembling
 
-.. GENERATED FROM PYTHON SOURCE LINES 558-571
+.. GENERATED FROM PYTHON SOURCE LINES 557-570
 
 .. code-block:: Python
 
@@ -1446,12 +1446,12 @@ Using vectorized map for model ensembling
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 572-574
+.. GENERATED FROM PYTHON SOURCE LINES 571-573
 
 Specialized Classes
 ------------------------------
 
-.. GENERATED FROM PYTHON SOURCE LINES 574-587
+.. GENERATED FROM PYTHON SOURCE LINES 573-586
 
 .. code-block:: Python
 
@@ -1481,7 +1481,7 @@ Specialized Classes
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 588-592
+.. GENERATED FROM PYTHON SOURCE LINES 587-591
 
 .. code-block:: Python
 
@@ -1502,7 +1502,7 @@ Specialized Classes
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 593-606
+.. GENERATED FROM PYTHON SOURCE LINES 592-605
 
 .. code-block:: Python
 
@@ -1526,7 +1526,7 @@ Specialized Classes
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 607-626
+.. GENERATED FROM PYTHON SOURCE LINES 606-625
 
 .. code-block:: Python
 
@@ -1570,7 +1570,7 @@ Specialized Classes
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 627-642
+.. GENERATED FROM PYTHON SOURCE LINES 626-641
 
 .. code-block:: Python
 
@@ -1611,7 +1611,7 @@ Specialized Classes
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 643-662
+.. GENERATED FROM PYTHON SOURCE LINES 642-661
 
 .. code-block:: Python
 
@@ -1655,12 +1655,12 @@ Specialized Classes
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 663-665
+.. GENERATED FROM PYTHON SOURCE LINES 662-664
 
 Using Environments and Modules
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-.. GENERATED FROM PYTHON SOURCE LINES 665-693
+.. GENERATED FROM PYTHON SOURCE LINES 664-692
 
 .. code-block:: Python
 
@@ -1725,7 +1725,7 @@ Using Environments and Modules
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 694-712
+.. GENERATED FROM PYTHON SOURCE LINES 693-711
 
 .. code-block:: Python
 
@@ -1780,7 +1780,7 @@ Using Environments and Modules
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 713-716
+.. GENERATED FROM PYTHON SOURCE LINES 712-715
 
 .. code-block:: Python
 
@@ -1800,7 +1800,7 @@ Using Environments and Modules
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 717-728
+.. GENERATED FROM PYTHON SOURCE LINES 716-727
 
 .. code-block:: Python
 
@@ -1822,12 +1822,12 @@ Using Environments and Modules
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 729-731
+.. GENERATED FROM PYTHON SOURCE LINES 728-730
 
 Collectors
 ^^^^^^^^^^
 
-.. GENERATED FROM PYTHON SOURCE LINES 731-737
+.. GENERATED FROM PYTHON SOURCE LINES 730-736
 
 .. code-block:: Python
 
@@ -1844,12 +1844,12 @@ Collectors
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 738-740
+.. GENERATED FROM PYTHON SOURCE LINES 737-739
 
 EnvCreator makes sure that we can send a lambda function from process to process
 We use a SerialEnv for simplicity, but for larger jobs a ParallelEnv would be better suited.
 
-.. GENERATED FROM PYTHON SOURCE LINES 740-750
+.. GENERATED FROM PYTHON SOURCE LINES 739-749
 
 .. code-block:: Python
 
@@ -1870,11 +1870,11 @@ We use a SerialEnv for simplicity, but for larger jobs a ParallelEnv would be be
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 751-752
+.. GENERATED FROM PYTHON SOURCE LINES 750-751
 
 Sync data collector
 
-.. GENERATED FROM PYTHON SOURCE LINES 752-764
+.. GENERATED FROM PYTHON SOURCE LINES 751-763
 
 .. code-block:: Python
 
@@ -1897,7 +1897,7 @@ Sync data collector
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 765-774
+.. GENERATED FROM PYTHON SOURCE LINES 764-773
 
 .. code-block:: Python
 
@@ -1949,7 +1949,7 @@ Sync data collector
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 775-796
+.. GENERATED FROM PYTHON SOURCE LINES 774-795
 
 .. code-block:: Python
 
@@ -2013,12 +2013,12 @@ Sync data collector
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 797-799
+.. GENERATED FROM PYTHON SOURCE LINES 796-798
 
 Objectives
 ^^^^^^^^^^
 
-.. GENERATED FROM PYTHON SOURCE LINES 799-821
+.. GENERATED FROM PYTHON SOURCE LINES 798-820
 
 .. code-block:: Python
 
@@ -2051,7 +2051,7 @@ Objectives
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 822-838
+.. GENERATED FROM PYTHON SOURCE LINES 821-837
 
 .. code-block:: Python
 
@@ -2078,7 +2078,7 @@ Objectives
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 839-842
+.. GENERATED FROM PYTHON SOURCE LINES 838-841
 
 .. code-block:: Python
 
@@ -2109,7 +2109,7 @@ Objectives
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 843-846
+.. GENERATED FROM PYTHON SOURCE LINES 842-845
 
 .. code-block:: Python
 
@@ -2144,7 +2144,7 @@ Objectives
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 847-866
+.. GENERATED FROM PYTHON SOURCE LINES 846-865
 
 State of the Library
 ^^^^^^^^^^^^^^^^^^^^
@@ -2166,7 +2166,7 @@ RL (or just curious), try it! Give us feedback: what will make the success of
 TorchRL is how well it covers researchers needs. To do that, we need their input!
 Since the library is nascent, it is a great time for you to shape it the way you want!
 
-.. GENERATED FROM PYTHON SOURCE LINES 868-872
+.. GENERATED FROM PYTHON SOURCE LINES 867-871
 
 Installing the Library
 ^^^^^^^^^^^^^^^^^^^^^^
@@ -2176,9 +2176,9 @@ The library is on PyPI: *pip install torchrl*
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (3 minutes 50.744 seconds)
+   **Total running time of the script:** (3 minutes 41.935 seconds)
 
-**Estimated memory usage:**  16 MB
+**Estimated memory usage:**  15 MB
 
 
 .. _sphx_glr_download_tutorials_torchrl_demo.py:

@@ -33,7 +33,7 @@ Get started with data collection and storage
         !pip install tensordict
         !pip install torchrl
 
-.. GENERATED FROM PYTHON SOURCE LINES 21-56
+.. GENERATED FROM PYTHON SOURCE LINES 20-55
 
 There is no learning without data. In supervised learning, users are
 accustomed to using :class:`~torch.utils.data.DataLoader` and the like
@@ -71,7 +71,7 @@ batches you want to collect (``frames_per_batch``), the length (possibly
 infinite) of the iterator, the policy and the environment. For simplicity,
 we will use a dummy, random policy in this example.
 
-.. GENERATED FROM PYTHON SOURCE LINES 57-72
+.. GENERATED FROM PYTHON SOURCE LINES 56-71
 
 .. code-block:: Python
 
@@ -104,7 +104,7 @@ we will use a dummy, random policy in this example.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 73-81
+.. GENERATED FROM PYTHON SOURCE LINES 72-80
 
 We now expect that our collector will deliver batches of size ``200`` no
 matter what happens during collection. In other words, we may have multiple
@@ -115,7 +115,7 @@ ending collector.
 Let's iterate over the collector to get a sense
 of what this data looks like:
 
-.. GENERATED FROM PYTHON SOURCE LINES 81-86
+.. GENERATED FROM PYTHON SOURCE LINES 80-85
 
 .. code-block:: Python
 
@@ -162,7 +162,7 @@ of what this data looks like:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 87-92
+.. GENERATED FROM PYTHON SOURCE LINES 86-91
 
 As you can see, our data is augmented with some collector-specific metadata
 grouped in a ``"collector"`` sub-tensordict that we did not see during
@@ -170,7 +170,7 @@ grouped in a ``"collector"`` sub-tensordict that we did not see during
 the trajectory ids. In the following list, each item marks the trajectory
 number the corresponding transition belongs to:
 
-.. GENERATED FROM PYTHON SOURCE LINES 92-95
+.. GENERATED FROM PYTHON SOURCE LINES 91-94
 
 .. code-block:: Python
 
@@ -198,7 +198,7 @@ number the corresponding transition belongs to:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 96-138
+.. GENERATED FROM PYTHON SOURCE LINES 95-137
 
 Data collectors are very useful when it comes to coding state-of-the-art
 sota-implementations, as performance is usually measured by the capability of a
@@ -243,7 +243,7 @@ Second, it uses :class:`~tensordict.MemoryMappedTensor` as a backend to save
 your data on disk in an efficient way. The only thing you need to know is
 how big you want your buffer to be.
 
-.. GENERATED FROM PYTHON SOURCE LINES 138-143
+.. GENERATED FROM PYTHON SOURCE LINES 137-142
 
 .. code-block:: Python
 
@@ -259,14 +259,14 @@ how big you want your buffer to be.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 144-148
+.. GENERATED FROM PYTHON SOURCE LINES 143-147
 
 Populating the buffer can be done via the
 :meth:`~torchrl.data.ReplayBuffer.add` (single element) or
 :meth:`~torchrl.data.ReplayBuffer.extend` (multiple elements) methods. Using
 the data we just collected, we initialize and populate the buffer in one go:
 
-.. GENERATED FROM PYTHON SOURCE LINES 148-151
+.. GENERATED FROM PYTHON SOURCE LINES 147-150
 
 .. code-block:: Python
 
@@ -280,12 +280,12 @@ the data we just collected, we initialize and populate the buffer in one go:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 152-154
+.. GENERATED FROM PYTHON SOURCE LINES 151-153
 
 We can check that the buffer now has the same number of elements than what
 we got from the collector:
 
-.. GENERATED FROM PYTHON SOURCE LINES 154-157
+.. GENERATED FROM PYTHON SOURCE LINES 153-156
 
 .. code-block:: Python
 
@@ -299,7 +299,7 @@ we got from the collector:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 158-163
+.. GENERATED FROM PYTHON SOURCE LINES 157-162
 
 The only thing left to know is how to gather data from the buffer.
 Naturally, this relies on the :meth:`~torchrl.data.ReplayBuffer.sample`
@@ -307,7 +307,7 @@ method. Because we did not specify that sampling had to be done without
 repetitions, it is not guaranteed that the samples gathered from our buffer
 will be unique:
 
-.. GENERATED FROM PYTHON SOURCE LINES 163-167
+.. GENERATED FROM PYTHON SOURCE LINES 162-166
 
 .. code-block:: Python
 
@@ -353,7 +353,7 @@ will be unique:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 168-190
+.. GENERATED FROM PYTHON SOURCE LINES 167-189
 
 Again, our sample looks exactly the same as the data we gathered from the
 collector!
@@ -381,7 +381,7 @@ Next steps
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 18.764 seconds)
+   **Total running time of the script:** (0 minutes 18.833 seconds)
 
 **Estimated memory usage:**  28 MB
 

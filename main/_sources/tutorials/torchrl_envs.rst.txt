@@ -25,7 +25,7 @@ TorchRL envs
 
 .. _envs_tuto:
 
-.. GENERATED FROM PYTHON SOURCE LINES 13-37
+.. GENERATED FROM PYTHON SOURCE LINES 12-36
 
 Environments play a crucial role in RL settings, often somewhat similar to
 datasets in supervised and unsupervised settings. The RL community has
@@ -52,7 +52,7 @@ will pass the arguments and keyword arguments to the root library builder.
 
 With gym, it means that building an environment is as easy as:
 
-.. GENERATED FROM PYTHON SOURCE LINES 38-44
+.. GENERATED FROM PYTHON SOURCE LINES 37-43
 
 .. code-block:: Python
 
@@ -69,7 +69,7 @@ With gym, it means that building an environment is as easy as:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 69-74
+.. GENERATED FROM PYTHON SOURCE LINES 68-73
 
 .. code-block:: Python
 
@@ -85,12 +85,12 @@ With gym, it means that building an environment is as easy as:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 75-77
+.. GENERATED FROM PYTHON SOURCE LINES 74-76
 
 The list of available environment can be accessed through this command:
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 77-80
+.. GENERATED FROM PYTHON SOURCE LINES 76-79
 
 .. code-block:: Python
 
@@ -110,7 +110,7 @@ The list of available environment can be accessed through this command:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 81-89
+.. GENERATED FROM PYTHON SOURCE LINES 80-88
 
 Env Specs
 ------------------------------
@@ -121,7 +121,7 @@ that more than one observation is retrieved, we expect the observation spec
 to be of type ``CompositeSpec``.
 Reward and action do not have this restriction:
 
-.. GENERATED FROM PYTHON SOURCE LINES 89-94
+.. GENERATED FROM PYTHON SOURCE LINES 88-93
 
 .. code-block:: Python
 
@@ -168,14 +168,14 @@ Reward and action do not have this restriction:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 95-99
+.. GENERATED FROM PYTHON SOURCE LINES 94-98
 
 Those spec come with a series of useful tools: one can assert whether a
 sample is in the defined space. We can also use some heuristic to project
 a sample in the space if it is out of space, and generate random (possibly
 uniformly distributed) numbers in that space:
 
-.. GENERATED FROM PYTHON SOURCE LINES 99-104
+.. GENERATED FROM PYTHON SOURCE LINES 98-103
 
 .. code-block:: Python
 
@@ -200,7 +200,7 @@ uniformly distributed) numbers in that space:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 105-108
+.. GENERATED FROM PYTHON SOURCE LINES 104-107
 
 .. code-block:: Python
 
@@ -216,12 +216,12 @@ uniformly distributed) numbers in that space:
  .. code-block:: none
 
     random action: 
-     tensor([-0.4942])
+     tensor([-0.4765])
 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 109-117
+.. GENERATED FROM PYTHON SOURCE LINES 108-116
 
 Out of these specs, the ``done_spec`` deserves a special attention. In TorchRL,
 all environments write end-of-trajectory signals of at least two types:
@@ -232,7 +232,7 @@ the task). In general, a ``"done"`` entry that is ``True`` when a ``"terminal"``
 is ``False`` is caused by a ``"truncated"`` signal. Gym environments account for
 these three signals:
 
-.. GENERATED FROM PYTHON SOURCE LINES 117-120
+.. GENERATED FROM PYTHON SOURCE LINES 116-119
 
 .. code-block:: Python
 
@@ -270,7 +270,7 @@ these three signals:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 121-136
+.. GENERATED FROM PYTHON SOURCE LINES 120-135
 
 Envs are also packed with an ``env.state_spec`` attribute of type
 ``CompositeSpec`` which contains all the specs that are inputs to the env
@@ -288,7 +288,7 @@ and (3) ``step``.
 
 Let's see how these methods work with TorchRL:
 
-.. GENERATED FROM PYTHON SOURCE LINES 136-142
+.. GENERATED FROM PYTHON SOURCE LINES 135-141
 
 .. code-block:: Python
 
@@ -319,12 +319,12 @@ Let's see how these methods work with TorchRL:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 143-145
+.. GENERATED FROM PYTHON SOURCE LINES 142-144
 
 We can now execute a step in the environment. Since we don't have a policy,
 we can just generate a random action:
 
-.. GENERATED FROM PYTHON SOURCE LINES 145-153
+.. GENERATED FROM PYTHON SOURCE LINES 144-152
 
 .. code-block:: Python
 
@@ -343,11 +343,11 @@ we can just generate a random action:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 154-155
+.. GENERATED FROM PYTHON SOURCE LINES 153-154
 
 By default, the tensordict returned by ``step`` is the same as the input...
 
-.. GENERATED FROM PYTHON SOURCE LINES 155-158
+.. GENERATED FROM PYTHON SOURCE LINES 154-157
 
 .. code-block:: Python
 
@@ -361,11 +361,11 @@ By default, the tensordict returned by ``step`` is the same as the input...
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 159-160
+.. GENERATED FROM PYTHON SOURCE LINES 158-159
 
 ... but with new keys
 
-.. GENERATED FROM PYTHON SOURCE LINES 160-163
+.. GENERATED FROM PYTHON SOURCE LINES 159-162
 
 .. code-block:: Python
 
@@ -404,12 +404,12 @@ By default, the tensordict returned by ``step`` is the same as the input...
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 164-166
+.. GENERATED FROM PYTHON SOURCE LINES 163-165
 
 What we just did (a random step using ``action_spec.rand()``) can also be
 done via the simple shortcut.
 
-.. GENERATED FROM PYTHON SOURCE LINES 166-169
+.. GENERATED FROM PYTHON SOURCE LINES 165-168
 
 .. code-block:: Python
 
@@ -444,7 +444,7 @@ done via the simple shortcut.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 170-176
+.. GENERATED FROM PYTHON SOURCE LINES 169-175
 
 The new key ``("next", "observation")`` (as all keys under the ``"next"``
 tensordict) have a special role in TorchRL: they indicate that they come
@@ -453,7 +453,7 @@ after the key with the same name but without the prefix.
 We provide a function ``step_mdp`` that executes a step in the tensordict:
 it returns a new tensordict updated such that *t < -t'*:
 
-.. GENERATED FROM PYTHON SOURCE LINES 176-190
+.. GENERATED FROM PYTHON SOURCE LINES 175-189
 
 .. code-block:: Python
 
@@ -494,7 +494,7 @@ it returns a new tensordict updated such that *t < -t'*:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 191-196
+.. GENERATED FROM PYTHON SOURCE LINES 190-195
 
 We can observe that ``step_mdp`` has removed all the time-dependent
 key-value pairs, but not ``"some other key"``. Also, the new
@@ -502,7 +502,7 @@ observation matches the previous one.
 
 Finally, note that the ``env.reset`` method also accepts a tensordict to update:
 
-.. GENERATED FROM PYTHON SOURCE LINES 196-201
+.. GENERATED FROM PYTHON SOURCE LINES 195-200
 
 .. code-block:: Python
 
@@ -532,14 +532,14 @@ Finally, note that the ``env.reset`` method also accepts a tensordict to update:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 202-206
+.. GENERATED FROM PYTHON SOURCE LINES 201-205
 
 Rollouts
 ------------------------------
 The generic environment class provided by TorchRL allows you to run rollouts
 easily for a given number of steps:
 
-.. GENERATED FROM PYTHON SOURCE LINES 206-210
+.. GENERATED FROM PYTHON SOURCE LINES 205-209
 
 .. code-block:: Python
 
@@ -579,13 +579,13 @@ easily for a given number of steps:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 211-214
+.. GENERATED FROM PYTHON SOURCE LINES 210-213
 
 The resulting tensordict has a ``batch_size`` of ``[20]``, which is the
 length of the trajectory. We can check that the observation match their
 next value:
 
-.. GENERATED FROM PYTHON SOURCE LINES 214-221
+.. GENERATED FROM PYTHON SOURCE LINES 213-220
 
 .. code-block:: Python
 
@@ -609,7 +609,7 @@ next value:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 222-232
+.. GENERATED FROM PYTHON SOURCE LINES 221-231
 
 ``frame_skip``
 ------------------------------
@@ -622,7 +622,7 @@ sequence, but the rewards will be summed over the number of frames.
 If the environment reaches a done state during this process, it'll stop
 and return the result of the truncated chain.
 
-.. GENERATED FROM PYTHON SOURCE LINES 232-236
+.. GENERATED FROM PYTHON SOURCE LINES 231-235
 
 .. code-block:: Python
 
@@ -651,7 +651,7 @@ and return the result of the truncated chain.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 237-242
+.. GENERATED FROM PYTHON SOURCE LINES 236-241
 
 Rendering
 ------------------------------
@@ -659,7 +659,7 @@ Rendering plays an important role in many RL settings, and this is why the
 generic environment class from torchrl provides a ``from_pixels`` keyword
 argument that allows the user to quickly ask for image-based environments:
 
-.. GENERATED FROM PYTHON SOURCE LINES 242-245
+.. GENERATED FROM PYTHON SOURCE LINES 241-244
 
 .. code-block:: Python
 
@@ -673,7 +673,7 @@ argument that allows the user to quickly ask for image-based environments:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 246-250
+.. GENERATED FROM PYTHON SOURCE LINES 245-249
 
 .. code-block:: Python
 
@@ -688,7 +688,7 @@ argument that allows the user to quickly ask for image-based environments:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 251-254
+.. GENERATED FROM PYTHON SOURCE LINES 250-253
 
 .. code-block:: Python
 
@@ -709,15 +709,15 @@ argument that allows the user to quickly ask for image-based environments:
  .. code-block:: none
 
 
-    <matplotlib.image.AxesImage object at 0x7f73f9399340>
+    <matplotlib.image.AxesImage object at 0x7f0394592250>
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 255-256
+.. GENERATED FROM PYTHON SOURCE LINES 254-255
 
 Let's have a look at what the tensordict contains:
 
-.. GENERATED FROM PYTHON SOURCE LINES 256-259
+.. GENERATED FROM PYTHON SOURCE LINES 255-258
 
 .. code-block:: Python
 
@@ -745,7 +745,7 @@ Let's have a look at what the tensordict contains:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 260-268
+.. GENERATED FROM PYTHON SOURCE LINES 259-267
 
 We still have a ``"state"`` that describes what ``"observation"`` used to
 describe in the previous case (the naming difference comes from the fact that
@@ -756,7 +756,7 @@ gym environment step method).
 
 One can also discard this supplementary output by asking for the pixels only:
 
-.. GENERATED FROM PYTHON SOURCE LINES 268-273
+.. GENERATED FROM PYTHON SOURCE LINES 267-272
 
 .. code-block:: Python
 
@@ -772,11 +772,11 @@ One can also discard this supplementary output by asking for the pixels only:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 274-275
+.. GENERATED FROM PYTHON SOURCE LINES 273-274
 
 Some environments only come in image-based format
 
-.. GENERATED FROM PYTHON SOURCE LINES 275-281
+.. GENERATED FROM PYTHON SOURCE LINES 274-280
 
 .. code-block:: Python
 
@@ -808,7 +808,7 @@ Some environments only come in image-based format
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 282-289
+.. GENERATED FROM PYTHON SOURCE LINES 281-288
 
 DeepMind Control environments
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -818,7 +818,7 @@ We also provide a wrapper for DM Control suite. Again, building an
 environment is easy: first let's look at what environments can be accessed.
 The ``available_envs`` now returns a dict of envs and possible tasks:
 
-.. GENERATED FROM PYTHON SOURCE LINES 289-292
+.. GENERATED FROM PYTHON SOURCE LINES 288-291
 
 .. code-block:: Python
 
@@ -832,7 +832,7 @@ The ``available_envs`` now returns a dict of envs and possible tasks:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 293-298
+.. GENERATED FROM PYTHON SOURCE LINES 292-297
 
 .. code-block:: Python
 
@@ -854,7 +854,7 @@ The ``available_envs`` now returns a dict of envs and possible tasks:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 299-305
+.. GENERATED FROM PYTHON SOURCE LINES 298-304
 
 .. code-block:: Python
 
@@ -886,11 +886,11 @@ The ``available_envs`` now returns a dict of envs and possible tasks:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 306-307
+.. GENERATED FROM PYTHON SOURCE LINES 305-306
 
 Of course we can also use pixel-based environments:
 
-.. GENERATED FROM PYTHON SOURCE LINES 307-314
+.. GENERATED FROM PYTHON SOURCE LINES 306-313
 
 .. code-block:: Python
 
@@ -927,7 +927,7 @@ Of course we can also use pixel-based environments:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 315-336
+.. GENERATED FROM PYTHON SOURCE LINES 314-335
 
 Transforming envs
 ^^^^^^^^^^^^^^^^^
@@ -951,7 +951,7 @@ approach is also similar to the way distributions are transformed in
 ``torch.distribution``, where a ``TransformedDistribution`` object is
 built around a ``base_dist`` distribution and (a sequence of) ``transforms``.
 
-.. GENERATED FROM PYTHON SOURCE LINES 336-347
+.. GENERATED FROM PYTHON SOURCE LINES 335-346
 
 .. code-block:: Python
 
@@ -996,11 +996,11 @@ built around a ``base_dist`` distribution and (a sequence of) ``transforms``.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 348-349
+.. GENERATED FROM PYTHON SOURCE LINES 347-348
 
 To compose transforms, simply use the ``Compose`` class:
 
-.. GENERATED FROM PYTHON SOURCE LINES 349-356
+.. GENERATED FROM PYTHON SOURCE LINES 348-355
 
 .. code-block:: Python
 
@@ -1032,11 +1032,11 @@ To compose transforms, simply use the ``Compose`` class:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 357-358
+.. GENERATED FROM PYTHON SOURCE LINES 356-357
 
 Transforms can also be added one at a time:
 
-.. GENERATED FROM PYTHON SOURCE LINES 358-364
+.. GENERATED FROM PYTHON SOURCE LINES 357-363
 
 .. code-block:: Python
 
@@ -1067,11 +1067,11 @@ Transforms can also be added one at a time:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 365-366
+.. GENERATED FROM PYTHON SOURCE LINES 364-365
 
 As expected, the metadata get updated too:
 
-.. GENERATED FROM PYTHON SOURCE LINES 366-370
+.. GENERATED FROM PYTHON SOURCE LINES 365-369
 
 .. code-block:: Python
 
@@ -1109,11 +1109,11 @@ As expected, the metadata get updated too:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 371-372
+.. GENERATED FROM PYTHON SOURCE LINES 370-371
 
 We can also concatenate tensors if needed:
 
-.. GENERATED FROM PYTHON SOURCE LINES 372-384
+.. GENERATED FROM PYTHON SOURCE LINES 371-383
 
 .. code-block:: Python
 
@@ -1160,7 +1160,7 @@ We can also concatenate tensors if needed:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 385-403
+.. GENERATED FROM PYTHON SOURCE LINES 384-402
 
 This feature makes it easy to mofidy the sets of transforms applied to an
 environment input and output. In fact, transforms are run both before and
@@ -1181,7 +1181,7 @@ the ``NoopResetEnv`` case, which when reset executes the following steps:
 resets the parent environment before executing a certain number of steps
 at random in that environment.
 
-.. GENERATED FROM PYTHON SOURCE LINES 403-415
+.. GENERATED FROM PYTHON SOURCE LINES 402-414
 
 .. code-block:: Python
 
@@ -1225,7 +1225,7 @@ at random in that environment.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 416-430
+.. GENERATED FROM PYTHON SOURCE LINES 415-429
 
 Environment device
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -1242,7 +1242,7 @@ device is the responsibility of the torchrl environment class. The big
 advantage of storing data on GPU is (1) speedup of transforms as mentioned
 above and (2) sharing data amongst workers in multiprocessing settings.
 
-.. GENERATED FROM PYTHON SOURCE LINES 430-443
+.. GENERATED FROM PYTHON SOURCE LINES 429-442
 
 .. code-block:: Python
 
@@ -1266,7 +1266,7 @@ above and (2) sharing data amongst workers in multiprocessing settings.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 444-451
+.. GENERATED FROM PYTHON SOURCE LINES 443-450
 
 Running environments in parallel
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -1276,7 +1276,7 @@ dtypes (but one could design masking functions to make this possible in case
 those tensors differ in shapes). Creating such environments is quite easy.
 Let us look at the simplest case:
 
-.. GENERATED FROM PYTHON SOURCE LINES 451-464
+.. GENERATED FROM PYTHON SOURCE LINES 450-463
 
 .. code-block:: Python
 
@@ -1300,7 +1300,7 @@ Let us look at the simplest case:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 465-474
+.. GENERATED FROM PYTHON SOURCE LINES 464-473
 
 The ``SerialEnv`` class is similar to the ``ParallelEnv`` except for the
 fact that environments are run sequentially. This is mostly useful for
@@ -1312,7 +1312,7 @@ objects from process to process without worring too much about running
 processes. A ``ParallelEnv`` can be started by calling ``start``, ``reset``
 or simply by calling ``step`` (if ``reset`` does not need to be called first).
 
-.. GENERATED FROM PYTHON SOURCE LINES 474-477
+.. GENERATED FROM PYTHON SOURCE LINES 473-476
 
 .. code-block:: Python
 
@@ -1340,13 +1340,13 @@ or simply by calling ``step`` (if ``reset`` does not need to be called first).
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 478-481
+.. GENERATED FROM PYTHON SOURCE LINES 477-480
 
 One can check that the parallel environment has the right batch size.
 Conventionally, the first part of the ``batch_size`` indicates the batch,
 the second the time frame. Let's check that with the ``rollout`` method:
 
-.. GENERATED FROM PYTHON SOURCE LINES 481-484
+.. GENERATED FROM PYTHON SOURCE LINES 480-483
 
 .. code-block:: Python
 
@@ -1385,7 +1385,7 @@ the second the time frame. Let's check that with the ``rollout`` method:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 485-492
+.. GENERATED FROM PYTHON SOURCE LINES 484-491
 
 Closing parallel environments
 ------------------------------
@@ -1395,7 +1395,7 @@ practice to close a function with a call to ``close``. In some instances,
 TorchRL will throw an error if this is not done (and often it will be at the
 end of a program, when the environment gets out of scope!)
 
-.. GENERATED FROM PYTHON SOURCE LINES 492-495
+.. GENERATED FROM PYTHON SOURCE LINES 491-494
 
 .. code-block:: Python
 
@@ -1409,7 +1409,7 @@ end of a program, when the environment gets out of scope!)
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 496-506
+.. GENERATED FROM PYTHON SOURCE LINES 495-505
 
 Seeding
 ------------------------------
@@ -1422,7 +1422,7 @@ be used, such that one can easily keep the chain going given the last seed.
 This is useful when several collectors all contain a ``ParallelEnv``
 instance and we want each of the sub-sub-environments to have a different seed.
 
-.. GENERATED FROM PYTHON SOURCE LINES 506-512
+.. GENERATED FROM PYTHON SOURCE LINES 505-511
 
 .. code-block:: Python
 
@@ -1445,7 +1445,7 @@ instance and we want each of the sub-sub-environments to have a different seed.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 513-518
+.. GENERATED FROM PYTHON SOURCE LINES 512-517
 
 Accessing environment attributes
 ---------------------------------
@@ -1453,7 +1453,7 @@ It sometimes occurs that a wrapped environment has an attribute that is of
 interest. First, note that TorchRL environment wrapper constains the toolings
 to access this attribute. Here's an example:
 
-.. GENERATED FROM PYTHON SOURCE LINES 518-521
+.. GENERATED FROM PYTHON SOURCE LINES 517-520
 
 .. code-block:: Python
 
@@ -1467,7 +1467,7 @@ to access this attribute. Here's an example:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 522-535
+.. GENERATED FROM PYTHON SOURCE LINES 521-534
 
 .. code-block:: Python
 
@@ -1491,7 +1491,7 @@ to access this attribute. Here's an example:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 536-540
+.. GENERATED FROM PYTHON SOURCE LINES 535-539
 
 .. code-block:: Python
 
@@ -1508,11 +1508,11 @@ to access this attribute. Here's an example:
  .. code-block:: none
 
 
-    'bar_2704a254-0308-11ef-97ad-0242ac110002'
+    'bar_9ad725e8-0309-11ef-a248-0242ac110002'
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 541-551
+.. GENERATED FROM PYTHON SOURCE LINES 540-550
 
 .. code-block:: Python
 
@@ -1539,7 +1539,7 @@ to access this attribute. Here's an example:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 552-558
+.. GENERATED FROM PYTHON SOURCE LINES 551-557
 
 .. code-block:: Python
 
@@ -1558,11 +1558,11 @@ to access this attribute. Here's an example:
  .. code-block:: none
 
 
-    <torchrl.envs.batched_envs._dispatch_caller_parallel object at 0x7f74aa9faaf0>
+    <torchrl.envs.batched_envs._dispatch_caller_parallel object at 0x7f03945908b0>
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 559-562
+.. GENERATED FROM PYTHON SOURCE LINES 558-561
 
 .. code-block:: Python
 
@@ -1578,15 +1578,15 @@ to access this attribute. Here's an example:
  .. code-block:: none
 
 
-    ['bar_2c975d06-0308-11ef-bd75-0242ac110002', 'bar_2c979000-0308-11ef-879b-0242ac110002', 'bar_2c98f85a-0308-11ef-a78d-0242ac110002']
+    ['bar_a02f8ef4-0309-11ef-be34-0242ac110002', 'bar_a02eaa3e-0309-11ef-a6b2-0242ac110002', 'bar_a02d2c7c-0309-11ef-8201-0242ac110002']
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 563-564
+.. GENERATED FROM PYTHON SOURCE LINES 562-563
 
 Similarly, methods can also be accessed:
 
-.. GENERATED FROM PYTHON SOURCE LINES 564-568
+.. GENERATED FROM PYTHON SOURCE LINES 563-567
 
 .. code-block:: Python
 
@@ -1607,7 +1607,7 @@ Similarly, methods can also be accessed:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 569-573
+.. GENERATED FROM PYTHON SOURCE LINES 568-572
 
 .. code-block:: Python
 
@@ -1622,14 +1622,14 @@ Similarly, methods can also be accessed:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 574-578
+.. GENERATED FROM PYTHON SOURCE LINES 573-577
 
 kwargs for parallel environments
 ---------------------------------
 One may want to provide kwargs to the various environments. This can achieved
 either at construction time or afterwards:
 
-.. GENERATED FROM PYTHON SOURCE LINES 580-609
+.. GENERATED FROM PYTHON SOURCE LINES 579-608
 
 .. code-block:: Python
 
@@ -1674,7 +1674,7 @@ either at construction time or afterwards:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 610-617
+.. GENERATED FROM PYTHON SOURCE LINES 609-616
 
 Transforming parallel environments
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -1684,7 +1684,7 @@ One can therefore think carefully about the transform design to leverage the
 device capabilities (e.g. transforms on cuda devices) and vectorizing
 operations on the main process if possible.
 
-.. GENERATED FROM PYTHON SOURCE LINES 617-653
+.. GENERATED FROM PYTHON SOURCE LINES 616-652
 
 .. code-block:: Python
 
@@ -1750,7 +1750,7 @@ operations on the main process if possible.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 654-674
+.. GENERATED FROM PYTHON SOURCE LINES 653-673
 
 VecNorm
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -1773,7 +1773,7 @@ it with data normalizing given a fixed version of the normalizing constants.
 
 In regular setting, using VecNorm is quite easy:
 
-.. GENERATED FROM PYTHON SOURCE LINES 674-684
+.. GENERATED FROM PYTHON SOURCE LINES 673-683
 
 .. code-block:: Python
 
@@ -1795,13 +1795,13 @@ In regular setting, using VecNorm is quite easy:
 
  .. code-block:: none
 
-    mean: : tensor([0.5438, 0.3332, 0.1084])
-    std: : tensor([1.5247, 1.3395, 1.3559])
+    mean: : tensor([-0.2011,  0.3695,  0.1513])
+    std: : tensor([0.9849, 1.0961, 1.1445])
 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 685-691
+.. GENERATED FROM PYTHON SOURCE LINES 684-690
 
 In **parallel envs** things are slightly more complicated, as we need to
 share the running statistics amongst the processes. We created a class
@@ -1810,7 +1810,7 @@ method, retrieving tensordicts to share amongst processes in the environment
 class, and pointing each process to the right common, shared tensordict
 once created:
 
-.. GENERATED FROM PYTHON SOURCE LINES 691-708
+.. GENERATED FROM PYTHON SOURCE LINES 690-707
 
 .. code-block:: Python
 
@@ -1859,13 +1859,13 @@ once created:
         batch_size=torch.Size([3, 5]),
         device=cpu,
         is_shared=False)
-    mean: : tensor([-0.2067, -0.0298,  0.0749])
-    std: : tensor([1.2097, 1.0694, 1.1862])
+    mean: : tensor([-0.0819,  0.2158, -0.0065])
+    std: : tensor([1.2558, 1.1833, 1.2462])
 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 709-714
+.. GENERATED FROM PYTHON SOURCE LINES 708-713
 
 The count is slightly higher than the number of steps (since we
 did not use any decay). The difference between the two is due to the fact
@@ -1873,7 +1873,7 @@ that ``ParallelEnv`` creates a dummy environment to initialize the shared
 ``TensorDict`` that is used to collect data from the dispached environments.
 This small difference will usually be absored throughout training.
 
-.. GENERATED FROM PYTHON SOURCE LINES 714-722
+.. GENERATED FROM PYTHON SOURCE LINES 713-721
 
 .. code-block:: Python
 
@@ -1901,9 +1901,9 @@ This small difference will usually be absored throughout training.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (3 minutes 33.141 seconds)
+   **Total running time of the script:** (3 minutes 24.556 seconds)
 
-**Estimated memory usage:**  30 MB
+**Estimated memory usage:**  63 MB
 
 
 .. _sphx_glr_download_tutorials_torchrl_envs.py:

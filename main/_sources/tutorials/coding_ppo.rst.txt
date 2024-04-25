@@ -52,7 +52,7 @@ We will cover six crucial components of TorchRL:
 * `data collectors <https://pytorch.org/rl/reference/collectors.html>`__
 * `replay buffers <https://pytorch.org/rl/reference/data.html#replay-buffers>`__
 
-.. GENERATED FROM PYTHON SOURCE LINES 40-108
+.. GENERATED FROM PYTHON SOURCE LINES 39-107
 
 If you are running this in Google Colab, make sure you install the following dependencies:
 
@@ -123,7 +123,7 @@ what a module reads and writes and care less about the specific data
 description and more about the algorithm itself.
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 108-136
+.. GENERATED FROM PYTHON SOURCE LINES 107-135
 
 .. code-block:: Python
 
@@ -162,7 +162,7 @@ description and more about the algorithm itself.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 157-168
+.. GENERATED FROM PYTHON SOURCE LINES 156-167
 
 Define Hyperparameters
 ----------------------
@@ -176,7 +176,7 @@ must be corrected for this value (since one environment step will
 actually return ``frame_skip`` frames).
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 168-179
+.. GENERATED FROM PYTHON SOURCE LINES 167-178
 
 .. code-block:: Python
 
@@ -198,7 +198,7 @@ actually return ``frame_skip`` frames).
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 180-190
+.. GENERATED FROM PYTHON SOURCE LINES 179-189
 
 Data collection parameters
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -211,7 +211,7 @@ as fast as it can in terms of environment interactions: the lower the ``total_fr
 the better.
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 190-194
+.. GENERATED FROM PYTHON SOURCE LINES 189-193
 
 .. code-block:: Python
 
@@ -226,7 +226,7 @@ the better.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 195-206
+.. GENERATED FROM PYTHON SOURCE LINES 194-205
 
 PPO parameters
 ~~~~~~~~~~~~~~
@@ -240,7 +240,7 @@ we will further split in smaller sub-batches during the inner training loop.
 The size of these sub-batches is controlled by ``sub_batch_size``.
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 206-215
+.. GENERATED FROM PYTHON SOURCE LINES 205-214
 
 .. code-block:: Python
 
@@ -260,7 +260,7 @@ The size of these sub-batches is controlled by ``sub_batch_size``.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 216-227
+.. GENERATED FROM PYTHON SOURCE LINES 215-226
 
 Define an environment
 ---------------------
@@ -274,7 +274,7 @@ to a large panel of RL simulators, allowing you to easily swap one environment
 with another. For example, creating a wrapped gym environment can be achieved with few characters:
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 227-230
+.. GENERATED FROM PYTHON SOURCE LINES 226-229
 
 .. code-block:: Python
 
@@ -288,7 +288,7 @@ with another. For example, creating a wrapped gym environment can be achieved wi
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 231-281
+.. GENERATED FROM PYTHON SOURCE LINES 230-280
 
 There are a few things to notice in this code: first, we created
 the environment by calling the ``GymEnv`` wrapper. If extra keyword arguments
@@ -341,7 +341,7 @@ to as ``"observation"`` and our transform layers will be told to modify this
 entry and this entry only:
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 281-292
+.. GENERATED FROM PYTHON SOURCE LINES 280-291
 
 .. code-block:: Python
 
@@ -363,14 +363,14 @@ entry and this entry only:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 293-297
+.. GENERATED FROM PYTHON SOURCE LINES 292-296
 
 As you may have noticed, we have created a normalization layer but we did not
 set its normalization parameters. To do this, :class:`~torchrl.envs.transforms.ObservationNorm` can
 automatically gather the summary statistics of our environment:
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 297-299
+.. GENERATED FROM PYTHON SOURCE LINES 296-298
 
 .. code-block:: Python
 
@@ -383,7 +383,7 @@ automatically gather the summary statistics of our environment:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 300-305
+.. GENERATED FROM PYTHON SOURCE LINES 299-304
 
 The :class:`~torchrl.envs.transforms.ObservationNorm` transform has now been populated with a
 location and a scale that will be used to normalize the data.
@@ -391,7 +391,7 @@ location and a scale that will be used to normalize the data.
 Let us do a little sanity check for the shape of our summary stats:
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 305-307
+.. GENERATED FROM PYTHON SOURCE LINES 304-306
 
 .. code-block:: Python
 
@@ -410,7 +410,7 @@ Let us do a little sanity check for the shape of our summary stats:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 308-327
+.. GENERATED FROM PYTHON SOURCE LINES 307-326
 
 An environment is not only defined by its simulator and transforms, but also
 by a series of metadata that describe what can be expected during its
@@ -432,7 +432,7 @@ is to be expected when executing an action in the environment,
 everything an environment requires to execute a single step.
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 327-332
+.. GENERATED FROM PYTHON SOURCE LINES 326-331
 
 .. code-block:: Python
 
@@ -503,13 +503,13 @@ everything an environment requires to execute a single step.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 333-336
+.. GENERATED FROM PYTHON SOURCE LINES 332-335
 
 the :func:`check_env_specs` function runs a small rollout and compares its output against the environment
 specs. If no error is raised, we can be confident that the specs are properly defined:
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 336-338
+.. GENERATED FROM PYTHON SOURCE LINES 335-337
 
 .. code-block:: Python
 
@@ -522,7 +522,7 @@ specs. If no error is raised, we can be confident that the specs are properly de
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 339-353
+.. GENERATED FROM PYTHON SOURCE LINES 338-352
 
 For fun, let's see what a simple random rollout looks like. You can
 call `env.rollout(n_steps)` and get an overview of what the environment inputs
@@ -539,7 +539,7 @@ number of steps, we will retrieve a :class:`~tensordict.TensorDict` instance wit
 that matches this trajectory length:
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 353-357
+.. GENERATED FROM PYTHON SOURCE LINES 352-356
 
 .. code-block:: Python
 
@@ -582,7 +582,7 @@ that matches this trajectory length:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 358-391
+.. GENERATED FROM PYTHON SOURCE LINES 357-390
 
 Our rollout data has a shape of ``torch.Size([3])``, which matches the number of steps
 we ran it for. The ``"next"`` entry points to the data coming after the current step.
@@ -618,7 +618,7 @@ We design the policy in three steps:
 3. Create a probabilistic :class:`~tensordict.nn.TensorDictModule` that can generate this distribution and sample from it.
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 391-403
+.. GENERATED FROM PYTHON SOURCE LINES 390-402
 
 .. code-block:: Python
 
@@ -641,7 +641,7 @@ We design the policy in three steps:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 404-409
+.. GENERATED FROM PYTHON SOURCE LINES 403-408
 
 To enable the policy to "talk" with the environment through the ``tensordict``
 data carrier, we wrap the ``nn.Module`` in a :class:`~tensordict.nn.TensorDictModule`. This
@@ -649,7 +649,7 @@ class will simply ready the ``in_keys`` it is provided with and write the
 outputs in-place at the registered ``out_keys``.
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 409-413
+.. GENERATED FROM PYTHON SOURCE LINES 408-412
 
 .. code-block:: Python
 
@@ -664,7 +664,7 @@ outputs in-place at the registered ``out_keys``.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 414-429
+.. GENERATED FROM PYTHON SOURCE LINES 413-428
 
 We now need to build a distribution out of the location and scale of our
 normal distribution. To do so, we instruct the
@@ -682,7 +682,7 @@ like, as the :class:`~torchrl.modules.TanhNormal` distribution constructor will 
 what ``in_key`` string should be used for every keyword argument that is to be used.
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 429-442
+.. GENERATED FROM PYTHON SOURCE LINES 428-441
 
 .. code-block:: Python
 
@@ -706,7 +706,7 @@ what ``in_key`` string should be used for every keyword argument that is to be u
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 443-454
+.. GENERATED FROM PYTHON SOURCE LINES 442-453
 
 Value network
 -------------
@@ -720,7 +720,7 @@ structure as the policy, but for simplicity we assign it its own set of
 parameters.
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 454-469
+.. GENERATED FROM PYTHON SOURCE LINES 453-468
 
 .. code-block:: Python
 
@@ -746,7 +746,7 @@ parameters.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 470-475
+.. GENERATED FROM PYTHON SOURCE LINES 469-474
 
 let's try our policy and value modules. As we said earlier, the usage of
 :class:`~tensordict.nn.TensorDictModule` makes it possible to directly read the output
@@ -754,7 +754,7 @@ of the environment to run these modules, as they know what information to read
 and where to write it:
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 475-478
+.. GENERATED FROM PYTHON SOURCE LINES 474-477
 
 .. code-block:: Python
 
@@ -798,7 +798,7 @@ and where to write it:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 479-509
+.. GENERATED FROM PYTHON SOURCE LINES 478-508
 
 Data collector
 --------------
@@ -831,7 +831,7 @@ training loop allows you to write data loading pipelines
 that are 100% oblivious to the actual specificities of the rollout content.
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 509-518
+.. GENERATED FROM PYTHON SOURCE LINES 508-517
 
 .. code-block:: Python
 
@@ -851,7 +851,7 @@ that are 100% oblivious to the actual specificities of the rollout content.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 519-537
+.. GENERATED FROM PYTHON SOURCE LINES 518-536
 
 Replay buffer
 -------------
@@ -872,7 +872,7 @@ sample the sub-batches from the collected batch, but using these classes
 make it easy for us to build the inner training loop in a reproducible way.
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 537-543
+.. GENERATED FROM PYTHON SOURCE LINES 536-542
 
 .. code-block:: Python
 
@@ -889,7 +889,7 @@ make it easy for us to build the inner training loop in a reproducible way.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 544-565
+.. GENERATED FROM PYTHON SOURCE LINES 543-564
 
 Loss function
 -------------
@@ -913,7 +913,7 @@ Both of these will be used by :class:`~torchrl.objectives.ClipPPOLoss` to
 return the policy and value losses.
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 565-586
+.. GENERATED FROM PYTHON SOURCE LINES 564-585
 
 .. code-block:: Python
 
@@ -945,7 +945,7 @@ return the policy and value losses.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 587-605
+.. GENERATED FROM PYTHON SOURCE LINES 586-604
 
 Training loop
 -------------
@@ -966,7 +966,7 @@ The steps include:
 * Repeat
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 605-675
+.. GENERATED FROM PYTHON SOURCE LINES 604-674
 
 .. code-block:: Python
 
@@ -1048,11 +1048,11 @@ The steps include:
 
  .. code-block:: none
 
-      0%|          | 0/10000 [00:00<?, ?it/s]     10%|█         | 1000/10000 [00:02<00:19, 463.09it/s]    eval cumulative reward:  111.0509 (init:  111.0509), eval step-count: 11, average reward= 9.0959 (init= 9.0959), step count (max): 12, lr policy:  0.0003:  10%|█         | 1000/10000 [00:02<00:19, 463.09it/s]    eval cumulative reward:  111.0509 (init:  111.0509), eval step-count: 11, average reward= 9.0959 (init= 9.0959), step count (max): 12, lr policy:  0.0003:  20%|██        | 2000/10000 [00:04<00:17, 466.81it/s]    eval cumulative reward:  111.0509 (init:  111.0509), eval step-count: 11, average reward= 9.1096 (init= 9.0959), step count (max): 14, lr policy:  0.0003:  20%|██        | 2000/10000 [00:04<00:17, 466.81it/s]    eval cumulative reward:  111.0509 (init:  111.0509), eval step-count: 11, average reward= 9.1096 (init= 9.0959), step count (max): 14, lr policy:  0.0003:  30%|███       | 3000/10000 [00:06<00:14, 471.70it/s]    eval cumulative reward:  111.0509 (init:  111.0509), eval step-count: 11, average reward= 9.1598 (init= 9.0959), step count (max): 19, lr policy:  0.0003:  30%|███       | 3000/10000 [00:06<00:14, 471.70it/s]    eval cumulative reward:  111.0509 (init:  111.0509), eval step-count: 11, average reward= 9.1598 (init= 9.0959), step count (max): 19, lr policy:  0.0003:  40%|████      | 4000/10000 [00:08<00:12, 473.08it/s]    eval cumulative reward:  111.0509 (init:  111.0509), eval step-count: 11, average reward= 9.1912 (init= 9.0959), step count (max): 21, lr policy:  0.0002:  40%|████      | 4000/10000 [00:08<00:12, 473.08it/s]    eval cumulative reward:  111.0509 (init:  111.0509), eval step-count: 11, average reward= 9.1912 (init= 9.0959), step count (max): 21, lr policy:  0.0002:  50%|█████     | 5000/10000 [00:10<00:10, 477.63it/s]    eval cumulative reward:  111.0509 (init:  111.0509), eval step-count: 11, average reward= 9.2127 (init= 9.0959), step count (max): 25, lr policy:  0.0002:  50%|█████     | 5000/10000 [00:10<00:10, 477.63it/s]    eval cumulative reward:  111.0509 (init:  111.0509), eval step-count: 11, average reward= 9.2127 (init= 9.0959), step count (max): 25, lr policy:  0.0002:  60%|██████    | 6000/10000 [00:12<00:08, 479.58it/s]    eval cumulative reward:  111.0509 (init:  111.0509), eval step-count: 11, average reward= 9.2326 (init= 9.0959), step count (max): 31, lr policy:  0.0001:  60%|██████    | 6000/10000 [00:12<00:08, 479.58it/s]    eval cumulative reward:  111.0509 (init:  111.0509), eval step-count: 11, average reward= 9.2326 (init= 9.0959), step count (max): 31, lr policy:  0.0001:  70%|███████   | 7000/10000 [00:14<00:06, 481.94it/s]    eval cumulative reward:  111.0509 (init:  111.0509), eval step-count: 11, average reward= 9.2278 (init= 9.0959), step count (max): 33, lr policy:  0.0001:  70%|███████   | 7000/10000 [00:14<00:06, 481.94it/s]    eval cumulative reward:  111.0509 (init:  111.0509), eval step-count: 11, average reward= 9.2278 (init= 9.0959), step count (max): 33, lr policy:  0.0001:  80%|████████  | 8000/10000 [00:16<00:04, 472.20it/s]    eval cumulative reward:  111.0509 (init:  111.0509), eval step-count: 11, average reward= 9.2450 (init= 9.0959), step count (max): 45, lr policy:  0.0001:  80%|████████  | 8000/10000 [00:16<00:04, 472.20it/s]    eval cumulative reward:  111.0509 (init:  111.0509), eval step-count: 11, average reward= 9.2450 (init= 9.0959), step count (max): 45, lr policy:  0.0001:  90%|█████████ | 9000/10000 [00:18<00:02, 477.58it/s]    eval cumulative reward:  111.0509 (init:  111.0509), eval step-count: 11, average reward= 9.2495 (init= 9.0959), step count (max): 41, lr policy:  0.0000:  90%|█████████ | 9000/10000 [00:18<00:02, 477.58it/s]    eval cumulative reward:  111.0509 (init:  111.0509), eval step-count: 11, average reward= 9.2495 (init= 9.0959), step count (max): 41, lr policy:  0.0000: 100%|██████████| 10000/10000 [00:20<00:00, 480.08it/s]    eval cumulative reward:  111.0509 (init:  111.0509), eval step-count: 11, average reward= 9.2528 (init= 9.0959), step count (max): 45, lr policy:  0.0000: 100%|██████████| 10000/10000 [00:20<00:00, 480.08it/s]
+      0%|          | 0/10000 [00:00<?, ?it/s]     10%|█         | 1000/10000 [00:02<00:19, 467.38it/s]    eval cumulative reward:  167.3330 (init:  167.3330), eval step-count: 17, average reward= 9.0986 (init= 9.0986), step count (max): 15, lr policy:  0.0003:  10%|█         | 1000/10000 [00:02<00:19, 467.38it/s]    eval cumulative reward:  167.3330 (init:  167.3330), eval step-count: 17, average reward= 9.0986 (init= 9.0986), step count (max): 15, lr policy:  0.0003:  20%|██        | 2000/10000 [00:04<00:16, 472.42it/s]    eval cumulative reward:  167.3330 (init:  167.3330), eval step-count: 17, average reward= 9.1264 (init= 9.0986), step count (max): 17, lr policy:  0.0003:  20%|██        | 2000/10000 [00:04<00:16, 472.42it/s]    eval cumulative reward:  167.3330 (init:  167.3330), eval step-count: 17, average reward= 9.1264 (init= 9.0986), step count (max): 17, lr policy:  0.0003:  30%|███       | 3000/10000 [00:06<00:14, 477.66it/s]    eval cumulative reward:  167.3330 (init:  167.3330), eval step-count: 17, average reward= 9.1653 (init= 9.0986), step count (max): 20, lr policy:  0.0003:  30%|███       | 3000/10000 [00:06<00:14, 477.66it/s]    eval cumulative reward:  167.3330 (init:  167.3330), eval step-count: 17, average reward= 9.1653 (init= 9.0986), step count (max): 20, lr policy:  0.0003:  40%|████      | 4000/10000 [00:08<00:12, 480.82it/s]    eval cumulative reward:  167.3330 (init:  167.3330), eval step-count: 17, average reward= 9.1827 (init= 9.0986), step count (max): 22, lr policy:  0.0002:  40%|████      | 4000/10000 [00:08<00:12, 480.82it/s]    eval cumulative reward:  167.3330 (init:  167.3330), eval step-count: 17, average reward= 9.1827 (init= 9.0986), step count (max): 22, lr policy:  0.0002:  50%|█████     | 5000/10000 [00:10<00:10, 483.48it/s]    eval cumulative reward:  167.3330 (init:  167.3330), eval step-count: 17, average reward= 9.2105 (init= 9.0986), step count (max): 27, lr policy:  0.0002:  50%|█████     | 5000/10000 [00:10<00:10, 483.48it/s]    eval cumulative reward:  167.3330 (init:  167.3330), eval step-count: 17, average reward= 9.2105 (init= 9.0986), step count (max): 27, lr policy:  0.0002:  60%|██████    | 6000/10000 [00:12<00:08, 484.63it/s]    eval cumulative reward:  167.3330 (init:  167.3330), eval step-count: 17, average reward= 9.2234 (init= 9.0986), step count (max): 28, lr policy:  0.0001:  60%|██████    | 6000/10000 [00:12<00:08, 484.63it/s]    eval cumulative reward:  167.3330 (init:  167.3330), eval step-count: 17, average reward= 9.2234 (init= 9.0986), step count (max): 28, lr policy:  0.0001:  70%|███████   | 7000/10000 [00:14<00:06, 486.96it/s]    eval cumulative reward:  167.3330 (init:  167.3330), eval step-count: 17, average reward= 9.2363 (init= 9.0986), step count (max): 28, lr policy:  0.0001:  70%|███████   | 7000/10000 [00:14<00:06, 486.96it/s]    eval cumulative reward:  167.3330 (init:  167.3330), eval step-count: 17, average reward= 9.2363 (init= 9.0986), step count (max): 28, lr policy:  0.0001:  80%|████████  | 8000/10000 [00:16<00:04, 476.00it/s]    eval cumulative reward:  167.3330 (init:  167.3330), eval step-count: 17, average reward= 9.2515 (init= 9.0986), step count (max): 40, lr policy:  0.0001:  80%|████████  | 8000/10000 [00:16<00:04, 476.00it/s]    eval cumulative reward:  167.3330 (init:  167.3330), eval step-count: 17, average reward= 9.2515 (init= 9.0986), step count (max): 40, lr policy:  0.0001:  90%|█████████ | 9000/10000 [00:18<00:02, 481.33it/s]    eval cumulative reward:  167.3330 (init:  167.3330), eval step-count: 17, average reward= 9.2622 (init= 9.0986), step count (max): 39, lr policy:  0.0000:  90%|█████████ | 9000/10000 [00:18<00:02, 481.33it/s]    eval cumulative reward:  167.3330 (init:  167.3330), eval step-count: 17, average reward= 9.2622 (init= 9.0986), step count (max): 39, lr policy:  0.0000: 100%|██████████| 10000/10000 [00:20<00:00, 485.08it/s]    eval cumulative reward:  167.3330 (init:  167.3330), eval step-count: 17, average reward= 9.2719 (init= 9.0986), step count (max): 44, lr policy:  0.0000: 100%|██████████| 10000/10000 [00:20<00:00, 485.08it/s]
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 676-683
+.. GENERATED FROM PYTHON SOURCE LINES 675-682
 
 Results
 -------
@@ -1062,7 +1062,7 @@ step count of 1000 steps, which is the maximum number of steps before the
 trajectory is truncated.
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 683-698
+.. GENERATED FROM PYTHON SOURCE LINES 682-697
 
 .. code-block:: Python
 
@@ -1093,7 +1093,7 @@ trajectory is truncated.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 699-719
+.. GENERATED FROM PYTHON SOURCE LINES 698-718
 
 Conclusion and next steps
 -------------------------
@@ -1119,7 +1119,7 @@ If you want to experiment with this tutorial a bit more, you can apply the follo
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (1 minutes 27.077 seconds)
+   **Total running time of the script:** (1 minutes 24.134 seconds)
 
 **Estimated memory usage:**  10 MB
 

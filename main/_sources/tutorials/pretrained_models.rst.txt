@@ -22,7 +22,7 @@ Using pretrained models
 =======================
 This tutorial explains how to use pretrained models in TorchRL.
 
-.. GENERATED FROM PYTHON SOURCE LINES 8-16
+.. GENERATED FROM PYTHON SOURCE LINES 7-15
 
 At the end of this tutorial, you will be capable of using pretrained models
 for efficient image representation, and fine-tune them.
@@ -33,7 +33,7 @@ in one or the other context. In this tutorial, we will be using R3M (https://arx
 but other models (e.g. VIP) will work equally well.
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 16-32
+.. GENERATED FROM PYTHON SOURCE LINES 15-31
 
 .. code-block:: Python
 
@@ -60,14 +60,14 @@ but other models (e.g. VIP) will work equally well.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 53-57
+.. GENERATED FROM PYTHON SOURCE LINES 52-56
 
 Let us first create an environment. For the sake of simplicity, we will be using
 a common gym environment. In practice, this will work in more challenging, embodied
 AI contexts (e.g. have a look at our Habitat wrappers).
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 57-59
+.. GENERATED FROM PYTHON SOURCE LINES 56-58
 
 .. code-block:: Python
 
@@ -80,7 +80,7 @@ AI contexts (e.g. have a look at our Habitat wrappers).
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 60-67
+.. GENERATED FROM PYTHON SOURCE LINES 59-66
 
 Let us fetch our pretrained model. We ask for the pretrained version of the model through the
 download=True flag. By default this is turned off.
@@ -90,7 +90,7 @@ in the output tensordict. Our policy, consisting of a single layer MLP, will the
 the corresponding action.
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 67-80
+.. GENERATED FROM PYTHON SOURCE LINES 66-79
 
 .. code-block:: Python
 
@@ -116,17 +116,17 @@ the corresponding action.
  .. code-block:: none
 
     Downloading: "https://pytorch.s3.amazonaws.com/models/rl/r3m/r3m_50.pt" to /root/.cache/torch/hub/checkpoints/r3m_50.pt
-      0%|          | 0.00/374M [00:00<?, ?B/s]      4%|▍         | 15.0M/374M [00:00<00:02, 156MB/s]      8%|▊         | 29.9M/374M [00:00<00:03, 111MB/s]     11%|█         | 41.2M/374M [00:00<00:04, 82.4MB/s]     13%|█▎        | 50.0M/374M [00:00<00:04, 74.5MB/s]     17%|█▋        | 64.0M/374M [00:00<00:03, 86.7MB/s]     19%|█▉        | 72.8M/374M [00:00<00:03, 85.3MB/s]     22%|██▏       | 81.2M/374M [00:01<00:03, 76.9MB/s]     24%|██▍       | 88.9M/374M [00:01<00:04, 65.3MB/s]     26%|██▌       | 97.8M/374M [00:01<00:04, 60.2MB/s]     28%|██▊       | 104M/374M [00:01<00:05, 55.4MB/s]      31%|███       | 115M/374M [00:01<00:04, 67.0MB/s]     35%|███▌      | 131M/374M [00:01<00:03, 76.1MB/s]     39%|███▉      | 148M/374M [00:01<00:02, 89.0MB/s]     44%|████▍     | 164M/374M [00:02<00:02, 86.8MB/s]     48%|████▊     | 179M/374M [00:02<00:02, 90.8MB/s]     50%|█████     | 188M/374M [00:02<00:02, 80.4MB/s]     52%|█████▏    | 196M/374M [00:02<00:02, 71.0MB/s]     54%|█████▍    | 202M/374M [00:02<00:02, 60.3MB/s]     57%|█████▋    | 212M/374M [00:03<00:02, 61.0MB/s]     59%|█████▉    | 220M/374M [00:03<00:02, 64.6MB/s]     61%|██████▏   | 229M/374M [00:03<00:02, 55.9MB/s]     66%|██████▌   | 246M/374M [00:03<00:01, 68.6MB/s]     70%|███████   | 262M/374M [00:03<00:01, 74.6MB/s]     74%|███████▍  | 277M/374M [00:03<00:01, 83.6MB/s]     76%|███████▌  | 285M/374M [00:03<00:01, 76.5MB/s]     79%|███████▉  | 295M/374M [00:04<00:01, 75.0MB/s]     83%|████████▎ | 311M/374M [00:04<00:00, 84.9MB/s]     88%|████████▊ | 328M/374M [00:04<00:00, 77.9MB/s]     92%|█████████▏| 342M/374M [00:04<00:00, 66.0MB/s]     93%|█████████▎| 349M/374M [00:04<00:00, 65.4MB/s]     96%|█████████▋| 360M/374M [00:05<00:00, 69.8MB/s]    100%|██████████| 374M/374M [00:05<00:00, 75.2MB/s]
+      0%|          | 0.00/374M [00:00<?, ?B/s]      4%|▍         | 16.5M/374M [00:00<00:03, 120MB/s]      9%|▉         | 32.9M/374M [00:00<00:02, 130MB/s]     13%|█▎        | 49.2M/374M [00:00<00:02, 127MB/s]     17%|█▋        | 64.9M/374M [00:00<00:02, 139MB/s]     21%|██        | 78.4M/374M [00:00<00:03, 92.6MB/s]     24%|██▍       | 88.9M/374M [00:01<00:05, 58.4MB/s]     26%|██▌       | 97.8M/374M [00:01<00:05, 53.4MB/s]     28%|██▊       | 104M/374M [00:01<00:05, 51.5MB/s]      31%|███       | 115M/374M [00:01<00:04, 58.9MB/s]     35%|███▌      | 131M/374M [00:01<00:04, 63.1MB/s]     39%|███▉      | 148M/374M [00:02<00:02, 81.5MB/s]     44%|████▍     | 164M/374M [00:02<00:02, 82.0MB/s]     48%|████▊     | 180M/374M [00:02<00:02, 83.7MB/s]     51%|█████     | 191M/374M [00:02<00:03, 57.2MB/s]     53%|█████▎    | 199M/374M [00:02<00:03, 60.6MB/s]     57%|█████▋    | 212M/374M [00:03<00:02, 67.5MB/s]     60%|█████▉    | 224M/374M [00:03<00:02, 71.7MB/s]     62%|██████▏   | 231M/374M [00:03<00:02, 61.7MB/s]     66%|██████▌   | 246M/374M [00:03<00:01, 72.5MB/s]     70%|██████▉   | 262M/374M [00:03<00:01, 86.1MB/s]     72%|███████▏  | 270M/374M [00:03<00:01, 72.1MB/s]     74%|███████▍  | 278M/374M [00:04<00:02, 50.1MB/s]     76%|███████▌  | 284M/374M [00:04<00:01, 48.7MB/s]     78%|███████▊  | 293M/374M [00:04<00:01, 50.3MB/s]     80%|███████▉  | 299M/374M [00:04<00:01, 49.0MB/s]     81%|████████  | 304M/374M [00:04<00:01, 49.3MB/s]     83%|████████▎ | 311M/374M [00:04<00:01, 49.8MB/s]     85%|████████▍ | 316M/374M [00:05<00:01, 47.1MB/s]     88%|████████▊ | 328M/374M [00:05<00:00, 53.8MB/s]     89%|████████▉ | 333M/374M [00:05<00:00, 53.4MB/s]     92%|█████████▏| 342M/374M [00:05<00:00, 55.3MB/s]     93%|█████████▎| 348M/374M [00:05<00:00, 55.2MB/s]     99%|█████████▉| 370M/374M [00:05<00:00, 89.6MB/s]    100%|██████████| 374M/374M [00:05<00:00, 67.0MB/s]
 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 81-83
+.. GENERATED FROM PYTHON SOURCE LINES 80-82
 
 Let's check the number of parameters of the policy:
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 83-85
+.. GENERATED FROM PYTHON SOURCE LINES 82-84
 
 .. code-block:: Python
 
@@ -145,12 +145,12 @@ Let's check the number of parameters of the policy:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 86-88
+.. GENERATED FROM PYTHON SOURCE LINES 85-87
 
 We collect a rollout of 32 steps and print its output:
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 88-91
+.. GENERATED FROM PYTHON SOURCE LINES 87-90
 
 .. code-block:: Python
 
@@ -189,14 +189,14 @@ We collect a rollout of 32 steps and print its output:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 92-96
+.. GENERATED FROM PYTHON SOURCE LINES 91-95
 
 For fine tuning, we integrate the transform in the policy after making the parameters
 trainable. In practice, it may be wiser to restrict this to a subset of the parameters (say the last layer
 of the MLP).
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 96-100
+.. GENERATED FROM PYTHON SOURCE LINES 95-99
 
 .. code-block:: Python
 
@@ -217,14 +217,14 @@ of the MLP).
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 101-105
+.. GENERATED FROM PYTHON SOURCE LINES 100-104
 
 Again, we collect a rollout with R3M. The structure of the output has changed slightly, as now
 the environment returns pixels (and not an embedding). The embedding "r3m_vec" is an intermediate
 result of our policy.
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 105-108
+.. GENERATED FROM PYTHON SOURCE LINES 104-107
 
 .. code-block:: Python
 
@@ -263,7 +263,7 @@ result of our policy.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 109-116
+.. GENERATED FROM PYTHON SOURCE LINES 108-115
 
 The easiness with which we have swapped the transform from the env to the policy
 is due to the fact that both behave like TensorDictModule: they have a set of `"in_keys"` and
@@ -273,7 +273,7 @@ To conclude this tutorial, let's have a look at how we could use R3M to read
 images stored in a replay buffer (e.g. in an offline RL context). First, let's build our dataset:
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 116-121
+.. GENERATED FROM PYTHON SOURCE LINES 115-120
 
 .. code-block:: Python
 
@@ -289,13 +289,13 @@ images stored in a replay buffer (e.g. in an offline RL context). First, let's b
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 122-125
+.. GENERATED FROM PYTHON SOURCE LINES 121-124
 
 We can now collect the data (random rollouts for our purpose) and fill the replay
 buffer with it:
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 125-131
+.. GENERATED FROM PYTHON SOURCE LINES 124-130
 
 .. code-block:: Python
 
@@ -312,12 +312,12 @@ buffer with it:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 132-134
+.. GENERATED FROM PYTHON SOURCE LINES 131-133
 
 Let's check what our replay buffer storage looks like. It should not contain the "r3m_vec" entry
 since we haven't used it yet:
 
-.. GENERATED FROM PYTHON SOURCE LINES 134-136
+.. GENERATED FROM PYTHON SOURCE LINES 133-135
 
 .. code-block:: Python
 
@@ -355,13 +355,13 @@ since we haven't used it yet:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 137-140
+.. GENERATED FROM PYTHON SOURCE LINES 136-139
 
 When sampling, the data will go through the R3M transform, giving us the processed data that we wanted.
 In this way, we can train an algorithm offline on a dataset made of images:
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 140-143
+.. GENERATED FROM PYTHON SOURCE LINES 139-142
 
 .. code-block:: Python
 
@@ -403,9 +403,9 @@ In this way, we can train an algorithm offline on a dataset made of images:
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 49.659 seconds)
+   **Total running time of the script:** (0 minutes 51.680 seconds)
 
-**Estimated memory usage:**  3696 MB
+**Estimated memory usage:**  2162 MB
 
 
 .. _sphx_glr_download_tutorials_pretrained_models.py:
