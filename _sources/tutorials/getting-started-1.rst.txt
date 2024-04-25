@@ -535,7 +535,16 @@ network:
 
 
 
+.. rst-class:: sphx-glr-script-out
 
+.. code-block:: pytb
+
+    Traceback (most recent call last):
+      File "/pytorch/rl/docs/source/reference/generated/tutorials/getting-started-1.py", line 276, in <module>
+        QValueModule(
+      File "/pytorch/rl/torchrl/modules/tensordict_module/actors.py", line 455, in __init__
+        raise TypeError("Using specs in action_space is deprecated")
+    TypeError: Using specs in action_space is deprecated
 
 
 
@@ -556,39 +565,6 @@ output. We should find an ``"action_value"`` as well as a
     print(rollout)
 
 
-
-
-
-.. rst-class:: sphx-glr-script-out
-
- .. code-block:: none
-
-    TensorDict(
-        fields={
-            action: Tensor(shape=torch.Size([3, 2]), device=cpu, dtype=torch.int64, is_shared=False),
-            action_value: Tensor(shape=torch.Size([3, 2]), device=cpu, dtype=torch.float32, is_shared=False),
-            chosen_action_value: Tensor(shape=torch.Size([3, 1]), device=cpu, dtype=torch.float32, is_shared=False),
-            done: Tensor(shape=torch.Size([3, 1]), device=cpu, dtype=torch.bool, is_shared=False),
-            next: TensorDict(
-                fields={
-                    done: Tensor(shape=torch.Size([3, 1]), device=cpu, dtype=torch.bool, is_shared=False),
-                    observation: Tensor(shape=torch.Size([3, 4]), device=cpu, dtype=torch.float32, is_shared=False),
-                    reward: Tensor(shape=torch.Size([3, 1]), device=cpu, dtype=torch.float32, is_shared=False),
-                    terminated: Tensor(shape=torch.Size([3, 1]), device=cpu, dtype=torch.bool, is_shared=False),
-                    truncated: Tensor(shape=torch.Size([3, 1]), device=cpu, dtype=torch.bool, is_shared=False)},
-                batch_size=torch.Size([3]),
-                device=cpu,
-                is_shared=False),
-            observation: Tensor(shape=torch.Size([3, 4]), device=cpu, dtype=torch.float32, is_shared=False),
-            terminated: Tensor(shape=torch.Size([3, 1]), device=cpu, dtype=torch.bool, is_shared=False),
-            truncated: Tensor(shape=torch.Size([3, 1]), device=cpu, dtype=torch.bool, is_shared=False)},
-        batch_size=torch.Size([3]),
-        device=cpu,
-        is_shared=False)
-
-
-
-
 .. GENERATED FROM PYTHON SOURCE LINES 291-295
 
 Because it relies on the ``argmax`` operator, this policy is deterministic.
@@ -605,12 +581,6 @@ once again:
 
     with set_exploration_type(ExplorationType.RANDOM):
         rollout_explore = env.rollout(max_steps=3, policy=policy_explore)
-
-
-
-
-
-
 
 
 .. GENERATED FROM PYTHON SOURCE LINES 302-318
@@ -635,9 +605,9 @@ Next steps:
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 46.026 seconds)
+   **Total running time of the script:** (0 minutes 35.280 seconds)
 
-**Estimated memory usage:**  8 MB
+**Estimated memory usage:**  2341 MB
 
 
 .. _sphx_glr_download_tutorials_getting-started-1.py:

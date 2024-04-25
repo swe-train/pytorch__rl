@@ -110,7 +110,16 @@ for :ref:`inference <gs_storage>`.
 
 
 
+.. rst-class:: sphx-glr-script-out
 
+.. code-block:: pytb
+
+    Traceback (most recent call last):
+      File "/pytorch/rl/docs/source/reference/generated/tutorials/getting-started-5.py", line 69, in <module>
+        policy = Seq(value_net, QValueModule(env.action_spec))
+      File "/pytorch/rl/torchrl/modules/tensordict_module/actors.py", line 455, in __init__
+        raise TypeError("Using specs in action_space is deprecated")
+    TypeError: Using specs in action_space is deprecated
 
 
 
@@ -148,12 +157,6 @@ and a :ref:`replay buffer <gs_storage_rb>` to store that data for training.
     from torch.optim import Adam
 
 
-
-
-
-
-
-
 .. GENERATED FROM PYTHON SOURCE LINES 103-108
 
 Loss module and optimizer
@@ -172,12 +175,6 @@ its optimizer and target parameter updater:
     loss = DQNLoss(value_network=policy, action_space=env.action_spec, delay_value=True)
     optim = Adam(loss.parameters(), lr=0.02)
     updater = SoftUpdate(loss, eps=0.99)
-
-
-
-
-
-
 
 
 .. GENERATED FROM PYTHON SOURCE LINES 116-121
@@ -202,12 +199,6 @@ We'll be using a CSV logger to log our results, and save rendered videos.
     record_env = TransformedEnv(
         GymEnv("CartPole-v1", from_pixels=True, pixels_only=False), video_recorder
     )
-
-
-
-
-
-
 
 
 .. GENERATED FROM PYTHON SOURCE LINES 133-141
@@ -260,12 +251,6 @@ as having longer trajectories).
     )
 
 
-
-
-
-
-
-
 .. GENERATED FROM PYTHON SOURCE LINES 176-181
 
 Rendering
@@ -283,12 +268,6 @@ video locally (notice that we are not exploring).
     video_recorder.dump()
 
 
-
-
-
-
-
-
 .. GENERATED FROM PYTHON SOURCE LINES 186-194
 
 This is what your rendered CartPole video will look like after a full
@@ -303,9 +282,9 @@ Feel free to share feedback about it on GitHub.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 21.351 seconds)
+   **Total running time of the script:** (0 minutes 2.653 seconds)
 
-**Estimated memory usage:**  13 MB
+**Estimated memory usage:**  2340 MB
 
 
 .. _sphx_glr_download_tutorials_getting-started-5.py:

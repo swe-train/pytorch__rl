@@ -445,9 +445,9 @@ and another that must learn to walk.</p>
 <div class="sphx-glr-script-out highlight-pytb notranslate"><div class="highlight"><pre><span></span><span class="gt">Traceback (most recent call last):</span>
   File <span class="nb">&quot;/pytorch/rl/docs/source/reference/generated/tutorials/multi_task.py&quot;</span>, line <span class="m">82</span>, in <span class="n">&lt;module&gt;</span>
 <span class="w">    </span><span class="n">tdreset</span> <span class="o">=</span> <a href="https://pytorch.org/docs/stable/generated/torch.stack.html#torch.stack" title="torch.stack" class="sphx-glr-backref-module-torch sphx-glr-backref-type-py-function"><span class="n">torch</span><span class="o">.</span><span class="n">stack</span></a><span class="p">([</span><a href="https://pytorch.org/tensordict/reference/generated/tensordict.TensorDict.html#tensordict.TensorDict" title="tensordict.TensorDict" class="sphx-glr-backref-module-tensordict sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">tdreset1</span></a><span class="p">,</span> <a href="https://pytorch.org/tensordict/reference/generated/tensordict.TensorDict.html#tensordict.TensorDict" title="tensordict.TensorDict" class="sphx-glr-backref-module-tensordict sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">tdreset2</span></a><span class="p">],</span> <span class="mi">0</span><span class="p">)</span>
-  File <span class="nb">&quot;/pytorch/rl/env/lib/python3.8/site-packages/tensordict/base.py&quot;</span>, line <span class="m">393</span>, in <span class="n">__torch_function__</span>
+  File <span class="nb">&quot;/pytorch/rl/env/lib/python3.8/site-packages/tensordict/base.py&quot;</span>, line <span class="m">385</span>, in <span class="n">__torch_function__</span>
 <span class="w">    </span><span class="k">return</span> <span class="n">TD_HANDLED_FUNCTIONS</span><span class="p">[</span><span class="n">func</span><span class="p">](</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
-  File <span class="nb">&quot;/pytorch/rl/env/lib/python3.8/site-packages/tensordict/_torch_func.py&quot;</span>, line <span class="m">450</span>, in <span class="n">_stack</span>
+  File <span class="nb">&quot;/pytorch/rl/env/lib/python3.8/site-packages/tensordict/_torch_func.py&quot;</span>, line <span class="m">432</span>, in <span class="n">_stack</span>
 <span class="w">    </span><span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span>
 <span class="gr">RuntimeError</span>: <span class="n">The sets of keys in the tensordicts to stack are exclusive. Consider using `LazyStackedTensorDict.maybe_dense_stack` instead.</span>
 </pre></div>
@@ -572,8 +572,8 @@ it will assume that we are in a multi-task setting.</p>
 <span class="k">del</span> <span class="n">env</span>
 </pre></div>
 </div>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 5.772 seconds)</p>
-<p><strong>Estimated memory usage:</strong>  3577 MB</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 5.565 seconds)</p>
+<p><strong>Estimated memory usage:</strong>  2342 MB</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-tutorials-multi-task-py">
 <div class="sphx-glr-download sphx-glr-download-jupyter docutils container">
 <p><a class="reference download internal" download="" href="../_downloads/9b5fe5a65e76c28e02edf59221b0dc86/multi_task.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">multi_task.ipynb</span></code></a></p>

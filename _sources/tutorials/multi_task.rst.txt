@@ -127,9 +127,9 @@ and another that must learn to walk.
     Traceback (most recent call last):
       File "/pytorch/rl/docs/source/reference/generated/tutorials/multi_task.py", line 82, in <module>
         tdreset = torch.stack([tdreset1, tdreset2], 0)
-      File "/pytorch/rl/env/lib/python3.8/site-packages/tensordict/base.py", line 393, in __torch_function__
+      File "/pytorch/rl/env/lib/python3.8/site-packages/tensordict/base.py", line 385, in __torch_function__
         return TD_HANDLED_FUNCTIONS[func](*args, **kwargs)
-      File "/pytorch/rl/env/lib/python3.8/site-packages/tensordict/_torch_func.py", line 450, in _stack
+      File "/pytorch/rl/env/lib/python3.8/site-packages/tensordict/_torch_func.py", line 432, in _stack
         raise RuntimeError(
     RuntimeError: The sets of keys in the tensordicts to stack are exclusive. Consider using `LazyStackedTensorDict.maybe_dense_stack` instead.
 
@@ -336,9 +336,9 @@ Rollout
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 5.772 seconds)
+   **Total running time of the script:** (0 minutes 5.565 seconds)
 
-**Estimated memory usage:**  3577 MB
+**Estimated memory usage:**  2342 MB
 
 
 .. _sphx_glr_download_tutorials_multi_task.py:

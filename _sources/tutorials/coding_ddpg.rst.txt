@@ -1642,11 +1642,11 @@ modules we need.
         loss_value, td_error, pred_val, target_value = self.loss_value(
       File "/pytorch/rl/docs/source/reference/generated/tutorials/coding_ddpg.py", line 342, in _loss_value
         with target_params.to_module(self.value_estimator):
-      File "/pytorch/rl/env/lib/python3.8/site-packages/tensordict/utils.py", line 1191, in new_func
+      File "/pytorch/rl/env/lib/python3.8/site-packages/tensordict/utils.py", line 1189, in new_func
         out = func(_self, *args, **kwargs)
-      File "/pytorch/rl/env/lib/python3.8/site-packages/tensordict/base.py", line 728, in to_module
+      File "/pytorch/rl/env/lib/python3.8/site-packages/tensordict/base.py", line 720, in to_module
         return self._to_module(
-      File "/pytorch/rl/env/lib/python3.8/site-packages/tensordict/_td.py", line 436, in _to_module
+      File "/pytorch/rl/env/lib/python3.8/site-packages/tensordict/_td.py", line 442, in _to_module
         child = __dict__["_modules"][key]
     KeyError: 'module'
 
@@ -1708,9 +1708,9 @@ To iterate further on this loss module we might consider:
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (1 minutes 29.846 seconds)
+   **Total running time of the script:** (1 minutes 26.138 seconds)
 
-**Estimated memory usage:**  4068 MB
+**Estimated memory usage:**  2616 MB
 
 
 .. _sphx_glr_download_tutorials_coding_ddpg.py:
