@@ -768,9 +768,9 @@ Further Reading
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 34.842 seconds)
+   **Total running time of the script:** (0 minutes 36.206 seconds)
 
-**Estimated memory usage:**  2373 MB
+**Estimated memory usage:**  3556 MB
 
 
 .. _sphx_glr_download_tutorials_dqn_with_rnn.py:
