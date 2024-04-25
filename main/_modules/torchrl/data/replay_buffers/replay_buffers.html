@@ -439,6 +439,7 @@
     <span class="n">WriterEnsemble</span><span class="p">,</span>
 <span class="p">)</span>
 <span class="kn">from</span> <span class="nn">torchrl.data.utils</span> <span class="kn">import</span> <span class="n">DEVICE_TYPING</span>
+<span class="kn">from</span> <span class="nn">torchrl.envs.transforms.transforms</span> <span class="kn">import</span> <span class="n">_InvertTransform</span>
 
 
 <div class="viewcode-block" id="ReplayBuffer"><a class="viewcode-back" href="../../../../reference/generated/torchrl.data.ReplayBuffer.html#torchrl.data.ReplayBuffer">[docs]</a><span class="k">class</span> <span class="nc">ReplayBuffer</span><span class="p">:</span>
@@ -993,25 +994,48 @@
     <span class="k">def</span> <span class="nf">mark_update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">index</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_sampler</span><span class="o">.</span><span class="n">mark_update</span><span class="p">(</span><span class="n">index</span><span class="p">)</span>
 
-<div class="viewcode-block" id="ReplayBuffer.append_transform"><a class="viewcode-back" href="../../../../reference/generated/torchrl.data.ReplayBuffer.html#torchrl.data.ReplayBuffer.append_transform">[docs]</a>    <span class="k">def</span> <span class="nf">append_transform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">transform</span><span class="p">:</span> <span class="s2">&quot;Transform&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ReplayBuffer</span><span class="p">:</span>  <span class="c1"># noqa-F821</span>
+<div class="viewcode-block" id="ReplayBuffer.append_transform"><a class="viewcode-back" href="../../../../reference/generated/torchrl.data.ReplayBuffer.html#torchrl.data.ReplayBuffer.append_transform">[docs]</a>    <span class="k">def</span> <span class="nf">append_transform</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">transform</span><span class="p">:</span> <span class="s2">&quot;Transform&quot;</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">invert</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>  <span class="c1"># noqa-F821</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ReplayBuffer</span><span class="p">:</span>  <span class="c1"># noqa: D417</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Appends transform at the end.</span>
 
 <span class="sd">        Transforms are applied in order when `sample` is called.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            transform (Transform): The transform to be appended</span>
+
+<span class="sd">        Keyword Args:</span>
+<span class="sd">            invert (bool, optional): if ``True``, the transform will be inverted (forward calls will be called</span>
+<span class="sd">                during writing and inverse calls during reading). Defaults to ``False``.</span>
+
+<span class="sd">        Example:</span>
+<span class="sd">            &gt;&gt;&gt; rb = ReplayBuffer(storage=LazyMemmapStorage(10), batch_size=4)</span>
+<span class="sd">            &gt;&gt;&gt; data = TensorDict({&quot;a&quot;: torch.zeros(10)}, [10])</span>
+<span class="sd">            &gt;&gt;&gt; def t(data):</span>
+<span class="sd">            ...     data += 1</span>
+<span class="sd">            ...     return data</span>
+<span class="sd">            &gt;&gt;&gt; rb.append_transform(t, invert=True)</span>
+<span class="sd">            &gt;&gt;&gt; rb.extend(data)</span>
+<span class="sd">            &gt;&gt;&gt; assert (data == 1).all()</span>
+
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="kn">from</span> <span class="nn">torchrl.envs.transforms.transforms</span> <span class="kn">import</span> <span class="n">_CallableTransform</span><span class="p">,</span> <span class="n">Transform</span>
 
         <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">transform</span><span class="p">,</span> <span class="n">Transform</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">callable</span><span class="p">(</span><span class="n">transform</span><span class="p">):</span>
             <span class="n">transform</span> <span class="o">=</span> <span class="n">_CallableTransform</span><span class="p">(</span><span class="n">transform</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">invert</span><span class="p">:</span>
+            <span class="n">transform</span> <span class="o">=</span> <span class="n">_InvertTransform</span><span class="p">(</span><span class="n">transform</span><span class="p">)</span>
         <span class="n">transform</span><span class="o">.</span><span class="n">eval</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_transform</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">transform</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span></div>
 
 <div class="viewcode-block" id="ReplayBuffer.insert_transform"><a class="viewcode-back" href="../../../../reference/generated/torchrl.data.ReplayBuffer.html#torchrl.data.ReplayBuffer.insert_transform">[docs]</a>    <span class="k">def</span> <span class="nf">insert_transform</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">,</span> <span class="n">index</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">transform</span><span class="p">:</span> <span class="s2">&quot;Transform&quot;</span>  <span class="c1"># noqa-F821</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ReplayBuffer</span><span class="p">:</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">index</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="n">transform</span><span class="p">:</span> <span class="s2">&quot;Transform&quot;</span><span class="p">,</span>  <span class="c1"># noqa-F821</span>
+        <span class="o">*</span><span class="p">,</span>
+        <span class="n">invert</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ReplayBuffer</span><span class="p">:</span>  <span class="c1"># noqa: D417</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Inserts transform.</span>
 
 <span class="sd">        Transforms are executed in order when `sample` is called.</span>
@@ -1019,8 +1043,15 @@
 <span class="sd">        Args:</span>
 <span class="sd">            index (int): Position to insert the transform.</span>
 <span class="sd">            transform (Transform): The transform to be appended</span>
+
+<span class="sd">        Keyword Args:</span>
+<span class="sd">            invert (bool, optional): if ``True``, the transform will be inverted (forward calls will be called</span>
+<span class="sd">                during writing and inverse calls during reading). Defaults to ``False``.</span>
+
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">transform</span><span class="o">.</span><span class="n">eval</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">invert</span><span class="p">:</span>
+            <span class="n">transform</span> <span class="o">=</span> <span class="n">_InvertTransform</span><span class="p">(</span><span class="n">transform</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_transform</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="n">index</span><span class="p">,</span> <span class="n">transform</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span></div>
 
