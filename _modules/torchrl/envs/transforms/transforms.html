@@ -7886,6 +7886,80 @@
     <span class="n">forward</span> <span class="o">=</span> <span class="n">_call</span></div>
 
 
+<span class="k">class</span> <span class="nc">_InvertTransform</span><span class="p">(</span><span class="n">Transform</span><span class="p">):</span>
+    <span class="n">_MISSING_TRANSFORM_ERROR</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="s2">&quot;There is not generic rule to invert a spec transform. &quot;</span>
+        <span class="s2">&quot;Please file an issue on github to get help.&quot;</span>
+    <span class="p">)</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">transform</span><span class="p">:</span> <span class="n">Transform</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">transform</span> <span class="o">=</span> <span class="n">transform</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">in_keys</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">transform</span><span class="o">.</span><span class="n">in_keys_inv</span>
+
+    <span class="nd">@in_keys</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">in_keys</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">value</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;Cannot set non-null value in in_keys.&quot;</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">in_keys_inv</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">transform</span><span class="o">.</span><span class="n">in_keys</span>
+
+    <span class="nd">@in_keys_inv</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">in_keys_inv</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">value</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;Cannot set non-null value in in_keys_inv.&quot;</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">out_keys</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">transform</span><span class="o">.</span><span class="n">out_keys_inv</span>
+
+    <span class="nd">@out_keys</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">out_keys</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">value</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;Cannot set non-null value in out_keys.&quot;</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">out_keys_inv</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">transform</span><span class="o">.</span><span class="n">out_keys</span>
+
+    <span class="nd">@out_keys_inv</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">out_keys_inv</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">value</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;Cannot set non-null value in out_keys_inv.&quot;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tensordict</span><span class="p">:</span> <span class="n">TensorDictBase</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">TensorDictBase</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">transform</span><span class="o">.</span><span class="n">inv</span><span class="p">(</span><span class="n">tensordict</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">inv</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tensordict</span><span class="p">:</span> <span class="n">TensorDictBase</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">TensorDictBase</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">transform</span><span class="o">.</span><span class="n">forward</span><span class="p">(</span><span class="n">tensordict</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_call</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tensordict</span><span class="p">:</span> <span class="n">TensorDictBase</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">TensorDictBase</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">transform</span><span class="o">.</span><span class="n">_inv_call</span><span class="p">(</span><span class="n">tensordict</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_inv_call</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tensordict</span><span class="p">:</span> <span class="n">TensorDictBase</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">TensorDictBase</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">transform</span><span class="o">.</span><span class="n">_call</span><span class="p">(</span><span class="n">tensordict</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">transform_observation_spec</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">observation_spec</span><span class="p">:</span> <span class="n">TensorSpec</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">TensorSpec</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_MISSING_TRANSFORM_ERROR</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">transform_state_spec</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state_spec</span><span class="p">:</span> <span class="n">TensorSpec</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">TensorSpec</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_MISSING_TRANSFORM_ERROR</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">transform_reward_spec</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">reward_spec</span><span class="p">:</span> <span class="n">TensorSpec</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">TensorSpec</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_MISSING_TRANSFORM_ERROR</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">transform_action_spec</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">action_spec</span><span class="p">:</span> <span class="n">TensorSpec</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">TensorSpec</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_MISSING_TRANSFORM_ERROR</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">transform_done_spec</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">done_spec</span><span class="p">:</span> <span class="n">TensorSpec</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">TensorSpec</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_MISSING_TRANSFORM_ERROR</span><span class="p">)</span>
+
+
 <span class="k">class</span> <span class="nc">_CallableTransform</span><span class="p">(</span><span class="n">Transform</span><span class="p">):</span>
     <span class="c1"># A wrapper around a custom callable to make it possible to transform any data type</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">func</span><span class="p">):</span>
