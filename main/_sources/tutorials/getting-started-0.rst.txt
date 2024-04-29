@@ -11,7 +11,7 @@
         :class: sphx-glr-download-link-note
 
         :ref:`Go to the end <sphx_glr_download_tutorials_getting-started-0.py>`
-        to download the full example code
+        to download the full example code.
 
 .. rst-class:: sphx-glr-example-title
 
@@ -209,7 +209,7 @@ dictionary:
 
  .. code-block:: none
 
-    tensor([-0.1347])
+    tensor([-1.0537])
 
 
 
@@ -572,7 +572,7 @@ To explore further what TorchRL's environments can do, go and check:
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 43.016 seconds)
+   **Total running time of the script:** (0 minutes 43.070 seconds)
 
 **Estimated memory usage:**  9 MB
 

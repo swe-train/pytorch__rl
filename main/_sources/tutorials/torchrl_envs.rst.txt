@@ -11,7 +11,7 @@
         :class: sphx-glr-download-link-note
 
         :ref:`Go to the end <sphx_glr_download_tutorials_torchrl_envs.py>`
-        to download the full example code
+        to download the full example code.
 
 .. rst-class:: sphx-glr-example-title
 
@@ -709,7 +709,7 @@ argument that allows the user to quickly ask for image-based environments:
  .. code-block:: none
 
 
-    <matplotlib.image.AxesImage object at 0x7f806d014c40>
+    <matplotlib.image.AxesImage object at 0x7f83bf181160>
 
 
 
@@ -1508,7 +1508,7 @@ to access this attribute. Here's an example:
  .. code-block:: none
 
 
-    'bar_c59871d0-03e3-11ef-a6c2-0242ac110002'
+    'bar_df9ed2f4-05ff-11ef-9455-0242ac110002'
 
 
 
@@ -1558,7 +1558,7 @@ to access this attribute. Here's an example:
  .. code-block:: none
 
 
-    <torchrl.envs.batched_envs._dispatch_caller_parallel object at 0x7f806d0d2220>
+    <torchrl.envs.batched_envs._dispatch_caller_parallel object at 0x7f8493ba5b80>
 
 
 
@@ -1578,7 +1578,7 @@ to access this attribute. Here's an example:
  .. code-block:: none
 
 
-    ['bar_cb315cb0-03e3-11ef-8234-0242ac110002', 'bar_cb32e0b2-03e3-11ef-92aa-0242ac110002', 'bar_cb32eb48-03e3-11ef-b7f7-0242ac110002']
+    ['bar_e549f56c-05ff-11ef-bf79-0242ac110002', 'bar_e54bcb1c-05ff-11ef-aed2-0242ac110002', 'bar_e54627a2-05ff-11ef-8ef0-0242ac110002']
 
 
 
@@ -1795,8 +1795,8 @@ In regular setting, using VecNorm is quite easy:
 
  .. code-block:: none
 
-    mean: : tensor([0.3551, 0.3084, 0.2349])
-    std: : tensor([1.4152, 1.2333, 1.3100])
+    mean: : tensor([0.1371, 0.3343, 0.2237])
+    std: : tensor([1.2541, 1.1468, 1.2526])
 
 
 
@@ -1859,8 +1859,8 @@ once created:
         batch_size=torch.Size([3, 5]),
         device=cpu,
         is_shared=False)
-    mean: : tensor([-0.0850,  0.2881,  0.0782])
-    std: : tensor([1.1746, 1.2305, 1.2729])
+    mean: : tensor([-0.1435,  0.2783,  0.0635])
+    std: : tensor([1.1086, 1.0929, 1.2970])
 
 
 
@@ -1901,9 +1901,9 @@ This small difference will usually be absored throughout training.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (3 minutes 34.614 seconds)
+   **Total running time of the script:** (3 minutes 37.589 seconds)
 
-**Estimated memory usage:**  31 MB
+**Estimated memory usage:**  30 MB
 
 
 .. _sphx_glr_download_tutorials_torchrl_envs.py:
