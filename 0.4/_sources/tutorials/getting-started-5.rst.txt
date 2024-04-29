@@ -11,7 +11,7 @@
         :class: sphx-glr-download-link-note
 
         :ref:`Go to the end <sphx_glr_download_tutorials_getting-started-5.py>`
-        to download the full example code
+        to download the full example code.
 
 .. rst-class:: sphx-glr-example-title
 
@@ -303,9 +303,9 @@ Feel free to share feedback about it on GitHub.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 21.116 seconds)
+   **Total running time of the script:** (0 minutes 21.352 seconds)
 
-**Estimated memory usage:**  125 MB
+**Estimated memory usage:**  99 MB
 
 
 .. _sphx_glr_download_tutorials_getting-started-5.py:
