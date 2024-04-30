@@ -406,70 +406,60 @@ This class can be safely used with offline RL sota-implementations.</p>
 </pre></div>
 </div>
 <p>See <a class="reference external" href="https://docs.python.org/3/library/multiprocessing.html">https://docs.python.org/3/library/multiprocessing.html</a> for more info.</p>
-<p>Examples:
-&gt;&gt;&gt; from torchrl.envs.libs.gym import GymEnv
-&gt;&gt;&gt; from tensordict.nn import TensorDictModule
-&gt;&gt;&gt; from torch import nn
-&gt;&gt;&gt; from torchrl.collectors import MultiaSyncDataCollector
-&gt;&gt;&gt; if __name__ == “__main__”:
-…     env_maker = lambda: GymEnv(“Pendulum-v1”, device=”cpu”)
-…     policy = TensorDictModule(nn.Linear(3, 1), in_keys=[“observation”], out_keys=[“action”])
-…     collector = MultiaSyncDataCollector(
-…         create_env_fn=[env_maker, env_maker],
-…         policy=policy,
-…         total_frames=2000,
-…         max_frames_per_traj=50,
-…         frames_per_batch=200,
-…         init_random_frames=-1,
-…         reset_at_each_iter=False,
-…         device=”cpu”,
-…         storing_device=”cpu”,
-…         cat_results=”stack”,
-…     )
-…     for i, data in enumerate(collector):
-…         if i == 2:
-…             print(data)
-…             break
-… collector.shutdown()
-… del collector
-TensorDict(</p>
-<blockquote>
-<div><dl>
-<dt>fields={</dt><dd><p>action: Tensor(shape=torch.Size([200, 1]), device=cpu, dtype=torch.float32, is_shared=False),
-collector: TensorDict(</p>
-<blockquote>
-<div><dl class="simple">
-<dt>fields={</dt><dd><p>traj_ids: Tensor(shape=torch.Size([200]), device=cpu, dtype=torch.int64, is_shared=False)},</p>
-</dd>
-</dl>
-<p>batch_size=torch.Size([200]),
-device=cpu,
-is_shared=False),</p>
-</div></blockquote>
-<p>done: Tensor(shape=torch.Size([200, 1]), device=cpu, dtype=torch.bool, is_shared=False),
-next: TensorDict(</p>
-<blockquote>
-<div><dl class="simple">
-<dt>fields={</dt><dd><p>done: Tensor(shape=torch.Size([200, 1]), device=cpu, dtype=torch.bool, is_shared=False),
-observation: Tensor(shape=torch.Size([200, 3]), device=cpu, dtype=torch.float32, is_shared=False),
-reward: Tensor(shape=torch.Size([200, 1]), device=cpu, dtype=torch.float32, is_shared=False),
-step_count: Tensor(shape=torch.Size([200, 1]), device=cpu, dtype=torch.int64, is_shared=False),
-truncated: Tensor(shape=torch.Size([200, 1]), device=cpu, dtype=torch.bool, is_shared=False)},</p>
-</dd>
-</dl>
-<p>batch_size=torch.Size([200]),
-device=cpu,
-is_shared=False),</p>
-</div></blockquote>
-<p>observation: Tensor(shape=torch.Size([200, 3]), device=cpu, dtype=torch.float32, is_shared=False),
-step_count: Tensor(shape=torch.Size([200, 1]), device=cpu, dtype=torch.int64, is_shared=False),
-truncated: Tensor(shape=torch.Size([200, 1]), device=cpu, dtype=torch.bool, is_shared=False)},</p>
-</dd>
-</dl>
-<p>batch_size=torch.Size([200]),
-device=cpu,
-is_shared=False)</p>
-</div></blockquote>
+</div>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">torchrl.envs.libs.gym</span> <span class="kn">import</span> <span class="n">GymEnv</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">tensordict.nn</span> <span class="kn">import</span> <span class="n">TensorDictModule</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">torch</span> <span class="kn">import</span> <span class="n">nn</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">torchrl.collectors</span> <span class="kn">import</span> <span class="n">MultiaSyncDataCollector</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+<span class="gp">... </span>    <span class="n">env_maker</span> <span class="o">=</span> <span class="k">lambda</span><span class="p">:</span> <span class="n">GymEnv</span><span class="p">(</span><span class="s2">&quot;Pendulum-v1&quot;</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="s2">&quot;cpu&quot;</span><span class="p">)</span>
+<span class="gp">... </span>    <span class="n">policy</span> <span class="o">=</span> <span class="n">TensorDictModule</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">in_keys</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;observation&quot;</span><span class="p">],</span> <span class="n">out_keys</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;action&quot;</span><span class="p">])</span>
+<span class="gp">... </span>    <span class="n">collector</span> <span class="o">=</span> <span class="n">MultiaSyncDataCollector</span><span class="p">(</span>
+<span class="gp">... </span>        <span class="n">create_env_fn</span><span class="o">=</span><span class="p">[</span><span class="n">env_maker</span><span class="p">,</span> <span class="n">env_maker</span><span class="p">],</span>
+<span class="gp">... </span>        <span class="n">policy</span><span class="o">=</span><span class="n">policy</span><span class="p">,</span>
+<span class="gp">... </span>        <span class="n">total_frames</span><span class="o">=</span><span class="mi">2000</span><span class="p">,</span>
+<span class="gp">... </span>        <span class="n">max_frames_per_traj</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span>
+<span class="gp">... </span>        <span class="n">frames_per_batch</span><span class="o">=</span><span class="mi">200</span><span class="p">,</span>
+<span class="gp">... </span>        <span class="n">init_random_frames</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span>
+<span class="gp">... </span>        <span class="n">reset_at_each_iter</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+<span class="gp">... </span>        <span class="n">device</span><span class="o">=</span><span class="s2">&quot;cpu&quot;</span><span class="p">,</span>
+<span class="gp">... </span>        <span class="n">storing_device</span><span class="o">=</span><span class="s2">&quot;cpu&quot;</span><span class="p">,</span>
+<span class="gp">... </span>        <span class="n">cat_results</span><span class="o">=</span><span class="s2">&quot;stack&quot;</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="p">)</span>
+<span class="gp">... </span>    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">data</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">collector</span><span class="p">):</span>
+<span class="gp">... </span>        <span class="k">if</span> <span class="n">i</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+<span class="gp">... </span>            <span class="nb">print</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+<span class="gp">... </span>            <span class="k">break</span>
+<span class="gp">... </span><span class="n">collector</span><span class="o">.</span><span class="n">shutdown</span><span class="p">()</span>
+<span class="gp">... </span><span class="k">del</span> <span class="n">collector</span>
+<span class="go">TensorDict(</span>
+<span class="go">    fields={</span>
+<span class="go">        action: Tensor(shape=torch.Size([200, 1]), device=cpu, dtype=torch.float32, is_shared=False),</span>
+<span class="go">        collector: TensorDict(</span>
+<span class="go">            fields={</span>
+<span class="go">                traj_ids: Tensor(shape=torch.Size([200]), device=cpu, dtype=torch.int64, is_shared=False)},</span>
+<span class="go">            batch_size=torch.Size([200]),</span>
+<span class="go">            device=cpu,</span>
+<span class="go">            is_shared=False),</span>
+<span class="go">        done: Tensor(shape=torch.Size([200, 1]), device=cpu, dtype=torch.bool, is_shared=False),</span>
+<span class="go">        next: TensorDict(</span>
+<span class="go">            fields={</span>
+<span class="go">                done: Tensor(shape=torch.Size([200, 1]), device=cpu, dtype=torch.bool, is_shared=False),</span>
+<span class="go">                observation: Tensor(shape=torch.Size([200, 3]), device=cpu, dtype=torch.float32, is_shared=False),</span>
+<span class="go">                reward: Tensor(shape=torch.Size([200, 1]), device=cpu, dtype=torch.float32, is_shared=False),</span>
+<span class="go">                step_count: Tensor(shape=torch.Size([200, 1]), device=cpu, dtype=torch.int64, is_shared=False),</span>
+<span class="go">                truncated: Tensor(shape=torch.Size([200, 1]), device=cpu, dtype=torch.bool, is_shared=False)},</span>
+<span class="go">            batch_size=torch.Size([200]),</span>
+<span class="go">            device=cpu,</span>
+<span class="go">            is_shared=False),</span>
+<span class="go">        observation: Tensor(shape=torch.Size([200, 3]), device=cpu, dtype=torch.float32, is_shared=False),</span>
+<span class="go">        step_count: Tensor(shape=torch.Size([200, 1]), device=cpu, dtype=torch.int64, is_shared=False),</span>
+<span class="go">        truncated: Tensor(shape=torch.Size([200, 1]), device=cpu, dtype=torch.bool, is_shared=False)},</span>
+<span class="go">    batch_size=torch.Size([200]),</span>
+<span class="go">    device=cpu,</span>
+<span class="go">    is_shared=False)</span>
+</pre></div>
 </div>
 <p>Runs a given number of DataCollectors on separate processes.</p>
 <dl class="field-list simple">
