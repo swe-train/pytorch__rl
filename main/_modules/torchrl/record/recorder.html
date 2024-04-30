@@ -385,13 +385,14 @@
 <span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">annotations</span>
 
 <span class="kn">import</span> <span class="nn">importlib.util</span>
+<span class="kn">import</span> <span class="nn">math</span>
 <span class="kn">from</span> <span class="nn">copy</span> <span class="kn">import</span> <span class="n">copy</span>
 <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Sequence</span><span class="p">,</span> <span class="n">Union</span>
 
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">torch</span>
 
-<span class="kn">from</span> <span class="nn">tensordict</span> <span class="kn">import</span> <span class="n">NonTensorData</span><span class="p">,</span> <span class="n">TensorDict</span><span class="p">,</span> <span class="n">TensorDictBase</span>
+<span class="kn">from</span> <span class="nn">tensordict</span> <span class="kn">import</span> <span class="n">NonTensorData</span><span class="p">,</span> <span class="n">TensorDictBase</span>
 
 <span class="kn">from</span> <span class="nn">tensordict.utils</span> <span class="kn">import</span> <span class="n">NestedKey</span>
 
@@ -596,7 +597,10 @@
                     <span class="p">)</span>
                 <span class="kn">from</span> <span class="nn">torchvision.utils</span> <span class="kn">import</span> <span class="n">make_grid</span>
 
-                <span class="n">observation_trsf</span> <span class="o">=</span> <span class="n">make_grid</span><span class="p">(</span><span class="n">observation_trsf</span><span class="o">.</span><span class="n">flatten</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">4</span><span class="p">))</span>
+                <span class="n">obs_flat</span> <span class="o">=</span> <span class="n">observation_trsf</span><span class="o">.</span><span class="n">flatten</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">4</span><span class="p">)</span>
+                <span class="n">observation_trsf</span> <span class="o">=</span> <span class="n">make_grid</span><span class="p">(</span>
+                    <span class="n">obs_flat</span><span class="p">,</span> <span class="n">nrow</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">math</span><span class="o">.</span><span class="n">ceil</span><span class="p">(</span><span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">obs_flat</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])))</span>
+                <span class="p">)</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">obs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">observation_trsf</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">uint8</span><span class="p">))</span>
             <span class="k">elif</span> <span class="n">observation_trsf</span><span class="o">.</span><span class="n">ndimension</span><span class="p">()</span> <span class="o">&gt;=</span> <span class="mi">4</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">obs</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">observation_trsf</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">uint8</span><span class="p">)</span><span class="o">.</span><span class="n">flatten</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">4</span><span class="p">))</span>
@@ -726,6 +730,8 @@
 <span class="sd">            thereby relaxing the shape requirements. If not provided, it will be inferred automatically from the</span>
 <span class="sd">            input data type and shape.</span>
 <span class="sd">        render_method (str, optional): the name of the render method. Defaults to ``&quot;render&quot;``.</span>
+<span class="sd">        pass_tensordict (bool, optional): if ``True``, the input tensordict will be passed to the</span>
+<span class="sd">            render method. This enables rendering for stateless environments. Defaults to ``False``.</span>
 <span class="sd">        **kwargs: additional keyword arguments to pass to the render function (e.g. ``mode=&quot;rgb_array&quot;``).</span>
 
 <span class="sd">    Examples:</span>
@@ -802,6 +808,7 @@
         <span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">as_non_tensor</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">render_method</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;render&quot;</span><span class="p">,</span>
+        <span class="n">pass_tensordict</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
         <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">if</span> <span class="n">out_keys</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
@@ -819,6 +826,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">kwargs</span> <span class="o">=</span> <span class="n">kwargs</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">render_method</span> <span class="o">=</span> <span class="n">render_method</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_enabled</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pass_tensordict</span> <span class="o">=</span> <span class="n">pass_tensordict</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">in_keys</span><span class="o">=</span><span class="p">[],</span> <span class="n">out_keys</span><span class="o">=</span><span class="n">out_keys</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">_reset</span><span class="p">(</span>
@@ -830,7 +838,12 @@
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_enabled</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">tensordict</span>
 
-        <span class="n">array</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">parent</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">render_method</span><span class="p">)(</span><span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="n">method</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">parent</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">render_method</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">pass_tensordict</span><span class="p">:</span>
+            <span class="n">array</span> <span class="o">=</span> <span class="n">method</span><span class="p">(</span><span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">array</span> <span class="o">=</span> <span class="n">method</span><span class="p">(</span><span class="n">tensordict</span><span class="p">,</span> <span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">kwargs</span><span class="p">)</span>
+
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">preproc</span><span class="p">:</span>
             <span class="n">array</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">preproc</span><span class="p">(</span><span class="n">array</span><span class="p">)</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">as_non_tensor</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
@@ -869,7 +882,7 @@
             <span class="n">switch</span> <span class="o">=</span> <span class="kc">True</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">switch</span><span class="p">()</span>
         <span class="n">parent</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">parent</span>
-        <span class="n">td_in</span> <span class="o">=</span> <span class="n">TensorDict</span><span class="p">({},</span> <span class="n">batch_size</span><span class="o">=</span><span class="n">parent</span><span class="o">.</span><span class="n">batch_size</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">parent</span><span class="o">.</span><span class="n">device</span><span class="p">)</span>
+        <span class="n">td_in</span> <span class="o">=</span> <span class="n">parent</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_call</span><span class="p">(</span><span class="n">td_in</span><span class="p">)</span>
         <span class="n">obs</span> <span class="o">=</span> <span class="n">td_in</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">out_keys</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">obs</span><span class="p">,</span> <span class="n">NonTensorData</span><span class="p">):</span>

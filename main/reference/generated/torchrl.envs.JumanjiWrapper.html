@@ -411,7 +411,10 @@ Defaults to <code class="docutils literal notranslate"><span class="pre">False</
 </dd>
 <dt class="field-even">Keyword Arguments<span class="colon">:</span></dt>
 <dd class="field-even"><ul class="simple">
-<li><p><strong>from_pixels</strong> (<em>bool</em><em>, </em><em>optional</em>) – Not yet supported.</p></li>
+<li><p><strong>from_pixels</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether the environment should render its output.
+This will drastically impact the environment throughput. Only the first environment
+will be rendered. See <code class="xref py py-meth docutils literal notranslate"><span class="pre">render()</span></code> for more information.
+Defaults to <cite>False</cite>.</p></li>
 <li><p><strong>frame_skip</strong> (<em>int</em><em>, </em><em>optional</em>) – if provided, indicates for how many steps the
 same action is to be repeated. The observation returned will be the
 last observation of the sequence, whereas the reward will be the sum

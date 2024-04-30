@@ -382,6 +382,8 @@
 <span class="c1">#</span>
 <span class="c1"># This source code is licensed under the MIT license found in the</span>
 <span class="c1"># LICENSE file in the root directory of this source tree.</span>
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">annotations</span>
+
 <span class="kn">import</span> <span class="nn">importlib.util</span>
 <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Union</span>
 
@@ -389,6 +391,8 @@
 <span class="kn">import</span> <span class="nn">torch</span>
 <span class="kn">from</span> <span class="nn">packaging</span> <span class="kn">import</span> <span class="n">version</span>
 <span class="kn">from</span> <span class="nn">tensordict</span> <span class="kn">import</span> <span class="n">TensorDict</span><span class="p">,</span> <span class="n">TensorDictBase</span>
+
+<span class="kn">from</span> <span class="nn">torchrl.envs.common</span> <span class="kn">import</span> <span class="n">_EnvPostInit</span>
 <span class="kn">from</span> <span class="nn">torchrl.envs.utils</span> <span class="kn">import</span> <span class="n">_classproperty</span>
 
 <span class="n">_has_jumanji</span> <span class="o">=</span> <span class="n">importlib</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">find_spec</span><span class="p">(</span><span class="s2">&quot;jumanji&quot;</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
@@ -398,6 +402,8 @@
     <span class="n">CompositeSpec</span><span class="p">,</span>
     <span class="n">DEVICE_TYPING</span><span class="p">,</span>
     <span class="n">DiscreteTensorSpec</span><span class="p">,</span>
+    <span class="n">MultiDiscreteTensorSpec</span><span class="p">,</span>
+    <span class="n">MultiOneHotDiscreteTensorSpec</span><span class="p">,</span>
     <span class="n">OneHotDiscreteTensorSpec</span><span class="p">,</span>
     <span class="n">TensorSpec</span><span class="p">,</span>
     <span class="n">UnboundedContinuousTensorSpec</span><span class="p">,</span>
@@ -441,6 +447,17 @@
         <span class="k">if</span> <span class="n">dtype</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">dtype</span> <span class="o">=</span> <span class="n">numpy_to_torch_dtype_dict</span><span class="p">[</span><span class="n">spec</span><span class="o">.</span><span class="n">dtype</span><span class="p">]</span>
         <span class="k">return</span> <span class="n">action_space_cls</span><span class="p">(</span><span class="n">spec</span><span class="o">.</span><span class="n">num_values</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">dtype</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">device</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">spec</span><span class="p">,</span> <span class="n">jumanji</span><span class="o">.</span><span class="n">specs</span><span class="o">.</span><span class="n">MultiDiscreteArray</span><span class="p">):</span>
+        <span class="n">action_space_cls</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="n">MultiDiscreteTensorSpec</span>
+            <span class="k">if</span> <span class="n">categorical_action_encoding</span>
+            <span class="k">else</span> <span class="n">MultiOneHotDiscreteTensorSpec</span>
+        <span class="p">)</span>
+        <span class="k">if</span> <span class="n">dtype</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">dtype</span> <span class="o">=</span> <span class="n">numpy_to_torch_dtype_dict</span><span class="p">[</span><span class="n">spec</span><span class="o">.</span><span class="n">dtype</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">action_space_cls</span><span class="p">(</span>
+            <span class="n">torch</span><span class="o">.</span><span class="n">as_tensor</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">spec</span><span class="o">.</span><span class="n">num_values</span><span class="p">)),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">dtype</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">device</span>
+        <span class="p">)</span>
     <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">spec</span><span class="p">,</span> <span class="n">jumanji</span><span class="o">.</span><span class="n">specs</span><span class="o">.</span><span class="n">BoundedArray</span><span class="p">):</span>
         <span class="n">shape</span> <span class="o">=</span> <span class="n">spec</span><span class="o">.</span><span class="n">shape</span>
         <span class="k">if</span> <span class="n">dtype</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
@@ -478,7 +495,15 @@
         <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unsupported spec type </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">spec</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
 
-<div class="viewcode-block" id="JumanjiWrapper"><a class="viewcode-back" href="../../../../reference/generated/torchrl.envs.JumanjiWrapper.html#torchrl.envs.JumanjiWrapper">[docs]</a><span class="k">class</span> <span class="nc">JumanjiWrapper</span><span class="p">(</span><span class="n">GymLikeEnv</span><span class="p">):</span>
+<span class="k">class</span> <span class="nc">_JumanjiMakeRender</span><span class="p">(</span><span class="n">_EnvPostInit</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="n">instance</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__call__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">instance</span><span class="o">.</span><span class="n">from_pixels</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">instance</span><span class="o">.</span><span class="n">make_render</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">instance</span>
+
+
+<div class="viewcode-block" id="JumanjiWrapper"><a class="viewcode-back" href="../../../../reference/generated/torchrl.envs.JumanjiWrapper.html#torchrl.envs.JumanjiWrapper">[docs]</a><span class="k">class</span> <span class="nc">JumanjiWrapper</span><span class="p">(</span><span class="n">GymLikeEnv</span><span class="p">,</span> <span class="n">metaclass</span><span class="o">=</span><span class="n">_JumanjiMakeRender</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Jumanji environment wrapper.</span>
 
 <span class="sd">    Jumanji offers a vectorized simulation framework based on Jax.</span>
@@ -500,7 +525,10 @@
 <span class="sd">            Defaults to ``False``.</span>
 
 <span class="sd">    Keyword Args:</span>
-<span class="sd">        from_pixels (bool, optional): Not yet supported.</span>
+<span class="sd">        from_pixels (bool, optional): Whether the environment should render its output.</span>
+<span class="sd">            This will drastically impact the environment throughput. Only the first environment</span>
+<span class="sd">            will be rendered. See :meth:`~torchrl.envs.JumanjiWrapper.render` for more information.</span>
+<span class="sd">            Defaults to `False`.</span>
 <span class="sd">        frame_skip (int, optional): if provided, indicates for how many steps the</span>
 <span class="sd">            same action is to be repeated. The observation returned will be the</span>
 <span class="sd">            last observation of the sequence, whereas the reward will be the sum</span>
@@ -681,7 +709,7 @@
     <span class="k">def</span> <span class="nf">available_envs</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">_has_jumanji</span><span class="p">:</span>
             <span class="k">return</span> <span class="p">[]</span>
-        <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="n">_get_envs</span><span class="p">())</span>
+        <span class="k">return</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">_get_envs</span><span class="p">())</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">lib</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -689,14 +717,19 @@
 
         <span class="k">if</span> <span class="n">version</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">jumanji</span><span class="o">.</span><span class="n">__version__</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">version</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="s2">&quot;1.0.0&quot;</span><span class="p">):</span>
             <span class="k">raise</span> <span class="ne">ImportError</span><span class="p">(</span><span class="s2">&quot;jumanji version must be &gt;= 1.0.0&quot;</span><span class="p">)</span>
-
         <span class="k">return</span> <span class="n">jumanji</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">env</span><span class="p">:</span> <span class="s2">&quot;jumanji.env.Environment&quot;</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>  <span class="c1"># noqa: F821</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">env</span><span class="p">:</span> <span class="s2">&quot;jumanji.env.Environment&quot;</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>  <span class="c1"># noqa: F821</span>
+        <span class="n">categorical_action_encoding</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
+    <span class="p">):</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">_has_jumanji</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ImportError</span><span class="p">(</span>
                 <span class="s2">&quot;jumanji is not installed or importing it failed. Consider checking your installation.&quot;</span>
             <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">categorical_action_encoding</span> <span class="o">=</span> <span class="n">categorical_action_encoding</span>
         <span class="k">if</span> <span class="n">env</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;env&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">env</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
@@ -714,9 +747,37 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">from_pixels</span> <span class="o">=</span> <span class="n">from_pixels</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">pixels_only</span> <span class="o">=</span> <span class="n">pixels_only</span>
 
-        <span class="k">if</span> <span class="n">from_pixels</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;TODO&quot;</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">env</span>
+
+    <span class="k">def</span> <span class="nf">make_render</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns a transformed environment that can be rendered.</span>
+
+<span class="sd">        Examples:</span>
+<span class="sd">            &gt;&gt;&gt; from torchrl.envs import JumanjiEnv</span>
+<span class="sd">            &gt;&gt;&gt; from torchrl.record import CSVLogger, VideoRecorder</span>
+<span class="sd">            &gt;&gt;&gt;</span>
+<span class="sd">            &gt;&gt;&gt; envname = JumanjiEnv.available_envs[-1]</span>
+<span class="sd">            &gt;&gt;&gt; logger = CSVLogger(&quot;jumanji&quot;, video_format=&quot;mp4&quot;, video_fps=2)</span>
+<span class="sd">            &gt;&gt;&gt; env = JumanjiEnv(envname, from_pixels=True)</span>
+<span class="sd">            &gt;&gt;&gt;</span>
+<span class="sd">            &gt;&gt;&gt; env = env.append_transform(</span>
+<span class="sd">            ...     VideoRecorder(logger=logger, in_keys=[&quot;pixels&quot;], tag=envname)</span>
+<span class="sd">            ... )</span>
+<span class="sd">            &gt;&gt;&gt; env.set_seed(0)</span>
+<span class="sd">            &gt;&gt;&gt; r = env.rollout(100)</span>
+<span class="sd">            &gt;&gt;&gt; env.transform.dump()</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="kn">from</span> <span class="nn">torchrl.record</span> <span class="kn">import</span> <span class="n">PixelRenderTransform</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">append_transform</span><span class="p">(</span>
+            <span class="n">PixelRenderTransform</span><span class="p">(</span>
+                <span class="n">out_keys</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;pixels&quot;</span><span class="p">],</span>
+                <span class="n">pass_tensordict</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                <span class="n">as_non_tensor</span><span class="o">=</span><span class="nb">bool</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">batch_size</span><span class="p">),</span>
+                <span class="n">as_numpy</span><span class="o">=</span><span class="nb">bool</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">batch_size</span><span class="p">),</span>
+            <span class="p">)</span>
+        <span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">_make_state_example</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">env</span><span class="p">):</span>
         <span class="kn">import</span> <span class="nn">jax</span>
@@ -739,7 +800,9 @@
 
     <span class="k">def</span> <span class="nf">_make_action_spec</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">env</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">TensorSpec</span><span class="p">:</span>
         <span class="n">action_spec</span> <span class="o">=</span> <span class="n">_jumanji_to_torchrl_spec_transform</span><span class="p">(</span>
-            <span class="n">env</span><span class="o">.</span><span class="n">action_spec</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">device</span>
+            <span class="n">env</span><span class="o">.</span><span class="n">action_spec</span><span class="p">,</span>
+            <span class="n">device</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="p">,</span>
+            <span class="n">categorical_action_encoding</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">categorical_action_encoding</span><span class="p">,</span>
         <span class="p">)</span>
         <span class="n">action_spec</span> <span class="o">=</span> <span class="n">action_spec</span><span class="o">.</span><span class="n">expand</span><span class="p">(</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">batch_size</span><span class="p">,</span> <span class="o">*</span><span class="n">action_spec</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">action_spec</span>
@@ -824,6 +887,84 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="n">obs_dict</span> <span class="o">=</span> <span class="n">_object_to_tensordict</span><span class="p">(</span><span class="n">obs</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">batch_size</span><span class="p">)</span>
         <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">read_obs</span><span class="p">(</span><span class="n">obs_dict</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">render</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">tensordict</span><span class="p">,</span>
+        <span class="n">matplotlib_backend</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">as_numpy</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
+    <span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Renders the environment output given an input tensordict.</span>
+
+<span class="sd">        This method is intended to be called by the :class:`~torchrl.record.PixelRenderTransform`</span>
+<span class="sd">        created whenever `from_pixels=True` is selected.</span>
+<span class="sd">        To create an appropriate rendering transform, use a similar call as bellow:</span>
+
+<span class="sd">            &gt;&gt;&gt; from torchrl.record import PixelRenderTransform</span>
+<span class="sd">            &gt;&gt;&gt; matplotlib_backend = None # Change this value if a specific matplotlib backend has to be used.</span>
+<span class="sd">            &gt;&gt;&gt; env = env.append_transform(</span>
+<span class="sd">            ...     PixelRenderTransform(out_keys=[&quot;pixels&quot;], pass_tensordict=True, matplotlib_backend=matplotlib_backend)</span>
+<span class="sd">            ... )</span>
+
+<span class="sd">        This pipeline will write a `&quot;pixels&quot;` entry in your output tensordict.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            tensordict (TensorDictBase): a tensordict containing a state to represent</span>
+<span class="sd">            matplotlib_backend (str, optional): the matplotlib backend</span>
+<span class="sd">            as_numpy (bool, optional): if ``False``, the np.ndarray will be converted to a torch.Tensor.</span>
+<span class="sd">                Defaults to ``False``.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="kn">import</span> <span class="nn">io</span>
+
+        <span class="kn">import</span> <span class="nn">jax</span>
+        <span class="kn">import</span> <span class="nn">jax.numpy</span> <span class="k">as</span> <span class="nn">jnp</span>
+        <span class="kn">import</span> <span class="nn">jumanji</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="kn">import</span> <span class="nn">matplotlib</span>
+            <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+            <span class="kn">import</span> <span class="nn">PIL</span>
+            <span class="kn">import</span> <span class="nn">torchvision.transforms.v2.functional</span>
+        <span class="k">except</span> <span class="ne">ImportError</span> <span class="k">as</span> <span class="n">err</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ImportError</span><span class="p">(</span>
+                <span class="s2">&quot;Rendering with Jumanji requires torchvision, matplotlib and PIL to be installed.&quot;</span>
+            <span class="p">)</span> <span class="kn">from</span> <span class="nn">err</span>
+
+        <span class="k">if</span> <span class="n">matplotlib_backend</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">matplotlib</span><span class="o">.</span><span class="n">use</span><span class="p">(</span><span class="n">matplotlib_backend</span><span class="p">)</span>
+
+        <span class="c1"># Get only one env</span>
+        <span class="n">_state_example</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_state_example</span>
+        <span class="k">while</span> <span class="n">tensordict</span><span class="o">.</span><span class="n">ndim</span><span class="p">:</span>
+            <span class="n">tensordict</span> <span class="o">=</span> <span class="n">tensordict</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">_state_example</span> <span class="o">=</span> <span class="n">jax</span><span class="o">.</span><span class="n">tree_util</span><span class="o">.</span><span class="n">tree_map</span><span class="p">(</span>
+                <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">jnp</span><span class="o">.</span><span class="n">take</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">),</span> <span class="n">_state_example</span>
+            <span class="p">)</span>
+        <span class="c1"># Patch jumanji is_notebook</span>
+        <span class="n">is_notebook</span> <span class="o">=</span> <span class="n">jumanji</span><span class="o">.</span><span class="n">environments</span><span class="o">.</span><span class="n">is_notebook</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">jumanji</span><span class="o">.</span><span class="n">environments</span><span class="o">.</span><span class="n">is_notebook</span> <span class="o">=</span> <span class="k">lambda</span><span class="p">:</span> <span class="kc">False</span>
+
+            <span class="n">isinteractive</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">isinteractive</span><span class="p">()</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">ion</span><span class="p">()</span>
+            <span class="n">buf</span> <span class="o">=</span> <span class="n">io</span><span class="o">.</span><span class="n">BytesIO</span><span class="p">()</span>
+            <span class="n">state</span> <span class="o">=</span> <span class="n">_tensordict_to_object</span><span class="p">(</span><span class="n">tensordict</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;state&quot;</span><span class="p">),</span> <span class="n">_state_example</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_env</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="n">state</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">buf</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s2">&quot;png&quot;</span><span class="p">)</span>
+            <span class="n">buf</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+            <span class="c1"># Load the image into a PIL object.</span>
+            <span class="n">img</span> <span class="o">=</span> <span class="n">PIL</span><span class="o">.</span><span class="n">Image</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">buf</span><span class="p">)</span>
+            <span class="n">img_array</span> <span class="o">=</span> <span class="n">torchvision</span><span class="o">.</span><span class="n">transforms</span><span class="o">.</span><span class="n">v2</span><span class="o">.</span><span class="n">functional</span><span class="o">.</span><span class="n">pil_to_tensor</span><span class="p">(</span><span class="n">img</span><span class="p">)</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">isinteractive</span><span class="p">:</span>
+                <span class="n">plt</span><span class="o">.</span><span class="n">ioff</span><span class="p">()</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">as_numpy</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">img_array</span><span class="p">[:</span><span class="mi">3</span><span class="p">]</span>
+            <span class="k">return</span> <span class="n">img_array</span><span class="p">[:</span><span class="mi">3</span><span class="p">]</span><span class="o">.</span><span class="n">numpy</span><span class="p">()</span>
+        <span class="k">finally</span><span class="p">:</span>
+            <span class="n">jumanji</span><span class="o">.</span><span class="n">environments</span><span class="o">.</span><span class="n">is_notebook</span> <span class="o">=</span> <span class="n">is_notebook</span>
 
     <span class="k">def</span> <span class="nf">_step</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tensordict</span><span class="p">:</span> <span class="n">TensorDictBase</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">TensorDictBase</span><span class="p">:</span>
         <span class="kn">import</span> <span class="nn">jax</span>
