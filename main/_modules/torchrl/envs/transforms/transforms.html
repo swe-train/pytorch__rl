@@ -7368,16 +7368,29 @@
         <span class="k">if</span> <span class="p">(</span>
             <span class="n">reset</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">done</span>
             <span class="ow">and</span> <span class="p">(</span><span class="n">reset</span> <span class="o">!=</span> <span class="n">done</span><span class="p">)</span><span class="o">.</span><span class="n">any</span><span class="p">()</span>
-            <span class="ow">and</span> <span class="p">(</span><span class="ow">not</span> <span class="n">reset</span><span class="o">.</span><span class="n">all</span><span class="p">()</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">reset</span><span class="o">.</span><span class="n">any</span><span class="p">())</span>
+            <span class="c1"># it can happen that all are reset, in which case</span>
+            <span class="c1"># it&#39;s fine (doesn&#39;t need to match done)</span>
+            <span class="ow">and</span> <span class="ow">not</span> <span class="n">reset</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
         <span class="p">):</span>
             <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span>
-                <span class="s2">&quot;Cannot partially reset a gym(nasium) async env with a reset mask that does not match the done mask. &quot;</span>
+                <span class="s2">&quot;Cannot partially reset a gym(nasium) async env with a &quot;</span>
+                <span class="s2">&quot;reset mask that does not match the done mask. &quot;</span>
                 <span class="sa">f</span><span class="s2">&quot;Got reset=</span><span class="si">{</span><span class="n">reset</span><span class="si">}</span><span class="se">\n</span><span class="s2">and done=</span><span class="si">{</span><span class="n">done</span><span class="si">}</span><span class="s2">&quot;</span>
             <span class="p">)</span>
         <span class="c1"># if not reset.any(), we don&#39;t need to do anything.</span>
         <span class="c1"># if reset.all(), we don&#39;t either (bc GymWrapper will call a plain reset).</span>
         <span class="k">if</span> <span class="n">reset</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">reset</span><span class="o">.</span><span class="n">any</span><span class="p">():</span>
             <span class="n">saved_next</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_memo</span><span class="p">[</span><span class="s2">&quot;saved_next&quot;</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">saved_next</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">reset</span><span class="o">.</span><span class="n">all</span><span class="p">():</span>
+                    <span class="c1"># We&#39;re fine: this means that a full reset was passed and the</span>
+                    <span class="c1"># env was manually reset</span>
+                    <span class="n">tensordict_reset</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">final_name</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+                    <span class="k">return</span> <span class="n">tensordict_reset</span>
+                <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span>
+                    <span class="s2">&quot;Did not find a saved tensordict while the reset mask was &quot;</span>
+                    <span class="sa">f</span><span class="s2">&quot;not empty: reset=</span><span class="si">{</span><span class="n">reset</span><span class="si">}</span><span class="s2">. Done was </span><span class="si">{</span><span class="n">done</span><span class="si">}</span><span class="s2">.&quot;</span>
+                <span class="p">)</span>
             <span class="c1"># reset = reset.view(tensordict.shape)</span>
             <span class="c1"># we have a data container from the previous call to step</span>
             <span class="c1"># that contains part of the observation we need.</span>
