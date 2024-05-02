@@ -409,7 +409,7 @@ widely used replay buffers:</p>
 </section>
 <section id="composable-replay-buffers">
 <h2>Composable Replay Buffers<a class="headerlink" href="#composable-replay-buffers" title="Permalink to this heading">¶</a></h2>
-<p>We also give users the ability to compose a replay buffer.
+<p id="ref-buffers">We also give users the ability to compose a replay buffer.
 We provide a wide panel of solutions for replay buffer usage, including support for
 almost any data type; storage in memory, on device or on physical memory;
 several sampling strategies; usage of transforms etc.</p>
@@ -1113,7 +1113,7 @@ such that they can be stacked together during sampling.</p>
 </section>
 <section id="tensorspec">
 <h2>TensorSpec<a class="headerlink" href="#tensorspec" title="Permalink to this heading">¶</a></h2>
-<p>The <cite>TensorSpec</cite> parent class and subclasses define the basic properties of observations and actions in TorchRL, such
+<p id="ref-specs">The <cite>TensorSpec</cite> parent class and subclasses define the basic properties of observations and actions in TorchRL, such
 as shape, device, dtype and domain.
 It is important that your environment specs match the input and output that it sends and receives, as
 <code class="xref py py-obj docutils literal notranslate"><span class="pre">ParallelEnv</span></code> will create buffers from these specs to communicate with the spawn processes.
