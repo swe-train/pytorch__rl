@@ -389,7 +389,7 @@
 <span class="kn">from</span> <span class="nn">dataclasses</span> <span class="kn">import</span> <span class="n">dataclass</span>
 
 <span class="kn">import</span> <span class="nn">torch</span>
-<span class="kn">from</span> <span class="nn">tensordict</span> <span class="kn">import</span> <span class="n">TensorDict</span><span class="p">,</span> <span class="n">TensorDictBase</span>
+<span class="kn">from</span> <span class="nn">tensordict</span> <span class="kn">import</span> <span class="n">TensorDict</span><span class="p">,</span> <span class="n">TensorDictBase</span><span class="p">,</span> <span class="n">TensorDictParams</span>
 
 <span class="kn">from</span> <span class="nn">tensordict.nn</span> <span class="kn">import</span> <span class="n">dispatch</span><span class="p">,</span> <span class="n">ProbabilisticTensorDictSequential</span><span class="p">,</span> <span class="n">TensorDictModule</span>
 <span class="kn">from</span> <span class="nn">tensordict.utils</span> <span class="kn">import</span> <span class="n">NestedKey</span>
@@ -594,6 +594,13 @@
     <span class="n">default_keys</span> <span class="o">=</span> <span class="n">_AcceptedKeys</span><span class="p">()</span>
     <span class="n">default_value_estimator</span> <span class="o">=</span> <span class="n">ValueEstimators</span><span class="o">.</span><span class="n">GAE</span>
     <span class="n">out_keys</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;loss_actor&quot;</span><span class="p">,</span> <span class="s2">&quot;loss_value&quot;</span><span class="p">]</span>
+
+    <span class="n">actor_network</span><span class="p">:</span> <span class="n">TensorDictModule</span>
+    <span class="n">critic_network</span><span class="p">:</span> <span class="n">TensorDictModule</span>
+    <span class="n">actor_network_params</span><span class="p">:</span> <span class="n">TensorDictParams</span>
+    <span class="n">critic_network_params</span><span class="p">:</span> <span class="n">TensorDictParams</span>
+    <span class="n">target_actor_network_params</span><span class="p">:</span> <span class="n">TensorDictParams</span>
+    <span class="n">target_critic_network_params</span><span class="p">:</span> <span class="n">TensorDictParams</span>
 
     <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="fm">__new__</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>

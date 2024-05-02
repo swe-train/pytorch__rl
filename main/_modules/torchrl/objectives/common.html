@@ -387,7 +387,6 @@
 
 <span class="kn">import</span> <span class="nn">abc</span>
 <span class="kn">import</span> <span class="nn">warnings</span>
-<span class="kn">from</span> <span class="nn">copy</span> <span class="kn">import</span> <span class="n">deepcopy</span>
 <span class="kn">from</span> <span class="nn">dataclasses</span> <span class="kn">import</span> <span class="n">dataclass</span>
 <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Iterator</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Tuple</span>
 
@@ -597,6 +596,16 @@
 <span class="sd">                will carry gradients as expected.</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="p">(</span>
+            <span class="n">module_name</span><span class="p">,</span>
+            <span class="n">module_name</span> <span class="o">+</span> <span class="s2">&quot;_params&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;target_&quot;</span> <span class="o">+</span> <span class="n">module_name</span> <span class="o">+</span> <span class="s2">&quot;_params&quot;</span><span class="p">,</span>
+        <span class="p">):</span>
+            <span class="k">if</span> <span class="n">name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__annotations__</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+                <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">&quot;The name </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2"> wasn&#39;t part of the annotations (</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__annotations__</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span><span class="si">}</span><span class="s2">). Make sure it is present in the definition class.&quot;</span>
+                <span class="p">)</span>
+
         <span class="k">if</span> <span class="n">kwargs</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unrecognised keyword arguments </span><span class="si">{</span><span class="nb">list</span><span class="p">(</span><span class="n">kwargs</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
         <span class="c1"># To make it robust to device casting, we must register list of</span>
@@ -669,13 +678,9 @@
 
         <span class="nb">setattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">param_name</span><span class="p">,</span> <span class="n">params</span><span class="p">)</span>
 
-        <span class="c1"># set the functional module: we need to convert the params to non-differentiable params</span>
-        <span class="c1"># otherwise they will appear twice in parameters</span>
-        <span class="k">with</span> <span class="n">params</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_make_meta_params</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">device</span><span class="p">(</span><span class="s2">&quot;meta&quot;</span><span class="p">),</span> <span class="n">filter_empty</span><span class="o">=</span><span class="kc">False</span>
-        <span class="p">)</span><span class="o">.</span><span class="n">to_module</span><span class="p">(</span><span class="n">module</span><span class="p">):</span>
-            <span class="c1"># avoid buffers and params being exposed</span>
-            <span class="bp">self</span><span class="o">.</span><span class="vm">__dict__</span><span class="p">[</span><span class="n">module_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">deepcopy</span><span class="p">(</span><span class="n">module</span><span class="p">)</span>
+        <span class="c1"># Set the module in the __dict__ directly to avoid listing its params</span>
+        <span class="c1"># A deepcopy with meta device could be used but that assumes that the model is copyable!</span>
+        <span class="bp">self</span><span class="o">.</span><span class="vm">__dict__</span><span class="p">[</span><span class="n">module_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">module</span>
 
         <span class="n">name_params_target</span> <span class="o">=</span> <span class="s2">&quot;target_&quot;</span> <span class="o">+</span> <span class="n">module_name</span>
         <span class="k">if</span> <span class="n">create_target_params</span><span class="p">:</span>

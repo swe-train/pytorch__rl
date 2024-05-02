@@ -389,8 +389,8 @@
 <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Union</span>
 
 <span class="kn">import</span> <span class="nn">torch</span>
-<span class="kn">from</span> <span class="nn">tensordict</span> <span class="kn">import</span> <span class="n">TensorDict</span><span class="p">,</span> <span class="n">TensorDictBase</span>
-<span class="kn">from</span> <span class="nn">tensordict.nn</span> <span class="kn">import</span> <span class="n">dispatch</span>
+<span class="kn">from</span> <span class="nn">tensordict</span> <span class="kn">import</span> <span class="n">TensorDict</span><span class="p">,</span> <span class="n">TensorDictBase</span><span class="p">,</span> <span class="n">TensorDictParams</span>
+<span class="kn">from</span> <span class="nn">tensordict.nn</span> <span class="kn">import</span> <span class="n">dispatch</span><span class="p">,</span> <span class="n">TensorDictModule</span>
 <span class="kn">from</span> <span class="nn">tensordict.utils</span> <span class="kn">import</span> <span class="n">NestedKey</span>
 
 <span class="kn">from</span> <span class="nn">torch</span> <span class="kn">import</span> <span class="n">distributions</span> <span class="k">as</span> <span class="n">d</span>
@@ -451,6 +451,10 @@
         <span class="n">action_pred</span><span class="p">:</span> <span class="n">NestedKey</span> <span class="o">=</span> <span class="s2">&quot;action&quot;</span>
 
     <span class="n">default_keys</span> <span class="o">=</span> <span class="n">_AcceptedKeys</span><span class="p">()</span>
+
+    <span class="n">actor_network</span><span class="p">:</span> <span class="n">TensorDictModule</span>
+    <span class="n">actor_network_params</span><span class="p">:</span> <span class="n">TensorDictParams</span>
+    <span class="n">target_actor_network_params</span><span class="p">:</span> <span class="n">TensorDictParams</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
@@ -657,6 +661,10 @@
         <span class="n">action_pred</span><span class="p">:</span> <span class="n">NestedKey</span> <span class="o">=</span> <span class="s2">&quot;action&quot;</span>
 
     <span class="n">default_keys</span> <span class="o">=</span> <span class="n">_AcceptedKeys</span><span class="p">()</span>
+
+    <span class="n">actor_network</span><span class="p">:</span> <span class="n">TensorDictModule</span>
+    <span class="n">actor_network_params</span><span class="p">:</span> <span class="n">TensorDictParams</span>
+    <span class="n">target_actor_network_params</span><span class="p">:</span> <span class="n">TensorDictParams</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
