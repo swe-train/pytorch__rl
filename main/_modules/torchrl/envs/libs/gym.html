@@ -956,6 +956,9 @@
                     <span class="p">)</span>
                     <span class="n">add_info_dict</span> <span class="o">=</span> <span class="kc">False</span>
             <span class="k">if</span> <span class="n">add_info_dict</span><span class="p">:</span>
+                <span class="c1"># First register the basic info dict reader</span>
+                <span class="n">instance</span><span class="o">.</span><span class="n">auto_register_info_dict</span><span class="p">()</span>
+                <span class="c1"># Make it so that infos are properly cast where they should at done time</span>
                 <span class="n">instance</span><span class="o">.</span><span class="n">set_info_dict_reader</span><span class="p">(</span>
                     <span class="n">terminal_obs_reader</span><span class="p">(</span><span class="n">instance</span><span class="o">.</span><span class="n">observation_spec</span><span class="p">,</span> <span class="n">backend</span><span class="o">=</span><span class="n">backend</span><span class="p">)</span>
                 <span class="p">)</span>
@@ -1874,12 +1877,15 @@
         <span class="s2">&quot;sb3&quot;</span><span class="p">:</span> <span class="s2">&quot;terminal_observation&quot;</span><span class="p">,</span>
         <span class="s2">&quot;gym&quot;</span><span class="p">:</span> <span class="s2">&quot;final_observation&quot;</span><span class="p">,</span>
     <span class="p">}</span>
+    <span class="n">backend_info_key</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;sb3&quot;</span><span class="p">:</span> <span class="s2">&quot;terminal_info&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;gym&quot;</span><span class="p">:</span> <span class="s2">&quot;final_info&quot;</span><span class="p">,</span>
+    <span class="p">}</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">observation_spec</span><span class="p">:</span> <span class="n">CompositeSpec</span><span class="p">,</span> <span class="n">backend</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;final&quot;</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_info_spec</span> <span class="o">=</span> <span class="n">CompositeSpec</span><span class="p">(</span>
-            <span class="p">{(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span> <span class="n">item</span><span class="o">.</span><span class="n">clone</span><span class="p">()</span> <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">observation_spec</span><span class="o">.</span><span class="n">items</span><span class="p">()},</span>
-            <span class="n">shape</span><span class="o">=</span><span class="n">observation_spec</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span>
+            <span class="p">{</span><span class="n">name</span><span class="p">:</span> <span class="n">observation_spec</span><span class="o">.</span><span class="n">clone</span><span class="p">()},</span> <span class="n">shape</span><span class="o">=</span><span class="n">observation_spec</span><span class="o">.</span><span class="n">shape</span>
         <span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">backend</span> <span class="o">=</span> <span class="n">backend</span>
 
@@ -1919,14 +1925,34 @@
 
     <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">info_dict</span><span class="p">,</span> <span class="n">tensordict</span><span class="p">):</span>
         <span class="n">terminal_obs</span> <span class="o">=</span> <span class="n">info_dict</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">backend_key</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">backend</span><span class="p">],</span> <span class="kc">None</span><span class="p">)</span>
-        <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">item</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">info_spec</span><span class="o">.</span><span class="n">items</span><span class="p">(</span><span class="kc">True</span><span class="p">,</span> <span class="kc">True</span><span class="p">):</span>
-            <span class="n">key</span> <span class="o">=</span> <span class="p">(</span><span class="n">key</span><span class="p">,)</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="k">else</span> <span class="n">key</span>
-            <span class="n">final_obs_buffer</span> <span class="o">=</span> <span class="n">item</span><span class="o">.</span><span class="n">zero</span><span class="p">()</span>
+        <span class="n">terminal_info</span> <span class="o">=</span> <span class="n">info_dict</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">backend_info_key</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">backend</span><span class="p">],</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">terminal_info</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="c1"># terminal_info is a list of items that can be None or not</span>
+            <span class="c1"># If they&#39;re not None, they are a dict of values that we want to put in a root dict</span>
+            <span class="n">keys</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+            <span class="k">for</span> <span class="n">info</span> <span class="ow">in</span> <span class="n">terminal_info</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">info</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="k">continue</span>
+                <span class="n">keys</span> <span class="o">=</span> <span class="n">keys</span><span class="o">.</span><span class="n">union</span><span class="p">(</span><span class="n">info</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+            <span class="n">terminal_info</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="n">key</span><span class="p">:</span> <span class="p">[</span><span class="n">info</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="k">if</span> <span class="n">info</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">info</span> <span class="k">for</span> <span class="n">info</span> <span class="ow">in</span> <span class="n">terminal_info</span><span class="p">]</span>
+                <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">keys</span>
+            <span class="p">}</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">terminal_info</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">obs_dict</span> <span class="o">=</span> <span class="n">terminal_info</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">terminal_obs</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">obs_dict</span><span class="p">[</span><span class="s2">&quot;observation&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">terminal_obs</span>
+        <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">terminal_obs</span> <span class="ow">in</span> <span class="n">obs_dict</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="n">spec</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">info_spec</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">key</span><span class="p">]</span>
+            <span class="c1"># for key, item in self.info_spec.items(True, True):</span>
+            <span class="c1">#     key = (key,) if isinstance(key, str) else key</span>
+            <span class="n">final_obs_buffer</span> <span class="o">=</span> <span class="n">spec</span><span class="o">.</span><span class="n">zero</span><span class="p">()</span>
             <span class="k">if</span> <span class="n">terminal_obs</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">obs</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">terminal_obs</span><span class="p">):</span>
                     <span class="c1"># writes final_obs inplace with terminal_obs content</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">_read_obs</span><span class="p">(</span><span class="n">obs</span><span class="p">,</span> <span class="n">key</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">final_obs_buffer</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="n">i</span><span class="p">)</span>
-            <span class="n">tensordict</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">final_obs_buffer</span><span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_read_obs</span><span class="p">(</span><span class="n">obs</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">final_obs_buffer</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="n">i</span><span class="p">)</span>
+            <span class="n">tensordict</span><span class="o">.</span><span class="n">set</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">key</span><span class="p">),</span> <span class="n">final_obs_buffer</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">tensordict</span>
 
 
