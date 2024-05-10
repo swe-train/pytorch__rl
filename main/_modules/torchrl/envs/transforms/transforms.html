@@ -385,7 +385,6 @@
 
 <span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">annotations</span>
 
-<span class="kn">import</span> <span class="nn">collections</span>
 <span class="kn">import</span> <span class="nn">functools</span>
 <span class="kn">import</span> <span class="nn">importlib.util</span>
 <span class="kn">import</span> <span class="nn">multiprocessing</span> <span class="k">as</span> <span class="nn">mp</span>
@@ -5196,6 +5195,8 @@
 <span class="sd">            Defaults to ``in_keys``.</span>
 <span class="sd">        shared_td (TensorDictBase, optional): A shared tensordict containing the</span>
 <span class="sd">            keys of the transform.</span>
+<span class="sd">        lock (mp.Lock): a lock to prevent race conditions between processes.</span>
+<span class="sd">            Defaults to None (lock created during init).</span>
 <span class="sd">        decay (number, optional): decay rate of the moving average.</span>
 <span class="sd">            default: 0.99</span>
 <span class="sd">        eps (number, optional): lower bound of the running standard</span>
@@ -5386,7 +5387,7 @@
 <div class="viewcode-block" id="VecNorm.to_observation_norm"><a class="viewcode-back" href="../../../../reference/generated/torchrl.envs.transforms.VecNorm.html#torchrl.envs.transforms.VecNorm.to_observation_norm">[docs]</a>    <span class="k">def</span> <span class="nf">to_observation_norm</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="n">Compose</span><span class="p">,</span> <span class="n">ObservationNorm</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Converts VecNorm into an ObservationNorm class that can be used at inference time.&quot;&quot;&quot;</span>
         <span class="n">out</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">in_keys</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">key_out</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">in_keys</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">out_keys</span><span class="p">):</span>
             <span class="n">_sum</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_td</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">_append_last</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="s2">&quot;_sum&quot;</span><span class="p">))</span>
             <span class="n">_ssq</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_td</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">_append_last</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="s2">&quot;_ssq&quot;</span><span class="p">))</span>
             <span class="n">_count</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_td</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">_append_last</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="s2">&quot;_count&quot;</span><span class="p">))</span>
@@ -5397,13 +5398,13 @@
                 <span class="n">loc</span><span class="o">=</span><span class="n">mean</span><span class="p">,</span>
                 <span class="n">scale</span><span class="o">=</span><span class="n">std</span><span class="p">,</span>
                 <span class="n">standard_normal</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-                <span class="n">in_keys</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">in_keys</span><span class="p">,</span>
+                <span class="n">in_keys</span><span class="o">=</span><span class="n">key</span><span class="p">,</span>
+                <span class="n">out_keys</span><span class="o">=</span><span class="n">key_out</span><span class="p">,</span>
             <span class="p">)</span>
-            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">in_keys</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
-                <span class="k">return</span> <span class="n">_out</span>
-            <span class="k">else</span><span class="p">:</span>
-                <span class="n">out</span> <span class="o">+=</span> <span class="n">ObservationNorm</span>
-        <span class="k">return</span> <span class="n">Compose</span><span class="p">(</span><span class="o">*</span><span class="n">out</span><span class="p">)</span></div>
+            <span class="n">out</span> <span class="o">+=</span> <span class="p">[</span><span class="n">_out</span><span class="p">]</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">in_keys</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">Compose</span><span class="p">(</span><span class="o">*</span><span class="n">out</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">_out</span></div>
 
 <div class="viewcode-block" id="VecNorm.build_td_for_shared_vecnorm"><a class="viewcode-back" href="../../../../reference/generated/torchrl.envs.transforms.VecNorm.html#torchrl.envs.transforms.VecNorm.build_td_for_shared_vecnorm">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">build_td_for_shared_vecnorm</span><span class="p">(</span>
@@ -5470,29 +5471,44 @@
             <span class="k">return</span> <span class="n">td_select</span><span class="o">.</span><span class="n">memmap_</span><span class="p">()</span>
         <span class="k">return</span> <span class="n">td_select</span><span class="o">.</span><span class="n">share_memory_</span><span class="p">()</span></div>
 
+    <span class="c1"># We use a different separator to ensure that keys can have points within them.</span>
+    <span class="n">SEP</span> <span class="o">=</span> <span class="s2">&quot;-&lt;.&gt;-&quot;</span>
+
 <div class="viewcode-block" id="VecNorm.get_extra_state"><a class="viewcode-back" href="../../../../reference/generated/torchrl.envs.transforms.VecNorm.html#torchrl.envs.transforms.VecNorm.get_extra_state">[docs]</a>    <span class="k">def</span> <span class="nf">get_extra_state</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">OrderedDict</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">collections</span><span class="o">.</span><span class="n">OrderedDict</span><span class="p">({</span><span class="s2">&quot;lock&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">lock</span><span class="p">,</span> <span class="s2">&quot;td&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_td</span><span class="p">})</span></div>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_td</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
+                <span class="s2">&quot;Querying state_dict on an uninitialized VecNorm transform will &quot;</span>
+                <span class="s2">&quot;return a `None` value for the summary statistics. &quot;</span>
+                <span class="s2">&quot;Loading such a state_dict on an initialized VecNorm will result in &quot;</span>
+                <span class="s2">&quot;an error.&quot;</span>
+            <span class="p">)</span>
+            <span class="k">return</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_td</span><span class="o">.</span><span class="n">flatten_keys</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">SEP</span><span class="p">)</span><span class="o">.</span><span class="n">to_dict</span><span class="p">()</span></div>
 
 <div class="viewcode-block" id="VecNorm.set_extra_state"><a class="viewcode-back" href="../../../../reference/generated/torchrl.envs.transforms.VecNorm.html#torchrl.envs.transforms.VecNorm.set_extra_state">[docs]</a>    <span class="k">def</span> <span class="nf">set_extra_state</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state</span><span class="p">:</span> <span class="n">OrderedDict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">lock</span> <span class="o">=</span> <span class="n">state</span><span class="p">[</span><span class="s2">&quot;lock&quot;</span><span class="p">]</span>
-        <span class="k">if</span> <span class="n">lock</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">            </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">            since locks can&#39;t be serialized, we have use cases for stripping them</span>
-<span class="sd">            for example in ParallelEnv, in which case keep the lock we already have</span>
-<span class="sd">            to avoid an updated tensor dict being sent between processes to erase locks</span>
-<span class="sd">            &quot;&quot;&quot;</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">lock</span> <span class="o">=</span> <span class="n">lock</span>
-        <span class="n">td</span> <span class="o">=</span> <span class="n">state</span><span class="p">[</span><span class="s2">&quot;td&quot;</span><span class="p">]</span>
-        <span class="k">if</span> <span class="n">td</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">td</span><span class="o">.</span><span class="n">is_shared</span><span class="p">():</span>
-            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span>
-                <span class="s2">&quot;Only shared tensordicts can be set in VecNorm transforms&quot;</span>
-            <span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_td</span> <span class="o">=</span> <span class="n">td</span></div>
+        <span class="k">if</span> <span class="n">state</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">td</span> <span class="o">=</span> <span class="n">TensorDict</span><span class="p">(</span><span class="n">state</span><span class="p">)</span><span class="o">.</span><span class="n">unflatten_keys</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">SEP</span><span class="p">)</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_td</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">td</span><span class="o">.</span><span class="n">is_shared</span><span class="p">():</span>
+                <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
+                    <span class="s2">&quot;VecNorm wasn&#39;t initialized and the tensordict is not shared. In single &quot;</span>
+                    <span class="s2">&quot;process settings, this is ok, but if you need to share the statistics &quot;</span>
+                    <span class="s2">&quot;between workers this should require some attention. &quot;</span>
+                    <span class="s2">&quot;Make sure that the content of VecNorm is transmitted to the workers &quot;</span>
+                    <span class="s2">&quot;after calling load_state_dict and not before, as other workers &quot;</span>
+                    <span class="s2">&quot;may not have access to the loaded TensorDict.&quot;</span>
+                <span class="p">)</span>
+                <span class="n">td</span><span class="o">.</span><span class="n">share_memory_</span><span class="p">()</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_td</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_td</span><span class="o">.</span><span class="n">update_</span><span class="p">(</span><span class="n">td</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_td</span> <span class="o">=</span> <span class="n">td</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">_td</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">KeyError</span><span class="p">(</span><span class="s2">&quot;Could not find a tensordict in the state_dict.&quot;</span><span class="p">)</span></div>
 
     <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
         <span class="k">return</span> <span class="p">(</span>
             <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">(decay=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">decay</span><span class="si">:</span><span class="s2">4.4f</span><span class="si">}</span><span class="s2">,&quot;</span>
-            <span class="sa">f</span><span class="s2">&quot;eps=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">eps</span><span class="si">:</span><span class="s2">4.4f</span><span class="si">}</span><span class="s2">, keys=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">in_keys</span><span class="si">}</span><span class="s2">)&quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;eps=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">eps</span><span class="si">:</span><span class="s2">4.4f</span><span class="si">}</span><span class="s2">, in_keys=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">in_keys</span><span class="si">}</span><span class="s2">, out_keys=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">out_keys</span><span class="si">}</span><span class="s2">)&quot;</span>
         <span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">__getstate__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>

@@ -410,6 +410,8 @@ default: [“observation”, “reward”]</p></li>
 Defaults to <code class="docutils literal notranslate"><span class="pre">in_keys</span></code>.</p></li>
 <li><p><strong>shared_td</strong> (<em>TensorDictBase</em><em>, </em><em>optional</em>) – A shared tensordict containing the
 keys of the transform.</p></li>
+<li><p><strong>lock</strong> (<em>mp.Lock</em>) – a lock to prevent race conditions between processes.
+Defaults to None (lock created during init).</p></li>
 <li><p><strong>decay</strong> (<em>number</em><em>, </em><em>optional</em>) – decay rate of the moving average.
 default: 0.99</p></li>
 <li><p><strong>eps</strong> (<em>number</em><em>, </em><em>optional</em>) – lower bound of the running standard
