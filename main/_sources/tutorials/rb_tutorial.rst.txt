@@ -419,8 +419,8 @@ We can also customize the storage location on disk:
  .. code-block:: none
 
     The buffer has 3 elements
-    the 'a' tensor is stored in <TemporaryDirectory '/tmp/tmpmubziz8d'>/a.memmap
-    the ('b', 'c') tensor is stored in <TemporaryDirectory '/tmp/tmpmubziz8d'>/b/c.memmap
+    the 'a' tensor is stored in /pytorch/rl/docs/source/reference/generated/tutorials/<TemporaryDirectory '/tmp/tmpj777yfqk'>/a.memmap
+    the ('b', 'c') tensor is stored in /pytorch/rl/docs/source/reference/generated/tutorials/<TemporaryDirectory '/tmp/tmpj777yfqk'>/b/c.memmap
 
 
 
@@ -1204,7 +1204,7 @@ higher indices should occur more frequently:
  .. code-block:: none
 
 
-    (array([ 46.,  28., 111.,  46.,  66., 150.,  69., 186., 105., 217.]), array([ 1. ,  2.4,  3.8,  5.2,  6.6,  8. ,  9.4, 10.8, 12.2, 13.6, 15. ]), <BarContainer object of 10 artists>)
+    (array([ 37.,  31.,  83.,  68.,  54., 169.,  93., 162.,  97., 230.]), array([ 1. ,  2.4,  3.8,  5.2,  6.6,  8. ,  9.4, 10.8, 12.2, 13.6, 15. ]), <BarContainer object of 10 artists>)
 
 
 
@@ -1260,7 +1260,7 @@ Now, higher indices should occur less frequently:
  .. code-block:: none
 
 
-    (array([195., 120., 182.,  72.,  94., 138.,  64.,  83.,  36.,  40.]), array([ 1. ,  2.4,  3.8,  5.2,  6.6,  8. ,  9.4, 10.8, 12.2, 13.6, 15. ]), <BarContainer object of 10 artists>)
+    (array([234., 100., 179.,  94.,  59., 125.,  66.,  93.,  35.,  39.]), array([ 1. ,  2.4,  3.8,  5.2,  6.6,  8. ,  9.4, 10.8, 12.2, 13.6, 15. ]), <BarContainer object of 10 artists>)
 
 
 
@@ -1820,7 +1820,7 @@ We mark the steps as well.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 855-877
+.. GENERATED FROM PYTHON SOURCE LINES 855-878
 
 Conclusion
 ----------
@@ -1844,13 +1844,14 @@ Next steps
   :class:`~torchrl.data.PrioritizedSliceSampler` and
   :class:`~torchrl.data.SliceSamplerWithoutReplacement`, or other writers
   such as :class:`~torchrl.data.TensorDictMaxValueWriter`.
+- Check how to checkpoint ReplayBuffers in :ref:`the doc <checkpoint-rb>`.
 
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (2 minutes 53.146 seconds)
+   **Total running time of the script:** (2 minutes 51.063 seconds)
 
-**Estimated memory usage:**  162 MB
+**Estimated memory usage:**  207 MB
 
 
 .. _sphx_glr_download_tutorials_rb_tutorial.py:
